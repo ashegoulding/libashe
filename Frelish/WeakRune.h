@@ -30,7 +30,7 @@ protected:
 	void __construct(const thisClass &src) noexcept;
 
 public:
-	WeakRune(std::string msg) noexcept;
+	WeakRune(std::string msg = "") noexcept;
 	WeakRune(const thisClass &src) noexcept;
 	virtual ~WeakRune() noexcept;
 

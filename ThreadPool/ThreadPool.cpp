@@ -1,10 +1,17 @@
 /*
  * ThreadPool.cpp
  *
- *  Created on: 2015. 3. 18.
- *      Author: david
+ * Ashe's thread pool with C++11
+ * On UNIX, link with lpthread
+ *
+ * @Maintained
+ *  2015 Q1
+ * @Author
+ *  Ashe David Sterkhus
+ *  Blame to: ashe.goulding+blame@gmail.com
+ * @COLOPHON
+ *  This file is part of libashe, Ashe's C++11/98 utility stuff
  */
-
 #include "ThreadPool.h"
 
 #include <sstream>
@@ -16,13 +23,28 @@ namespace ashe
 ThreadPool::ThreadPool(const unsigned short spawn/* = std::thread::hardware_concurrency()*/) noexcept
 		: __initialSize(spawn)
 {
+	this->className = "ThreadPool";
 	this->__spawnPoolThreads(spawn);
 }
 
 ThreadPool::ThreadPool(const thisClass &src) noexcept
-		: __initialSize(0)
+		: motherClass(src)
+		, __initialSize(0)
 {
+	this->className = "ThreadPool";
 	this->__construct(src);
+}
+
+ThreadPool::~ThreadPool() noexcept
+{
+	this->__recall();
+}
+
+ThreadPool::thisClass& ThreadPool::operator =(const thisClass& src) noexcept
+{
+	motherClass::__construct(src);
+	this->__construct(src);
+	return *this;
 }
 
 void ThreadPool::__construct(const thisClass& src) noexcept
@@ -65,14 +87,78 @@ void ThreadPool::__recall() noexcept
 	}
 }
 
-ThreadPool::~ThreadPool() noexcept
+void ThreadPool::__spawnPoolThreads(const unsigned short x) noexcept
 {
-	this->__recall();
+	std::lock_guard<std::mutex> l(this->__methodMtx);
+	unsigned short i;
+
+	for(i=0; i<x; ++i)
+		this->__resting.push(new PoolThread(this));
 }
 
-ThreadPool::thisClass& ThreadPool::operator =(const thisClass& src) noexcept
+void ThreadPool::__onTickEnd(PoolThread* th) noexcept
 {
-	this->__construct(src);
+	std::lock_guard<std::mutex> l(this->__methodMtx);
+	std::set<PoolThread*>::iterator pos = this->__working.find(th);
+
+	if(pos != this->__working.end())
+	{
+		this->__working.erase(pos);
+		this->__resting.push(th);
+		this->__restingEvent.set_value((unsigned short)this->__resting.size());
+		this->__restingEvent = std::promise<unsigned short>();
+		this->__restingEventFuture = this->__restingEvent.get_future().share();
+	}
+}
+
+ThreadPool::thisClass& ThreadPool::labour(WorkUnit* wu) throw(Rune)
+{
+	if(! wu)
+		throw Rune(Rune::C_ILLEGAL_ARGUMENT, "WorkUnit pointer cannot be NULL."); // Or a random PoolThread's gonna die
+	else if(this->labourBlocking)
+	{
+		this->__methodMtx.lock();
+		if(this->__resting.empty())
+		{
+			if(this->__working.empty())
+			{
+				this->__methodMtx.unlock();
+				throw Rune(Rune::C_EMPTY_POOL, "Was trying to block");
+			}
+
+			std::shared_future<unsigned short> restingFuture;
+			do
+			{
+				restingFuture = this->__restingEventFuture;
+				this->__methodMtx.unlock();
+				restingFuture.get();
+				this->__methodMtx.lock();
+			}
+			while(this->__resting.empty());
+		}
+
+		this->__resting.front()->labour(wu);
+		this->__working.insert(this->__resting.front());
+		this->__resting.pop();
+
+		this->__methodMtx.unlock();
+	}
+	else
+	{
+		std::lock_guard<std::mutex> l(this->__methodMtx);
+
+		if(this->__resting.empty())
+		{
+			if(this->__working.empty())
+				throw Rune(Rune::C_EMPTY_POOL, "Was non-blocking");
+			else
+				throw Rune(Rune::C_ALL_THREAD_BUSY);
+		}
+		this->__resting.front()->labour(wu);
+		this->__working.insert(this->__resting.front());
+		this->__resting.pop();
+	}
+
 	return *this;
 }
 
@@ -104,29 +190,6 @@ ThreadPool::thisClass& ThreadPool::count(unsigned short * resting, unsigned shor
 	return *this;
 }
 
-void ThreadPool::__onTickEnd(PoolThread* th) noexcept
-{
-	std::lock_guard<std::mutex> l(this->__methodMtx);
-	std::set<PoolThread*>::iterator pos = this->__working.find(th);
-
-	if(pos != this->__working.end())
-	{
-		this->__working.erase(pos);
-		this->__resting.push(th);
-		this->__restingEvent.set_value((unsigned short)this->__resting.size());
-		this->__restingEvent = std::promise<unsigned short>();
-	}
-}
-
-void ThreadPool::__spawnPoolThreads(const unsigned short x) noexcept
-{
-	std::lock_guard<std::mutex> l(this->__methodMtx);
-	unsigned short i;
-
-	for(i=0; i<x; ++i)
-		this->__resting.push(new PoolThread(this));
-}
-
 ThreadPool::thisClass& ThreadPool::setNonBlockingLabour(const bool nonBlocking) noexcept
 {
 	this->labourBlocking = !nonBlocking;
@@ -138,83 +201,47 @@ bool ThreadPool::blockingLabour() const noexcept
 	return this->labourBlocking;
 }
 
-ThreadPool::thisClass& ThreadPool::labour(WorkUnit* wu) throw(Exception)
-{
-	if(! wu)
-		throw Exception(Exception::C_ILLEGAL_ARGUMENT, "WorkUnit pointer cannot be NULL.");
-	else if(this->labourBlocking)
-	{
-		this->__methodMtx.lock();
-		if(this->__resting.empty())
-		{
-			unsigned short resting;
-			std::future<unsigned short> restingFuture;
-			while(true)
-			{
-				restingFuture = this->__restingEvent.get_future();
-				this->__methodMtx.unlock();
-				resting = restingFuture.get();
-				this->__methodMtx.lock();
-				if(resting)
-					break;
-			}
-		}
-
-		this->__resting.front()->labour(wu);
-		this->__working.insert(this->__resting.front());
-		this->__resting.pop();
-
-		this->__methodMtx.unlock();
-	}
-	else
-	{
-		std::lock_guard<std::mutex> l(this->__methodMtx);
-
-		if(this->__resting.empty())
-		{
-			if(this->__working.empty())
-				throw Exception(Exception::C_EMPTY_POOL);
-			else
-				throw Exception(Exception::C_ALL_THREAD_BUSY);
-		}
-		this->__resting.front()->labour(wu);
-		this->__working.insert(this->__resting.front());
-		this->__resting.pop();
-	}
-
-	return *this;
-}
-
 } /* ThreadPool */
 
 namespace ashe
 {
 
-ThreadPool::Exception::Exception(const Code code, const std::string msg/* = ""*/) noexcept
+ThreadPool::Rune::Rune(const Code code, const std::string msg/* = ""*/) noexcept
 		: code(code)
 {
+	this->className = "ThreadPool::Rune";
 	std::stringstream sb;
 	sb << '[' << thisClass::codeToString__(code) << ']';
 	if(! msg.empty())
 		sb << ' ' << msg;
-	this->msg = sb.str();
+	this->whatString = sb.str();
 }
 
-ThreadPool::Exception::~Exception() noexcept
+ThreadPool::Rune::Rune(const thisClass& src) noexcept
+		: motherClass(src)
+		, code(src.code)
+{
+	this->className = "ThreadPool::Rune";
+	this->__construct(src);
+}
+
+ThreadPool::Rune::~Rune() noexcept
 {
 }
 
-ThreadPool::Exception::Code ThreadPool::Exception::getCode() const noexcept
+ThreadPool::Rune::thisClass& ThreadPool::Rune::operator =(const thisClass& src) noexcept
+{
+	motherClass::__construct(src);
+	this->__construct(src);
+	return *this;
+}
+
+ThreadPool::Rune::Code ThreadPool::Rune::getCode() const noexcept
 {
 	return this->code;
 }
 
-std::string ThreadPool::Exception::toString() const noexcept
-{
-	return this->msg;
-}
-
-std::string ThreadPool::Exception::codeToString__(const Code x) noexcept
+std::string ThreadPool::Rune::codeToString__(const Code x) noexcept
 {
 	switch(x)
 	{
@@ -225,27 +252,9 @@ std::string ThreadPool::Exception::codeToString__(const Code x) noexcept
 	return "C_NONE";
 }
 
-void ThreadPool::Exception::__construct(const thisClass& src) noexcept
+void ThreadPool::Rune::__construct(const thisClass& src) noexcept
 {
 	this->code = src.code;
-	this->msg = src.msg;
-}
-
-ThreadPool::Exception::Exception(const thisClass& src) noexcept
-		: code(src.code)
-{
-	this->__construct(src);
-}
-
-ThreadPool::Exception::thisClass& ThreadPool::Exception::operator =(const thisClass& src) noexcept
-{
-	this->__construct(src);
-	return *this;
-}
-
-const char* ThreadPool::Exception::what() const noexcept
-{
-	return this->msg.c_str();
 }
 
 } /* ThreadPool::Exception */
@@ -253,13 +262,50 @@ const char* ThreadPool::Exception::what() const noexcept
 namespace ashe
 {
 
+ThreadPool::WorkUnit::WorkUnit() noexcept
+{
+	this->className = "ThreadPool::WorkUnit";
+}
+
+ThreadPool::WorkUnit::WorkUnit(const thisClass& src) noexcept
+		: motherClass(src)
+{
+	this->className = "ThreadPool::WorkUnit";
+}
+
 ThreadPool::WorkUnit::~WorkUnit() noexcept{}
-void ThreadPool::WorkUnit::onTick() noexcept{}
+
+void ThreadPool::WorkUnit::onTick(){}
 
 } /* ThreadPool::WorkUnit */
 
 namespace ashe
 {
+
+ThreadPool::PoolThread::PoolThread(ThreadPool *mother) noexcept
+		: mother(mother)
+{
+	assert(mother);
+	*((std::thread*)this) = std::thread([this](){
+		this->__run();
+	});
+}
+
+ThreadPool::PoolThread::PoolThread(const thisClass& src) throw (StrongRune)
+{
+	throw StrongRune("Nothing can copy a thread!");
+}
+
+ThreadPool::PoolThread::~PoolThread() noexcept
+{
+	this->die();
+}
+
+ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::operator =(const thisClass& src) throw (StrongRune)
+{
+	throw StrongRune("Nothing can copy a thread!");
+	return *this;
+}
 
 void ThreadPool::PoolThread::__run() noexcept
 {
@@ -278,19 +324,6 @@ PROC_START:
 	this->mother->__onTickEnd(this);
 
 	goto PROC_START;
-}
-
-ThreadPool::PoolThread::PoolThread(ThreadPool *mother) noexcept
-		: mother(mother)
-{
-	*((std::thread*)this) = std::thread([this](){
-		this->__run();
-	});
-}
-
-ThreadPool::PoolThread::~PoolThread() noexcept
-{
-	this->die();
 }
 
 ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::labour(WorkUnit *wu) noexcept

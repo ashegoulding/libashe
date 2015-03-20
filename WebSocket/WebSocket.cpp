@@ -1,10 +1,20 @@
 /*
- * WebSocket.cpp
+ * WebSocket.h
  *
- *  Created on: 2015. 2. 10.
- *      Author: david
+ * C++11, POSIX WebSocket implementation by Ashe
+ *
+ * @Refer
+ *  - https://tools.ietf.org/html/rfc6455
+ *  - https://developer.mozilla.org/en-US/docs/WebSockets/Writing_WebSocket_servers
+ *  - http://www.websocket.org/echo.html
+ * @Maintained
+ *  Under development since: 2015 Q1
+ * @Author
+ *  Ashe David Sterkhus
+ *  Blame to: ashe.goulding+blame@gmail.com
+ * @COLOPHON
+ *  This file is part of libashe, Ashe's C++11/98 utility stuff
  */
-
 #include "WebSocket.h"
 
 #include "coreutils/base64.h"
@@ -17,10 +27,13 @@ namespace ashe
  */
 WebSocket::WebSocket() noexcept
 {
+	this->className = "WebSocket";
 }
 
 WebSocket::WebSocket(const WebSocket& src) noexcept
+		: motherClass(src)
 {
+	this->className = "WebSocket";
 	this->__construct(src);
 }
 
@@ -33,8 +46,33 @@ WebSocket::~WebSocket() noexcept
 
 WebSocket& WebSocket::operator =(const WebSocket& src) noexcept
 {
+	motherClass::__construct(src);
 	this->__construct(src);
 	return *this;
+}
+
+void WebSocket::__construct(const thisClass& src) noexcept
+{
+	this->fd = src.fd;
+	this->__clearStash();
+}
+
+void WebSocket::__clearStash() noexcept
+{
+	for(auto&v : this->stash)
+		v.clear();
+	this->handshakeStash.clear();
+	this->remainingRead = 0;
+	this->buffer.clear();
+	this->wasHandshaking = false;
+}
+
+void WebSocket::__clearRequest() noexcept
+{
+	this->handshook = false;
+	this->requestedUrl.clear();
+	this->header.clear();
+	this->values.clear();
 }
 
 WebSocket& WebSocket::bind(const unsigned short port, const std::string address) throw (int)
@@ -196,12 +234,6 @@ unsigned short WebSocket::getBindPort() const noexcept
 	if(::getsockname(this->fd, (sockaddr*)&sin, &len) > 0)
 		return ntohs(sin.sin_port);
 	return 0;
-}
-
-void WebSocket::__construct(const thisClass& src) noexcept
-{
-	this->fd = src.fd;
-	this->__clearStash();
 }
 
 WebSocket& WebSocket::handshake() throw (std::string, int, ssize_t)
@@ -420,16 +452,6 @@ WebSocket& WebSocket::setBufferSize(const size_t size) noexcept
 	return *this;
 }
 
-void WebSocket::__clearStash() noexcept
-{
-	for(auto&v : this->stash)
-		v.clear();
-	this->handshakeStash.clear();
-	this->remainingRead = 0;
-	this->buffer.clear();
-	this->wasHandshaking = false;
-}
-
 WebSocket& WebSocket::setNonBlock(const bool nonBlock) throw (int)
 {
 	int flags = ::fcntl(this->fd, F_GETFL, 0);
@@ -635,14 +657,6 @@ std::vector<std::string> WebSocket::explode__(const std::string& x, const std::s
 	return y;
 }
 
-void WebSocket::__clearRequest() noexcept
-{
-	this->handshook = false;
-	this->requestedUrl.clear();
-	this->header.clear();
-	this->values.clear();
-}
-
 }
 
 namespace ashe
@@ -650,22 +664,15 @@ namespace ashe
 /* WebSocket::Frame implementation
  *
  */
-std::vector<unsigned char> WebSocket::Frame::__maskPayload() noexcept
-{
-	std::vector<unsigned char> y = this->payload;
-	std::vector<unsigned char>::size_type i = 0;
-	for(auto &v : y)
-		v ^= this->mask[(i++)%4];
-	return y;
-}
-
 WebSocket::Frame::Frame() noexcept
 {
+	this->className = "WebSocket::Frame";
 }
 
 WebSocket::Frame::Frame(std::vector<unsigned char>& v, const size_t frameSizeLimit) throw (ssize_t, std::string)
 {
 	ssize_t req = 0, pos = 0;
+	this->className = "WebSocket::Frame";
 	if(v.size() < 2)
 	{
 		req = 2 - v.size();
@@ -743,6 +750,55 @@ WebSocket::Frame::Frame(std::vector<unsigned char>& v, const size_t frameSizeLim
 	v.erase(v.begin(), v.begin() + pos);
 }
 
+WebSocket::Frame::Frame(const thisClass& src) noexcept
+		: motherClass(src)
+{
+	this->className = "WebSocket::Frame";
+	this->__construct(src);
+}
+
+WebSocket::Frame::~Frame() noexcept
+{
+}
+
+WebSocket::Frame& WebSocket::Frame::operator =(const thisClass& src) noexcept
+{
+	motherClass::__construct(src);
+	this->__construct(src);
+	return *this;
+}
+
+void WebSocket::Frame::__construct(const thisClass& src) noexcept
+{
+	::memcpy(&this->firstBytes, &src.firstBytes, sizeof(unsigned short));
+	if(src.hasMask())
+		this->setMask(src.mask);
+	else
+		this->clearMask();
+	this->payload = src.payload;
+	this->__updatePayloadSize();
+}
+
+std::vector<unsigned char> WebSocket::Frame::__maskPayload() const noexcept
+{
+	std::vector<unsigned char> y(this->payload);
+	std::vector<unsigned char>::size_type i = 0;
+	for(auto &v : y)
+		v ^= this->mask[(i++)%4];
+	return y;
+}
+
+void WebSocket::Frame::__updatePayloadSize() noexcept
+{
+	const auto size = this->payload.size();
+	if(size > 65535)
+		this->firstBytes |= 127;
+	else if(size > 125)
+		this->firstBytes |= 126;
+	else
+		this->firstBytes |= (unsigned short)size;
+}
+
 bool WebSocket::Frame::fin() const noexcept
 {
 	return (this->firstBytes & 0b1000000000000000) != 0;
@@ -798,28 +854,6 @@ WebSocket::Frame& WebSocket::Frame::clearMask() noexcept
 	return *this;
 }
 
-void WebSocket::Frame::__construct(const thisClass& src) noexcept
-{
-	::memcpy(&this->firstBytes, &src.firstBytes, sizeof(unsigned short));
-	if(src.hasMask())
-		this->setMask(src.mask);
-	else
-		this->clearMask();
-	this->payload = src.payload;
-	this->__updatePayloadSize();
-}
-
-WebSocket::Frame::Frame(const thisClass& src) noexcept
-{
-	this->__construct(src);
-}
-
-WebSocket::Frame& WebSocket::Frame::operator =(const thisClass& src) noexcept
-{
-	this->__construct(src);
-	return *this;
-}
-
 std::vector<unsigned char> WebSocket::Frame::getPayload() const noexcept
 {
 	return this->payload;
@@ -849,17 +883,6 @@ WebSocket::Frame& WebSocket::Frame::swapPayload(std::vector<unsigned char>& x) n
 	this->payload.swap(x);
 	this->__updatePayloadSize();
 	return *this;
-}
-
-void WebSocket::Frame::__updatePayloadSize() noexcept
-{
-	const auto size = this->payload.size();
-	if(size > 65535)
-		this->firstBytes |= 127;
-	else if(size > 125)
-		this->firstBytes |= 126;
-	else
-		this->firstBytes |= (unsigned short)size;
 }
 
 size_t WebSocket::Frame::getFrameSize() const noexcept
@@ -911,8 +934,13 @@ std::vector<unsigned char> WebSocket::Frame::toBinary() const noexcept
 	}
 
 	if(this->hasMask())
+	{
+		const auto mask = this->__maskPayload();
 		y.insert(y.end(), this->mask.begin(), this->mask.end());
-	y.insert(y.end(), this->payload.begin(), this->payload.end());
+		y.insert(y.end(), mask.begin(), mask.end());
+	}
+	else
+		y.insert(y.end(), this->payload.begin(), this->payload.end());
 
 	return y;
 }

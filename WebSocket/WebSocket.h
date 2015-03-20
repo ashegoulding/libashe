@@ -1,15 +1,20 @@
 /*
  * WebSocket.h
  *
- * C++11 WebSocket implementation by Ashe
+ * C++11, POSIX WebSocket implementation by Ashe
  *
- * Refer:
- ** https://tools.ietf.org/html/rfc6455
- ** https://developer.mozilla.org/en-US/docs/WebSockets/Writing_WebSocket_servers
- ** http://www.websocket.org/echo.html
- *
+ * @Refer
+ *  - https://tools.ietf.org/html/rfc6455
+ *  - https://developer.mozilla.org/en-US/docs/WebSockets/Writing_WebSocket_servers
+ *  - http://www.websocket.org/echo.html
+ * @Maintained
+ *  Under development since: 2015 Q1
+ * @Author
+ *  Ashe David Sterkhus
+ *  Blame to: ashe.goulding+blame@gmail.com
+ * @COLOPHON
+ *  This file is part of libashe, Ashe's C++11/98 utility stuff
  */
-
 #ifndef ASHE_WEBSOCKET_H_
 #define ASHE_WEBSOCKET_H_
 
@@ -21,8 +26,9 @@
 #include <map>
 #include <set>
 
+#include "Frelish.h"
+
 #include <fcntl.h>
-#include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -32,15 +38,17 @@
 namespace ashe
 {
 
-class WebSocket
+class WebSocket : public Icebank
 {
 public:
+	typedef Icebank motherClass;
 	typedef WebSocket thisClass;
 	const static int implementedVersion = 13;
 
-	class Frame
+	class Frame : public Icebank
 	{
 	public:
+		typedef Icebank motherClass;
 		typedef Frame thisClass;
 		enum OPCode
 		{
@@ -59,12 +67,13 @@ public:
 
 		void __construct(const thisClass &src) noexcept;
 		void __updatePayloadSize() noexcept;
-		virtual std::vector<unsigned char> __maskPayload() noexcept;
+		virtual std::vector<unsigned char> __maskPayload() const noexcept;
 
 	public:
 		Frame() noexcept;
 		Frame(const thisClass &src) noexcept;
 		Frame(std::vector<unsigned char> &v, const size_t frameSizeLimit) throw(ssize_t, std::string);
+		virtual ~Frame() noexcept;
 
 		Frame &operator =(const thisClass &src) noexcept;
 

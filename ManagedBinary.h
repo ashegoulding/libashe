@@ -1,3 +1,16 @@
+/*
+ * ManagedBinary.h
+ *
+ * Ashe's ManagedBinary with C++98
+ *
+ * @Maintained
+ *  2015 Q1
+ * @Author
+ *  Ashe David Sterkhus
+ *  Blame to: ashe.goulding+blame@gmail.com
+ * @COLOPHON
+ *  This file is part of libashe, Ashe's C++11/98 utility stuff
+ */
 #ifndef ASHE_MANAGEDBINARY_H_
 #define ASHE_MANAGEDBINARY_H_
 
@@ -6,11 +19,16 @@
 #include <sstream>
 #include <typeinfo>
 
+#include "Frelish.h"
+
 namespace ashe
 {
-
+/* ManagedBinary, dynamic memory range manager
+ * This implementation is for C++98 use.
+ * For C++11, use std::vector<T>::data()
+ */
 template <class T>
-class ManagedBinary
+class ManagedBinary : public Fjord
 {
 public:
 	typedef ManagedBinary<T> thisClass;
@@ -18,12 +36,10 @@ public:
 	T *data; // Pointer to range
 	size_t size; // In element quantity, not byte: Content, using size
 	size_t realSize; // In element quantity, not byte: Real size allcated to thisClass::data pointer. Used by unforced thisClass::resize()
-	bool clearUpOnDelete; // True: deleting thisClass::data on instance destruction. For when handing over the pointer to outsize the instance
+	bool clearUpOnDelete; // True: deleting thisClass::data on instance destruction. For when handing over the pointer to outside of the instance
 
 protected:
 	void __construct(const thisClass *src) throw();
-
-	std::string __dummyString; // Legacy support: const char*
 
 public:
 	ManagedBinary(const size_t size = 0) throw();
@@ -32,7 +48,6 @@ public:
 	ManagedBinary(const T *arr, const size_t size) throw();
 	// Constructs the instance based on the given instance
 	// Except that it will not clone 'data' pointer address but allocates new data range and copies the content to new instance
-	ManagedBinary(const thisClass *src) throw();
 	ManagedBinary(const thisClass &src) throw();
 	// Checks thisClass::clearUpOnDelete to see if the instance should delete its 'arr' on destruction
 	virtual ~ManagedBinary() throw();
@@ -44,31 +59,31 @@ public:
 
 	// Sets the size. This will drop the content in thisClass::data
 	// Newly allocated data range shall be zero-filled after this method invoked
-	virtual void setSize(const size_t size) throw();
+	virtual thisClass &setSize(const size_t size) throw();
 	// Resizes the size. Whatever the 'newSize' is, the method will try to maintain the content.
 	// Shorter range: cut, Larger: original content with zero-filled range of newly grown.
-	virtual void resize(const size_t newSize, const bool forced = true) throw();
+	virtual thisClass &resize(const size_t newSize, const bool forced = true) throw();
 	// Zero-fills the data much as the size, not the realSize. Invokes ::memset()
-	inline virtual void fillZeros() throw();
+	inline virtual thisClass &fillZeros() throw();
 	// Fills the data range with the given element
 	// Note that this method is slower than method: fillBytes()
 	// And if you just want to zero-fill the range, invoke fillZeros() method which is fastest one
-	inline virtual void fill(const T x) throw();
+	inline virtual thisClass &fill(const T x) throw();
 	// Fills the data range with the given byte
 	// Note that this method is faster than method: fill(const T)
 	// This method is equivalent to: memset(thisClass::data, x, thisClass::size);
-	inline virtual void fillBytes(const unsigned char x) throw();
+	inline virtual thisClass &fillBytes(const unsigned char x) throw();
 	// Clears up the instance
 	// The data will be deleted and the noth 'size' and 'realSize' members will be set to 0
-	inline virtual void empty() throw();
+	inline virtual thisClass &empty() throw();
 	// Swaps the instance with given instance
 	// Purpose was on the inside of the method but you can use it from outside too
 	// (Like swap methods in C++ Standard Library)
-	inline virtual void swap(thisClass &with) throw();
+	inline virtual thisClass &swap(thisClass &with) throw();
 
 	// Returns instance representative string which contains address of 'this' pointer, 'size', 'realSize' and 'clearUpOnDelete'
 	// If the argument 'y' is set, it will also returns the string with 'y' in c-style string
-	virtual std::string toString(const char **y = NULL) throw();
+	virtual std::string toString() const throw();
 };
 
 template<class T>
@@ -78,6 +93,7 @@ ManagedBinary<T>::ManagedBinary(const size_t size) throw ()
 	, realSize(0)
 	, clearUpOnDelete(true)
 {
+	this->className = "ManagedBinary<" + std::string(typeid(T).name()) + ">";
 	if(size)
 		this->setSize(size);
 }
@@ -89,6 +105,7 @@ ManagedBinary<T>::ManagedBinary(const T* arr, const size_t size) throw ()
 	, realSize(0)
 	, clearUpOnDelete(true)
 {
+	this->className = "ManagedBinary<" + std::string(typeid(T).name()) + ">";
 	if(arr)
 	{
 		size_t copySize; // In bytes
@@ -103,22 +120,13 @@ ManagedBinary<T>::ManagedBinary(const T* arr, const size_t size) throw ()
 }
 
 template<class T>
-ManagedBinary<T>::ManagedBinary(const thisClass* src) throw ()
-	: data(NULL)
-	, size(0)
-	, realSize(0)
-	, clearUpOnDelete(true)
-{
-	this->__construct(src);
-}
-
-template<class T>
 ManagedBinary<T>::ManagedBinary(const thisClass& src) throw ()
 	: data(NULL)
 	, size(0)
 	, realSize(0)
 	, clearUpOnDelete(true)
 {
+	this->className = "ManagedBinary<" + std::string(typeid(T).name()) + ">";
 	this->__construct(&src);
 }
 
@@ -156,14 +164,14 @@ void ManagedBinary<T>::__construct(const thisClass* src) throw ()
 }
 
 template<class T>
-void ManagedBinary<T>::setSize(const size_t size) throw ()
+ManagedBinary<T> &ManagedBinary<T>::setSize(const size_t size) throw ()
 {
 	if(this->realSize == size)
 	{
 		// Case: No change
 		this->size = size;
 		this->fillZeros();
-		return;
+		return *this;
 	}
 	this->empty();
 	if(size)
@@ -172,16 +180,18 @@ void ManagedBinary<T>::setSize(const size_t size) throw ()
 		this->data = new T[this->realSize];
 		this->fillZeros();
 	}
+
+	return *this;
 }
 
 template<class T>
-void ManagedBinary<T>::resize(const size_t newSize, const bool forced) throw ()
+ManagedBinary<T> &ManagedBinary<T>::resize(const size_t newSize, const bool forced) throw ()
 {
 	if(this->realSize >= newSize && (! forced))
 	{
 		// Case: Not necessary to grow
 		this->size = newSize;
-		return;
+		return *this;
 	}
 	// Case: Need to grow
 	// TODO: Grow as requested.
@@ -190,16 +200,19 @@ void ManagedBinary<T>::resize(const size_t newSize, const bool forced) throw ()
 		memcpy(newOne.data, this->data, sizeof(T)*(newOne.size < this->size? newOne.size : this->size));
 	this->clearUpOnDelete = true;
 	this->swap(newOne);
+
+	return *this;
 }
 
 template<class T>
-inline void ManagedBinary<T>::fillZeros() throw ()
+ManagedBinary<T> &ManagedBinary<T>::fillZeros() throw ()
 {
 	memset(this->data, 0, sizeof(T)*this->size);
+	return *this;
 }
 
 template<class T>
-inline void ManagedBinary<T>::empty() throw ()
+inline ManagedBinary<T> &ManagedBinary<T>::empty() throw ()
 {
 	if(this->data || this->realSize)
 	{
@@ -207,10 +220,12 @@ inline void ManagedBinary<T>::empty() throw ()
 		this->data = NULL;
 		this->realSize = this->size = 0;
 	}
+
+	return *this;
 }
 
 template<class T>
-inline void ManagedBinary<T>::swap(thisClass& with) throw ()
+inline ManagedBinary<T> &ManagedBinary<T>::swap(thisClass& with) throw ()
 {
 	thisClass dummyOne;
 	dummyOne.size = with.size;
@@ -223,25 +238,30 @@ inline void ManagedBinary<T>::swap(thisClass& with) throw ()
 	this->realSize = dummyOne.realSize;
 	this->data = dummyOne.data;
 	dummyOne.clearUpOnDelete = false;
+
+	return *this;
 }
 
 template<class T>
-inline void ManagedBinary<T>::fill(const T x) throw ()
+inline ManagedBinary<T> &ManagedBinary<T>::fill(const T x) throw ()
 {
 	T *p = this->data;
 	const T *end = p + this->size;
 	while(p < end)
 		*(p++) = x;
+
+	return *this;
 }
 
 template<class T>
-inline void ManagedBinary<T>::fillBytes(const unsigned char x) throw ()
+inline ManagedBinary<T> &ManagedBinary<T>::fillBytes(const unsigned char x) throw ()
 {
 	memset(this->data, x, sizeof(T)*this->size);
+	return *this;
 }
 
 template<class T>
-std::string ManagedBinary<T>::toString(const char** y) throw ()
+std::string ManagedBinary<T>::toString() const throw ()
 {
 	std::stringstream sb;
 	sb << "[ManagedBinary<" << typeid(T).name() << "> @ " << std::hex << this << std::dec << "]\n";
@@ -253,11 +273,6 @@ std::string ManagedBinary<T>::toString(const char** y) throw ()
 	if(! this->clearUpOnDelete)
 		sb << "\nWill not clear up on delete.";
 
-	if(y)
-	{
-		this->__dummyString = sb.str();
-		*y = this->__dummyString.c_str();
-	}
 	return sb.str();
 }
 

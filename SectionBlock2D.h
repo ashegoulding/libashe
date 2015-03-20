@@ -1,3 +1,17 @@
+/*
+ * SectionBlock2D.h
+ *
+ * Ashe's SectionBlock2D - for PrismAlgorithm::LabelAlgorithm
+ *
+ * @Maintained
+ *  2014 Q3
+ * @Author
+ *  Ashe David Sterkhus
+ *  Blame to: ashe.goulding+blame@gmail.com
+ * @COLOPHON
+ *  - This file is part of libashe, Ashe's C++11/98 utility stuff
+ *  - This file is part of PrismAlgorithm
+ */
 #ifndef ASHE_SECTIONBLOCK2D_H_
 #define ASHE_SECTIONBLOCK2D_H_
 

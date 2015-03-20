@@ -42,8 +42,8 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1685532633" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.debug">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.so.debug.option.optimization.level.1657111410" name="Optimization Level" superClass="gnu.c.compiler.so.debug.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.so.debug.option.debugging.level.1226365363" name="Debug Level" superClass="gnu.c.compiler.so.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.dialect.std.1111912783" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.c11" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.misc.pic.1791306947" superClass="gnu.c.compiler.option.misc.pic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.dialect.std.1111912783" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.c11" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.misc.pic.1791306947" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.612707748" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.1184483222" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug">
@@ -61,8 +61,18 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.so.debug.369640419.1921707076" name="/" resourcePath="Logger">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.so.debug.1934689184" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.base.710676811" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.969265487"/>
+							<tool command="g++" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.601603232" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.1377074289"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.debug.182189435" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1685532633"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.454346290" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug.1184483222"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.24559842" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.904646880"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.so.debug.249933240" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.debug.871811682"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="WebSocket/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Logger|WebSocket/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -109,8 +119,8 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.release.1626980310" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.release">
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.so.release.option.optimization.level.983154521" name="Optimization Level" superClass="gnu.c.compiler.so.release.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.so.release.option.debugging.level.1318111288" name="Debug Level" superClass="gnu.c.compiler.so.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.dialect.std.1437854562" superClass="gnu.c.compiler.option.dialect.std" value="gnu.c.compiler.dialect.c11" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.misc.pic.1114891882" superClass="gnu.c.compiler.option.misc.pic" value="true" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.dialect.std.1437854562" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.c11" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.misc.pic.1114891882" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1071942103" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.release.1563105560" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.release">
@@ -128,8 +138,18 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.so.release.1706740653.451221610" name="/" resourcePath="Logger">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.so.release.1256835597" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.release" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.base.698241579" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1780315652"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.297905360" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.1009650888"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.release.1823097326" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.release.1626980310"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.release.1169665106" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.release.1563105560"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.release.621214724" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.release.1257366046"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.so.release.1241106537" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.release.1419378065"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="WebSocket/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Logger|WebSocket/examples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

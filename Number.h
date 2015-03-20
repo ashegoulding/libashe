@@ -1,10 +1,16 @@
 /*
  * Number.h
  *
- *  Created on: 2014. 10. 20.
- *      Author: david
+ * Ashe's Number - string conversion library with C++98
+ *
+ * @Maintained
+ *  2014 Q3
+ * @Author
+ *  Ashe David Sterkhus
+ *  Blame to: ashe.goulding+blame@gmail.com
+ * @COLOPHON
+ *  This file is part of libashe, Ashe's C++11/98 utility stuff
  */
-
 #ifndef ASHE_NUMBER_H_
 #define ASHE_NUMBER_H_
 

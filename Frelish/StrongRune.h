@@ -27,7 +27,7 @@ protected:
 	void __construct(const thisClass &src) noexcept;
 
 public:
-	StrongRune(std::string msg) noexcept;
+	StrongRune(std::string msg = "") noexcept;
 	StrongRune(const StrongRune &src) noexcept;
 	virtual ~StrongRune() noexcept;
 
