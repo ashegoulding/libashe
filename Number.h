@@ -33,7 +33,8 @@ protected:
 public:
 	T number;
 
-	static T fromString(std::string &x) throw();
+	static T fromString(const char *x) throw();
+	static T fromString(const std::string &x) throw();
 	static std::string toString(T x) throw();
 	static void swap(T &a, T &b) throw();
 
@@ -124,7 +125,18 @@ T& Number<T>::operator *() throw ()
 }
 
 template<class T>
-T Number<T>::fromString(std::string& x) throw ()
+T Number<T>::fromString(const std::string& x) throw ()
+{
+	std::stringstream sb;
+	T y;
+	memset(&y, 0, sizeof(T));
+	sb << x;
+	sb >> y;
+	return y;
+}
+
+template<class T>
+T Number<T>::fromString(const char *x) throw ()
 {
 	std::stringstream sb;
 	T y;

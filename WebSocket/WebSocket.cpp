@@ -17,9 +17,6 @@
  */
 #include "WebSocket.h"
 
-#include "coreutils/base64.h"
-#include "coreutils/sha1.h"
-
 namespace ashe
 {
 /* WebSocket implementation

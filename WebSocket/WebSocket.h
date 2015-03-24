@@ -35,6 +35,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "__coreutils/base64.h"
+#include "__coreutils/sha1.h"
+
 namespace ashe
 {
 
