@@ -27,6 +27,12 @@
 namespace ashe
 {
 
+/* Semaphore implementation, using C++11 features
+ *
+ * @NOTE
+ *  - 'ArithType' could be any type that has following arithmetic operations: +=, -=, =, <=
+ *  - None of the feature of this class is thread-safe.
+ */
 template<class ArithType>
 class Semaphore : public Icebank
 {
@@ -34,35 +40,14 @@ public:
 	typedef Icebank motherClass;
 	typedef Semaphore<ArithType> thisClass;
 
-	class Rune : public WeakRune
-	{
-	public:
-		typedef WeakRune motherClass;
-		typedef Rune thisClass;
-
-		enum Code
-		{
-			C_NONE,
-			C_ZERO_CONCURRENCY
-		};
-
-		static std::string codeToString__(const Code code) noexcept;
-
-	protected:
-		Code code = C_NONE;
-
-		void __construct(const thisClass &src) noexcept;
-
-	public:
-		Rune(const Code code = C_NONE, const std::string msg = "") noexcept;
-		Rune(const thisClass &src) noexcept;
-		virtual ~Rune() noexcept;
-
-		virtual thisClass &operator =(const thisClass &src) noexcept;
-
-		virtual Code getCode() const noexcept;
-	};
-
+	/* C++11 RAII compliant
+	 *
+	 * @NOTE
+	 *  - Enters the section on construction, leaves it on destruction
+	 *  - One can explicitly, manually leave the section by 'dispose()' method
+	 * @REFER_TO
+	 *  - Usage tradition of std::unique_lock, std::lock_guard
+	 */
 	class Ticket : public Icebank
 	{
 	public:
@@ -70,39 +55,84 @@ public:
 		typedef Ticket thisClass;
 
 	protected:
+		// NULL is valid, that is when the instance has been disposed
 		Semaphore<ArithType> *mother = NULL;
-		ArithType crement;
+		ArithType crement; // Decrementing value on the destruction
 
 	public:
-		Ticket(Semaphore<ArithType> &mother, const ArithType crement = (ArithType)1) throw(Rune);
+		/* @Behaviour
+		 *  - Enters the section with 'mother' and 'crement'
+		 */
+		Ticket(Semaphore<ArithType> &mother, const ArithType crement = (ArithType)1) noexcept;
+		// Unintended code, makes the program killed when invoked, reminds the programmer of his or her fault.
 		Ticket(const thisClass &src) throw(StrongRune);
+		/* @Behaviour
+		 *  - Invokes 'dispose()' methods, making the instance's 'mother' to leave the seciton.
+		 */
 		virtual ~Ticket() noexcept;
 
+		// Unintended code, makes the program killed when invoked, reminds the programmer of his or her fault.
 		virtual thisClass &operator =(const thisClass &src) throw(StrongRune);
+		/* Alias of the constructor
+		 *
+		 * @Behaviour
+		 *  - Disposes the instance itself ('dispose()' method)
+		 *  - Then reconstructs itself with given Semaphore instance.
+		 */
 		virtual thisClass &operator =(Semaphore<ArithType> &src) noexcept;
 
+		/* Leaves the section ('leave()' method of 'mother')
+		 *
+		 * @Behaviour
+		 *  - Invokes 'leave()'
+		 *  - Sets 'mother' member to NULL, hence the instance shall have no linkage with no 'mother'
+		 *  - This method does nothing when it is already disposed.
+		 */
 		virtual thisClass &dispose() noexcept;
 	};
 
 protected:
-	std::mutex __concurrencyMtx, __ticketMtx;
+	std::mutex __concurrencyMtx; // Handles the other member's data race
 	std::condition_variable __cv;
-	ArithType traffic, concurrency;
+	ArithType traffic, // Increasing value
+		concurrency; // Limit value
 
 	void __construct(const thisClass &src) noexcept;
 
 public:
+	/* Constructor
+	 *
+	 * @NOTE
+	 *  - Using this class with default values (concurrency, increment, decrement ...)
+	 *  - works as plane mutex which this class wasn't meant to do.
+	 *  - Don't be a piss-taker. Give concurrency larger than 1
+	 */
 	Semaphore(const ArithType concurrency = (ArithType)1) noexcept;
+	/* Copy-constructor
+	 *
+	 * @NOTE
+	 *  - Copies only attributes.
+	 *  - This constructor does not copy anything other than its attribute
+	 *  - (Holding threads, the state of mutex, 'traffic' member)
+	 */
 	Semaphore(const thisClass &src) noexcept;
+	/* Destructor
+	 *
+	 * @NOTE
+	 *  - Deleting the instance with other threads running with it causes segfault.
+	 *  - Join them before the destruction.
+	 */
 	virtual ~Semaphore() noexcept;
 
+	// Reconstructor. Refer to the copy-constructor
 	virtual thisClass &operator =(const thisClass &src) noexcept;
 
-	virtual thisClass &enter(const ArithType increment = (ArithType)1) throw(Rune);
+	virtual thisClass &enter(const ArithType increment = (ArithType)1) noexcept;
 	virtual thisClass &leave(const ArithType decrement = (ArithType)1) noexcept;
+	// Updates the concurrency run-time, making more blocked thread to be released.
 	virtual thisClass &setConcurrency(const ArithType x) noexcept;
-	virtual ArithType getConcurrency() const noexcept;
-	virtual ArithType getTraffic() const noexcept;
+	virtual ArithType getConcurrency() const noexcept; // Not thread-safe
+	virtual ArithType getTraffic() const noexcept; // Not thread-safe
 };
 
 } /* namespace ashe */
@@ -151,12 +181,9 @@ void Semaphore<ArithType>::__construct(const thisClass& src) noexcept
 }
 
 template<class ArithType>
-Semaphore<ArithType> &Semaphore<ArithType>::enter(const ArithType increment/* = (ArithType)1*/) throw(Rune)
+Semaphore<ArithType> &Semaphore<ArithType>::enter(const ArithType increment/* = (ArithType)1*/) noexcept
 {
 	std::unique_lock<std::mutex> l(this->__concurrencyMtx);
-	if(! this->concurrency)
-		throw Rune(Rune::C_ZERO_CONCURRENCY, "Whilst entering");
-
 	while(this->concurrency <= this->traffic)
 		this->__cv.wait(l);
 	this->traffic += increment;
@@ -202,72 +229,7 @@ namespace ashe
 {
 
 template<class ArithType>
-Semaphore<ArithType>::Rune::Rune(const Code code/* = C_NONE*/, const std::string msg/* = ""*/) noexcept
-{
-	std::stringstream sb;
-	sb << "Semaphore<" << typeid(ArithType).name() << ">::Rune";
-	this->className = sb.str();
-
-	sb.str("");
-	sb.clear();
-	sb << "[" << thisClass::codeToString__(code) << "] " << msg;
-	this->whatString = sb.str();
-}
-
-template<class ArithType>
-Semaphore<ArithType>::Rune::Rune(const thisClass& src) noexcept
-	: motherClass(src)
-{
-	std::stringstream sb;
-	sb << "Semaphore<" << typeid(ArithType).name() << ">::Rune";
-	this->className = sb.str();
-
-	this->__construct(src);
-}
-
-template<class ArithType>
-Semaphore<ArithType>::Rune::~Rune() noexcept
-{
-}
-
-template<class ArithType>
-typename Semaphore<ArithType>::Rune &Semaphore<ArithType>::Rune::operator =(const thisClass& src) noexcept
-{
-	motherClass::__construct(src);
-	this->__construct(src);
-
-	return *this;
-}
-
-template<class ArithType>
-void Semaphore<ArithType>::Rune::__construct(const thisClass& src) noexcept
-{
-	this->code = src.code;
-}
-
-template<class ArithType>
-typename Semaphore<ArithType>::Rune::Code Semaphore<ArithType>::Rune::getCode() const noexcept
-{
-	return this->code;
-}
-
-template<class ArithType>
-std::string Semaphore<ArithType>::Rune::codeToString__(const Code code) noexcept
-{
-	switch(code)
-	{
-	case C_ZERO_CONCURRENCY: return "Instance has 0 concurrency limit";
-	}
-	return "Undefined";
-}
-
-}
-
-namespace ashe
-{
-
-template<class ArithType>
-Semaphore<ArithType>::Ticket::Ticket(Semaphore<ArithType>& mother, const ArithType crement/* = (ArithType)1*/) throw(Rune)
+Semaphore<ArithType>::Ticket::Ticket(Semaphore<ArithType>& mother, const ArithType crement/* = (ArithType)1*/) noexcept
 	: mother(&mother)
 	, crement(crement)
 {
