@@ -4,12 +4,7 @@
 #include "Fjord.h"
 
 #include <string>
-#include <sstream>
 #include <exception>
-
-#include <errno.h>
-#include <cstring>
-#include <cstdio>
 
 namespace ashe
 {
@@ -17,7 +12,7 @@ namespace ashe
 /*
  * WeakRune: Exception that is intended or recoverable
  */
-class WeakRune : public Fjord
+class WeakRune : public Fjord, public std::exception
 {
 public:
 	typedef Fjord motherClass;

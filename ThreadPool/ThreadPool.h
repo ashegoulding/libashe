@@ -37,7 +37,7 @@ namespace ashe
  *  4. Created PoolThreads shall be implicitly joined when the instance's deletion
  *
  * @Note
- *  - This entire class is thread-safe except labourBlocking(which you would unlikely care)
+ *  - This entire class is thread-safe except labour() method
  */
 class ThreadPool : public Fjord
 {
@@ -163,7 +163,6 @@ protected:
 	 * A value is set to __resting's new size every time it changes.
 	 */
 	std::promise<unsigned short> __restingEvent;
-	std::shared_future<unsigned short> __restingEventFuture;
 
 	void __construct(const thisClass &src) noexcept;
 	virtual void __spawnPoolThreads(const unsigned short x) noexcept;

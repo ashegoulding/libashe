@@ -1,5 +1,7 @@
 #include "Fjord.h"
 
+#include <sstream>
+
 /*
  * Fjord implementation
  */

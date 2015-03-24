@@ -4,9 +4,6 @@
 #include <string>
 #include <exception>
 
-#include <errno.h>
-#include <cstring>
-
 namespace ashe
 {
 

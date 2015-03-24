@@ -1,5 +1,8 @@
 #include "DescendantPipe.h"
 
+#include <cstring>
+#include <sstream>
+
 namespace ashe
 {
 

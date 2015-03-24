@@ -1,7 +1,7 @@
 #ifndef ASHE_FJORD_H_
 #define ASHE_FJORD_H_
 
-#include <sstream>
+#include <string>
 
 namespace ashe
 {

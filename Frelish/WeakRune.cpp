@@ -1,5 +1,8 @@
 #include "WeakRune.h"
 
+#include <cstring> // For strerror()
+#include <sstream>
+
 namespace ashe
 {
 

@@ -107,7 +107,6 @@ void ThreadPool::__onTickEnd(PoolThread* th) noexcept
 		this->__resting.push(th);
 		this->__restingEvent.set_value((unsigned short)this->__resting.size());
 		this->__restingEvent = std::promise<unsigned short>();
-		this->__restingEventFuture = this->__restingEvent.get_future().share();
 	}
 }
 
@@ -126,10 +125,10 @@ ThreadPool::thisClass& ThreadPool::labour(WorkUnit* wu) throw(Rune)
 				throw Rune(Rune::C_EMPTY_POOL, "Was trying to block");
 			}
 
-			std::shared_future<unsigned short> restingFuture;
+			std::future<unsigned short> restingFuture;
 			do
 			{
-				restingFuture = this->__restingEventFuture;
+				restingFuture = this->__restingEvent.get_future();
 				this->__methodMtx.unlock();
 				restingFuture.get();
 				this->__methodMtx.lock();

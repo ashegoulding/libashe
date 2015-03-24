@@ -7,6 +7,8 @@
 
 #include "DescendantProcess.h"
 
+#include <sstream>
+
 namespace ashe
 {
 
