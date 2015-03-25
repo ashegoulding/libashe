@@ -101,7 +101,7 @@ void UUID::__parse(const char* x, const size_t len) throw (Rune)
 
 	try
 	{
-		std::string::size_type i = 0;
+		std::string::size_type i = 0, j = 1;
 		size_t p = 0;
 		std::string digit = "00";
 
@@ -132,13 +132,14 @@ void UUID::__parse(const char* x, const size_t len) throw (Rune)
 					throwParseError(i, v, Rune::C_PARSE_ERROR);
 			}
 
-			if(! (i%2))
+			if(! (j%2))
 			{
 				digit[1] = v;
-				this->data[p++] = std::stoi(digit, 0, 16);
+				this->data[p++] = (unsigned char)std::stoul(digit, 0, 16);
 			}
 			else
 				digit[0] = v;
+			++j;
 		}
 	}
 	catch(ParseError &e)
