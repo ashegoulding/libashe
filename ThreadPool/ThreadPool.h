@@ -93,6 +93,8 @@ public:
 		WorkUnit(const thisClass &src) noexcept;
 		virtual ~WorkUnit() noexcept;
 
+		virtual thisClass &operator =(const thisClass &src) noexcept;
+
 		/* A method that arbitrary PoolThread runs.
 		 * Override this method to make the thread to do something.
 		 *

@@ -93,7 +93,7 @@ ManagedBinary<T>::ManagedBinary(const size_t size) throw ()
 	, realSize(0)
 	, clearUpOnDelete(true)
 {
-	this->className = "ManagedBinary<" + std::string(typeid(T).name()) + ">";
+	this->className = "ashe::ManagedBinary<" + std::string(typeid(T).name()) + ">";
 	if(size)
 		this->setSize(size);
 }
@@ -105,7 +105,7 @@ ManagedBinary<T>::ManagedBinary(const T* arr, const size_t size) throw ()
 	, realSize(0)
 	, clearUpOnDelete(true)
 {
-	this->className = "ManagedBinary<" + std::string(typeid(T).name()) + ">";
+	this->className = "ashe::ManagedBinary<" + std::string(typeid(T).name()) + ">";
 	if(arr)
 	{
 		size_t copySize; // In bytes
@@ -126,8 +126,8 @@ ManagedBinary<T>::ManagedBinary(const thisClass& src) throw ()
 	, realSize(0)
 	, clearUpOnDelete(true)
 {
-	this->className = "ManagedBinary<" + std::string(typeid(T).name()) + ">";
 	this->__construct(&src);
+	this->className = "ashe::ManagedBinary<" + std::string(typeid(T).name()) + ">";
 }
 
 template<class T>

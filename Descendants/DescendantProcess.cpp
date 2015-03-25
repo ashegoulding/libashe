@@ -21,7 +21,7 @@ int DescendantProcess::main()
 
 DescendantProcess::DescendantProcess() noexcept
 {
-	this->className = "DescendantProcess";
+	this->className = "ashe::DescendantProcess";
 }
 
 DescendantProcess::DescendantProcess(const thisClass& src) throw (WeakRune)
@@ -34,6 +34,7 @@ DescendantProcess::DescendantProcess(const thisClass& src) throw (WeakRune)
 		WeakRune e("It is not nice to copy a forked process!");
 		throw e;
 	}
+	this->className = "ashe::DescendantProcess";
 }
 
 DescendantProcess::~DescendantProcess() noexcept
@@ -89,7 +90,7 @@ DescendantProcess::thisClass& DescendantProcess::operator =(const thisClass& src
 		WeakRune e("It is not nice to copy a forked process!");
 		throw e;
 	}
-
+	this->className = "ashe::DescendantProcess";
 	return *this;
 }
 

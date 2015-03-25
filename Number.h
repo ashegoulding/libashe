@@ -3,6 +3,9 @@
  *
  * Ashe's Number - string conversion library with C++98
  *
+ * @NOTE
+ *  - For C++11, use std::sto?() (where ? is type character) and std::to_string()
+ *  - Although this class is no-exception guaranteed, whereas C++11 functions could throw invalid_argument exception
  * @Maintained
  *  2014 Q3
  * @Author

@@ -23,7 +23,7 @@ protected:
 public:
 	Fjord() noexcept;
 	Fjord(const Fjord &src) noexcept;
-	virtual ~Fjord();
+	virtual ~Fjord() noexcept;
 
 	virtual std::string toString() const noexcept;
 	virtual std::string getClassName() const noexcept;

@@ -5,15 +5,16 @@ namespace ashe
 
 Icebank::Icebank() noexcept
 {
-	motherClass::className = "Icebank";
+	this->className = "ashe::Icebank";
 }
 
 Icebank::Icebank(const Icebank &src) noexcept
 		: motherClass(src)
 {
 	motherClass::__construct(src);
+	this->className = "ashe::Icebank";
 }
 
-Icebank::~Icebank(){}
+Icebank::~Icebank()noexcept{}
 
 }

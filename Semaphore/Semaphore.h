@@ -145,7 +145,7 @@ Semaphore<ArithType>::Semaphore(const ArithType concurrency/* = (ArithType)1*/) 
 	: concurrency(concurrency)
 {
 	std::stringstream sb;
-	sb << "Semaphore<" << typeid(ArithType).name() << ">";
+	sb << "ashe::Semaphore<" << typeid(ArithType).name() << ">";
 	this->className = sb.str();
 
 	::memset(&this->traffic, 0, sizeof(ArithType));
@@ -157,6 +157,9 @@ Semaphore<ArithType>::Semaphore(const thisClass &src) noexcept
 {
 	this->__construct(src);
 	::memset(&this->traffic, 0, sizeof(ArithType));
+	std::stringstream sb;
+	sb << "ashe::Semaphore<" << typeid(ArithType).name() << ">";
+	this->className = sb.str();
 }
 
 template<class ArithType>
@@ -170,6 +173,10 @@ Semaphore<ArithType> &Semaphore<ArithType>::operator =(const thisClass &src) noe
 	motherClass::__construct(src);
 	this->__construct(src);
 	::memset(&this->traffic, 0, sizeof(ArithType));
+
+	std::stringstream sb;
+	sb << "ashe::Semaphore<" << typeid(ArithType).name() << ">";
+	this->className = sb.str();
 
 	return *this;
 }
@@ -233,6 +240,10 @@ Semaphore<ArithType>::Ticket::Ticket(Semaphore<ArithType>& mother, const ArithTy
 	: mother(&mother)
 	, crement(crement)
 {
+	std::stringstream sb;
+	sb << "ashe::Semaphore<" << typeid(ArithType).name() << ">::Ticket";
+	this->className = sb.str();
+
 	mother.enter(crement);
 }
 
@@ -262,6 +273,10 @@ typename Semaphore<ArithType>::Ticket &Semaphore<ArithType>::Ticket::operator =(
 	this->dispose().mother = &src;
 	this->mother->enter();
 	this->crement = (ArithType)1;
+
+	std::stringstream sb;
+	sb << "ashe::Semaphore<" << typeid(ArithType).name() << ">::Ticket";
+	this->className = sb.str();
 
 	return *this;
 }

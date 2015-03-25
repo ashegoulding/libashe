@@ -23,7 +23,7 @@ namespace ashe
 ThreadPool::ThreadPool(const unsigned short spawn/* = std::thread::hardware_concurrency()*/) noexcept
 		: __initialSize(spawn)
 {
-	this->className = "ThreadPool";
+	this->className = "ashe::ThreadPool";
 	this->__spawnPoolThreads(spawn);
 }
 
@@ -31,7 +31,7 @@ ThreadPool::ThreadPool(const thisClass &src) noexcept
 		: motherClass(src)
 		, __initialSize(0)
 {
-	this->className = "ThreadPool";
+	this->className = "ashe::ThreadPool";
 	this->__construct(src);
 }
 
@@ -44,6 +44,7 @@ ThreadPool::thisClass& ThreadPool::operator =(const thisClass& src) noexcept
 {
 	motherClass::__construct(src);
 	this->__construct(src);
+	this->className = "ashe::ThreadPool";
 	return *this;
 }
 
@@ -208,7 +209,7 @@ namespace ashe
 ThreadPool::Rune::Rune(const Code code, const std::string msg/* = ""*/) noexcept
 		: code(code)
 {
-	this->className = "ThreadPool::Rune";
+	this->className = "ashe::ThreadPool::Rune";
 	std::stringstream sb;
 	sb << '[' << thisClass::codeToString__(code) << ']';
 	if(! msg.empty())
@@ -220,8 +221,8 @@ ThreadPool::Rune::Rune(const thisClass& src) noexcept
 		: motherClass(src)
 		, code(src.code)
 {
-	this->className = "ThreadPool::Rune";
 	this->__construct(src);
+	this->className = "ashe::ThreadPool::Rune";
 }
 
 ThreadPool::Rune::~Rune() noexcept
@@ -232,6 +233,7 @@ ThreadPool::Rune::thisClass& ThreadPool::Rune::operator =(const thisClass& src) 
 {
 	motherClass::__construct(src);
 	this->__construct(src);
+	this->className = "ashe::ThreadPool::Rune";
 	return *this;
 }
 
@@ -263,16 +265,21 @@ namespace ashe
 
 ThreadPool::WorkUnit::WorkUnit() noexcept
 {
-	this->className = "ThreadPool::WorkUnit";
+	this->className = "ashe::ThreadPool::WorkUnit";
 }
 
 ThreadPool::WorkUnit::WorkUnit(const thisClass& src) noexcept
 		: motherClass(src)
 {
-	this->className = "ThreadPool::WorkUnit";
+	this->className = "ashe::ThreadPool::WorkUnit";
 }
 
 ThreadPool::WorkUnit::~WorkUnit() noexcept{}
+
+ThreadPool::WorkUnit::thisClass& ThreadPool::WorkUnit::operator =(const thisClass& src) noexcept
+{
+	return *this;
+}
 
 void ThreadPool::WorkUnit::onTick(){}
 
@@ -344,5 +351,5 @@ ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::die() noexcept
 	}
 	return *this;
 }
-
 } /* ThreadPool::PoolThread */
+

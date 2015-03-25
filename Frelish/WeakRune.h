@@ -31,8 +31,8 @@ public:
 
 	thisClass &operator =(const thisClass &src) noexcept;
 
+	virtual std::string toString() const noexcept;
 	virtual const char *what() const noexcept; //@Override, alias of getMsg
-	virtual std::string getMsg() const noexcept;
 
 	virtual bool hasError() const noexcept;
 	virtual thisClass &setError() noexcept;

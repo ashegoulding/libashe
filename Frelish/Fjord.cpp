@@ -9,7 +9,7 @@ namespace ashe
 {
 
 Fjord::Fjord() noexcept
-	: className("Fjord")
+	: className("ashe::Fjord")
 {
 }
 
@@ -39,3 +39,4 @@ void Fjord::__construct(const thisClass& src) noexcept
 }
 
 } // End of fjord
+

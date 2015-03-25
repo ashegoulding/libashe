@@ -30,6 +30,11 @@ WeakRune::thisClass& WeakRune::operator =(const thisClass& src) noexcept
 	return *this;
 }
 
+std::string WeakRune::toString() const noexcept
+{
+	return this->whatString;
+}
+
 const char* WeakRune::what() const noexcept
 {
 	return this->whatString.c_str();
@@ -39,11 +44,6 @@ void WeakRune::__construct(const thisClass& src) noexcept
 {
 	this->whatString = src.whatString;
 	this->errorNumber = src.errorNumber;
-}
-
-std::string WeakRune::getMsg() const noexcept
-{
-	return this->whatString;
 }
 
 bool WeakRune::hasError() const noexcept
@@ -70,3 +70,4 @@ std::string WeakRune::getErrorString() const noexcept
 }
 
 }
+

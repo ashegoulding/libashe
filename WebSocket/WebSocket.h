@@ -166,12 +166,6 @@ public:
 	virtual WebSocket &setBufferSize(const size_t size) noexcept;
 	virtual WebSocket &setFrameSizeLimit(const size_t size) noexcept;
 	virtual size_t getFrameSizeLimit() const noexcept;
-
-	static std::string trim__(const std::string &x) noexcept;
-	static std::vector<std::string> explodeSpace__(const std::string &x) noexcept;
-	static std::vector<std::string> explode__(const std::string &x, const std::set<std::string> &delimiters) noexcept;
-	static std::string toLower__(const std::string &x) noexcept;
-	static std::string toUpper__(const std::string &x) noexcept;
 };
 
 } /* namespace ashe */

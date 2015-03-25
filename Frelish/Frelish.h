@@ -14,3 +14,18 @@
 #include "WeakRune.h"
 #include "Icebank.h"
 #include "Fjord.h"
+
+#include <vector>
+#include <set>
+
+namespace ashe
+{
+
+extern std::string trim__(const std::string &x) noexcept;
+extern std::vector<std::string> explodeSpace__(const std::string &x) noexcept;
+extern std::vector<std::string> explode__(const std::string &x, const std::set<std::string> &delimiters) noexcept;
+extern std::string toLower__(const std::string &x) noexcept;
+extern std::string toUpper__(const std::string &x) noexcept;
+extern std::string::size_type findStarting__(const std::string &x) noexcept;
+
+}

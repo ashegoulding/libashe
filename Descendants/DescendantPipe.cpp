@@ -8,7 +8,7 @@ namespace ashe
 
 DescendantPipe::DescendantPipe(const bool blocking) throw (WeakRune, StrongRune)
 {
-	this->className = "DescendantPipe";
+	this->className = "ashe::DescendantPipe";
 	if(::pipe(this->pipe) < 0)
 	{
 		WeakRune e("Whilst ::pipe()");
@@ -23,6 +23,7 @@ DescendantPipe::DescendantPipe(const thisClass& src) throw (WeakRune, StrongRune
 {
 	this->pipe[0] = this->pipe[1] = -1;
 	this->__construct(src);
+	this->className = "ashe::DescendantPipe";
 }
 
 DescendantPipe::~DescendantPipe() noexcept
@@ -72,6 +73,7 @@ DescendantPipe::thisClass& DescendantPipe::operator =(const thisClass& src) thro
 {
 	motherClass::__construct(src);
 	this->__construct(src);
+	this->className = "ashe::DescendantPipe";
 	return *this;
 }
 

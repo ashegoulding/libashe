@@ -24,14 +24,14 @@ namespace ashe
  */
 WebSocket::WebSocket() noexcept
 {
-	this->className = "WebSocket";
+	this->className = "ashe::WebSocket";
 }
 
 WebSocket::WebSocket(const WebSocket& src) noexcept
 		: motherClass(src)
 {
-	this->className = "WebSocket";
 	this->__construct(src);
+	this->className = "ashe::WebSocket";
 }
 
 WebSocket::~WebSocket() noexcept
@@ -45,6 +45,7 @@ WebSocket& WebSocket::operator =(const WebSocket& src) noexcept
 {
 	motherClass::__construct(src);
 	this->__construct(src);
+	this->className = "ashe::WebSocket";
 	return *this;
 }
 
@@ -293,19 +294,19 @@ WebSocket& WebSocket::handshake() throw (std::string, int, ssize_t)
 		line = (lineIt++)->str();
 		if(line.length() > this->headerLineLimit)
 			throw std::string("Header line limit reached.");
-		line = thisClass::trim__(line);
+		line = trim__(line);
 
 		if(statusLine)
 		{
 			std::regex_search(line, result, headerNameExp);
 			if(! result.size())
 				continue;
-			headerName = thisClass::toLower__(thisClass::trim__(result[1].str()));
+			headerName = toLower__(trim__(result[1].str()));
 
 			std::regex_search(line, result, headerValueExp);
 			if(! result.size())
 				continue;
-			headerValue = thisClass::trim__(result[1].str());
+			headerValue = trim__(result[1].str());
 
 			duplicatable = true;
 			if(! headerValue.compare("host"))
@@ -322,10 +323,10 @@ WebSocket& WebSocket::handshake() throw (std::string, int, ssize_t)
 		}
 		else
 		{
-			std::vector<std::string> exploded(thisClass::explodeSpace__(line));
+			std::vector<std::string> exploded(explodeSpace__(line));
 			if(exploded.size() != 3)
 				throw std::string("Invalid status: " + lineIt->str());
-			else if(thisClass::toUpper__(exploded[0]).compare("GET"))
+			else if(toUpper__(exploded[0]).compare("GET"))
 				throw std::string("Invalid method: " + exploded[0]);
 
 			this->requestedUrl = exploded[1];
@@ -338,9 +339,9 @@ WebSocket& WebSocket::handshake() throw (std::string, int, ssize_t)
 				delim.insert(std::string("?"));
 				delim.insert(std::string("&"));
 				delimEnt.insert(std::string("="));
-				for(const auto &v : thisClass::explode__(it->str(), delim))
+				for(const auto &v : explode__(it->str(), delim))
 				{
-					ent = thisClass::explode__(v, delimEnt);
+					ent = explode__(v, delimEnt);
 					name.clear();
 					val.clear();
 					if(ent.size() > 1)
@@ -472,18 +473,6 @@ bool WebSocket::isNonBlock() const throw (int)
 	return (flags & O_NONBLOCK) != 0;
 }
 
-std::string WebSocket::toLower__(const std::string& x) noexcept
-{
-	std::string y = x;
-	for(auto &v : y)
-	{
-		if('A' <= v && v <= 'Z')
-			v += 32;
-	}
-
-	return y;
-}
-
 WebSocket& WebSocket::setFrameSizeLimit(const size_t size) noexcept
 {
 	this->frameSizeLimit = size;
@@ -498,18 +487,6 @@ size_t WebSocket::getFrameSizeLimit() const noexcept
 std::map<std::string, std::string> WebSocket::getHeader() throw (std::string)
 {
 	return this->header;
-}
-
-std::string WebSocket::toUpper__(const std::string& x) noexcept
-{
-	std::string y = x;
-	for(auto &v : y)
-	{
-		if('a' <= v && v <= 'z')
-			v -= 32;
-	}
-
-	return y;
 }
 
 WebSocket& WebSocket::setReuseAddress(const bool reuse) throw(int)
@@ -557,103 +534,6 @@ std::string WebSocket::getRequestedUrl() noexcept
 	return this->requestedUrl;
 }
 
-std::string WebSocket::trim__(const std::string& x) noexcept
-{
-	std::string y = x;
-
-	while(y.begin() != y.end())
-	{
-		if(std::isspace(*y.begin()))
-			y.erase(y.begin());
-		else
-			break;
-	}
-	while(y.begin() != y.end() && y.end() - 1 != y.end())
-	{
-		if(std::isspace(*(y.end()-1)))
-			y.erase(y.end()-1);
-		else
-			break;
-	}
-
-	return y;
-}
-
-std::vector<std::string> WebSocket::explodeSpace__(const std::string& x) noexcept
-{
-	std::string arg = x;
-	std::vector<std::string> y;
-	std::string::size_type i, cnt;
-	while(true)
-	{
-		arg = thisClass::trim__(arg);
-		cnt = arg.length();
-		for(i=0; i<cnt; ++i)
-		{
-			if(std::isspace(arg[i]))
-			{
-				y.push_back(arg.substr(0, i));
-				arg.erase(arg.begin(), arg.begin()+i);
-				break;
-			}
-		}
-		if(i >= cnt)
-		{
-			if(! arg.empty())
-				y.push_back(arg);
-			break;
-		}
-	}
-	return y;
-}
-
-std::vector<std::string> WebSocket::explode__(const std::string& x, const std::set<std::string>& delimiters) noexcept
-{
-	std::string arg = x;
-	std::vector<std::string> y;
-	std::string::size_type i, cnt;
-
-	auto trimDelimiters = [&arg, &delimiters]()
-	{
-		while(arg.begin() != arg.end())
-		{
-			if(delimiters.find(std::string(1, *arg.begin())) != delimiters.end())
-				arg.erase(arg.begin());
-			else
-				break;
-		}
-		while(arg.begin() != arg.end() && arg.end() - 1 != arg.end())
-		{
-			if(delimiters.find(std::string(1, *(arg.end() - 1))) != delimiters.end())
-				arg.erase(arg.end()-1);
-			else
-				break;
-		}
-	};
-
-	while(true)
-	{
-		trimDelimiters();
-		cnt = arg.length();
-		for(i=0; i<cnt; ++i)
-		{
-			if(delimiters.find(std::string(1, arg[i])) != delimiters.end())
-			{
-				y.push_back(arg.substr(0, i));
-				arg.erase(arg.begin(), arg.begin()+i);
-				break;
-			}
-		}
-		if(i >= cnt)
-		{
-			if(! arg.empty())
-				y.push_back(arg);
-			break;
-		}
-	}
-	return y;
-}
-
 }
 
 namespace ashe
@@ -663,13 +543,13 @@ namespace ashe
  */
 WebSocket::Frame::Frame() noexcept
 {
-	this->className = "WebSocket::Frame";
+	this->className = "ashe::WebSocket::Frame";
 }
 
 WebSocket::Frame::Frame(std::vector<unsigned char>& v, const size_t frameSizeLimit) throw (ssize_t, std::string)
 {
 	ssize_t req = 0, pos = 0;
-	this->className = "WebSocket::Frame";
+	this->className = "ashe::WebSocket::Frame";
 	if(v.size() < 2)
 	{
 		req = 2 - v.size();
@@ -750,8 +630,8 @@ WebSocket::Frame::Frame(std::vector<unsigned char>& v, const size_t frameSizeLim
 WebSocket::Frame::Frame(const thisClass& src) noexcept
 		: motherClass(src)
 {
-	this->className = "WebSocket::Frame";
 	this->__construct(src);
+	this->className = "ashe::WebSocket::Frame";
 }
 
 WebSocket::Frame::~Frame() noexcept
@@ -762,6 +642,7 @@ WebSocket::Frame& WebSocket::Frame::operator =(const thisClass& src) noexcept
 {
 	motherClass::__construct(src);
 	this->__construct(src);
+	this->className = "ashe::WebSocket::Frame";
 	return *this;
 }
 
