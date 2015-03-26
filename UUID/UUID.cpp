@@ -22,6 +22,7 @@ const UUID UUID_NS_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 // For version (1 to 5, version digit) + (89ab magic digit)
 const std::regex UUID_REGEX("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}");
 
+static std::mutex __mtx__;
 static UUID::MersenneTwisterEngine __defaultEngine__;
 
 UUID::UUID() noexcept
@@ -347,7 +348,6 @@ UUID UUID::merge(const std::string& x) const throw(Rune)
 
 UUID UUID::generate__() noexcept
 {
-	static std::mutex __mtx__;
 	std::lock_guard<std::mutex> lg(__mtx__);
 	return __defaultEngine__.generate();
 }
@@ -493,8 +493,9 @@ UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::operator =(
 
 UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::randomise() noexcept
 {
-	auto seed = (unsigned long long)std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	this->__engine.seed(seed);
+	std::lock_guard<std::mutex> lg(__mtx__);
+	std::seed_seq sq = {__defaultEngine__.random(), (unsigned long long)std::chrono::high_resolution_clock::now().time_since_epoch().count()};
+	this->__engine.seed(sq);
 	return *this;
 }
 
