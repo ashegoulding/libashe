@@ -27,29 +27,29 @@
 namespace ashe
 {
 
-/* Semaphore implementation, using C++11 features
- *
- * @NOTE
- *  - 'ArithType' could be any type that has following arithmetic operations: +=, -=, =, <=
- *  - None of the feature of this class is thread-safe.
- */
 template<class ArithType>
 class Semaphore : public Icebank
 {
+/* Semaphore implementation, using C++11 features
+*
+* @NOTE
+*  - 'ArithType' could be any type that has following arithmetic operations: +=, -=, =, <=
+*  - None of the feature of this class is thread-safe.
+*/
 public:
 	typedef Icebank motherClass;
 	typedef Semaphore<ArithType> thisClass;
 
-	/* C++11 RAII compliant
-	 *
-	 * @NOTE
-	 *  - Enters the section on construction, leaves it on destruction
-	 *  - One can explicitly, manually leave the section by 'dispose()' method
-	 * @REFER_TO
-	 *  - Usage tradition of std::unique_lock, std::lock_guard
-	 */
 	class Ticket : public Icebank
 	{
+	/* C++11 RAII compliant
+	*
+	* @NOTE
+	*  - Enters the section on construction, leaves it on destruction
+	*  - One can explicitly, manually leave the section by 'dispose()' method
+	* @REFER_TO
+	*  - Usage tradition of std::unique_lock, std::lock_guard
+	*/
 	public:
 		typedef Icebank motherClass;
 		typedef Ticket thisClass;

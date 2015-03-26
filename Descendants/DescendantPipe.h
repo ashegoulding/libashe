@@ -11,10 +11,10 @@
 namespace ashe
 {
 
-/* DescendantMessageQueue: Wrapper class of posix pipe
- */
 class DescendantPipe : public Icebank
 {
+/* DescendantMessageQueue: Wrapper class of posix pipe
+ */
 public:
 	typedef Icebank motherClass;
 	typedef DescendantPipe thisClass;

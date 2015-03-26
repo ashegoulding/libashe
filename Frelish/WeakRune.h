@@ -9,11 +9,10 @@
 namespace ashe
 {
 
-/*
- * WeakRune: Exception that is intended or recoverable
- */
 class WeakRune : public Fjord, public std::exception
 {
+/* WeakRune: Exception that is likely expected and recoverable
+*/
 public:
 	typedef Fjord motherClass;
 	typedef WeakRune thisClass;

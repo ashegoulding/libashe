@@ -6,11 +6,11 @@
 namespace ashe
 {
 
-/* Class that is in concrete and stable development state.
- * Derive from this class if a class is no longer buggy.
- */
 class Fjord
 {
+/* Class that is in concrete and stable development state.
+* Derive from this class if a class is no longer buggy.
+*/
 public:
 	typedef Fjord thisClass;
 

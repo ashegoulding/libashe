@@ -7,13 +7,14 @@
 namespace ashe
 {
 
-/*
- * StrongRune: Exception that no one, nothing should catch.
- * For Unrecoverable exception throwing.
- * Derives only 'std::exception' unlike WeakRune, so it cannot be copied in catch() block.
- */
 class StrongRune : public std::exception
 {
+/*
+* StrongRune: Exception that no one, nothing should catch.
+* For Unrecoverable exception throwing.
+*
+* Alternative of assert()
+*/
 public:
 	typedef std::exception motherClass;
 	typedef StrongRune thisClass;

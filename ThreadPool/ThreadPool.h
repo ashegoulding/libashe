@@ -1,17 +1,17 @@
 /*
- * ThreadPool.h
- *
- * Ashe's thread pool with C++11
- * On UNIX, link with lpthread
- *
- * @Maintained
- *  2015 Q1
- * @Author
- *  Ashe David Sterkhus
- *  Blame to: ashe.goulding+blame@gmail.com
- * @COLOPHON
- *  This file is part of libashe, Ashe's C++11/98 utility stuff
- */
+* ThreadPool.h
+*
+* Ashe's thread pool with C++11
+* On UNIX, link with lpthread
+*
+* @Maintained
+*  2015 Q1
+* @Author
+*  Ashe David Sterkhus
+*  Blame to: ashe.goulding+blame@gmail.com
+* @COLOPHON
+*  This file is part of libashe, Ashe's C++11/98 utility stuff
+*/
 #ifndef THREADPOOL_H_
 #define THREADPOOL_H_
 
@@ -28,25 +28,23 @@
 namespace ashe
 {
 
-/* Implement WorkUnit first for PoolThread to run.
- *
- * @Usage flow:
- *  1. ThreadPool instantiation
- *  2. (Optional) set non-block labour
- *  3. Put the PoolThreads to work with labour() method
- *  4. Created PoolThreads shall be implicitly joined when the instance's deletion
- *
- * @Note
- *  - This entire class is thread-safe except labour() method
- */
 class ThreadPool : public Fjord
 {
+/* Implement WorkUnit first for PoolThread to run.
+*
+* @Usage flow:
+*  1. ThreadPool instantiation
+*  2. (Optional) set non-block labour
+*  3. Put the PoolThreads to work with labour() method
+*  4. Created PoolThreads shall be implicitly joined when the instance's deletion
+*
+* @Note
+*  - This entire class is thread-safe except labour() method
+*/
 public:
 	typedef Fjord motherClass;
 	typedef ThreadPool thisClass;
 
-	/* ThreadPool's exception
-	 */
 	class Rune : public WeakRune
 	{
 	public:
@@ -79,10 +77,9 @@ public:
 		virtual Code getCode() const noexcept;
 	};
 
-	/* WorkUnit that PoolThread runs when it's given by labour() method
-	 */
 	class WorkUnit : public Fjord
 	{
+	// WorkUnit that PoolThread runs when it's given by labour() method
 	public:
 		typedef Fjord motherClass;
 		typedef WorkUnit thisClass;
@@ -107,17 +104,17 @@ public:
 	};
 
 protected:
-	/* Thread class that would be nurtured by superior class.
-	 * I don't think you will ever get to derive this class.
-	 *
-	 * @Behaviour
-	 *  - construction: Unleashes a freshly born std::thread to __run() method.
-	 *  - destruction: Invokes die() method -- Calls the thread in and then joins it if it is running.
-	 * @Note
-	 *  - You're not gonna copy a thread, would you? nor this class
-	 */
 	class PoolThread : protected std::thread
 	{
+	/* Thread class that would be nurtured by superior class.
+	* I don't think you will ever get to derive this class.
+	*
+	* @Behaviour
+	*  - construction: Unleashes a freshly born std::thread to __run() method.
+	*  - destruction: Invokes die() method -- Calls the thread in and then joins it if it is running.
+	* @Note
+	*  - You're not gonna copy a thread, would you? nor this class
+	*/
 	public:
 		typedef std::thread motherClass;
 		typedef PoolThread thisClass;

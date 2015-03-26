@@ -6,11 +6,11 @@
 namespace ashe
 {
 
-/* Class that is under developing.
- * Derive from this class if a class is being made or buggy.
- */
 class Icebank : public Fjord
 {
+/* Class that is under developing.
+* Derive from this class if a class is being made or buggy.
+*/
 public:
 	typedef Fjord motherClass;
 	typedef Icebank thisClass;

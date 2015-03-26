@@ -21,7 +21,7 @@ void run()
 	typedef std::set<ashe::UUID> SetType;
 	const SetType::size_type POOL_SIZE = 1024*1024;
 	SetType idSet;
-	ashe::UUID::RandomEngine theEngine;
+	ashe::UUID::MersenneTwisterEngine theEngine;
 	ashe::UUID id(1);
 
 	theEngine.setPoolSize(256);
@@ -48,9 +48,14 @@ void run()
 
 int main()
 {
-	ashe::UUID id(1);
-	ashe::UUID::RandomEngine theEngine;
+	ashe::UUID id = ashe::UUID_NS_DNS;
+	ashe::UUID::MersenneTwisterEngine theEngine;
 	std::vector<std::thread> threadVector(std::thread::hardware_concurrency());
+
+	std::cerr << ashe::UUID_NS_DNS.toString() << std::endl;
+	std::cerr << ashe::UUID_NS_ISO_OID.toString() << std::endl;
+	std::cerr << ashe::UUID_NS_URL.toString() << std::endl;
+	std::cerr << ashe::UUID_NS_X500.toString() << std::endl;
 
 	for(auto &v : threadVector)
 		v = std::thread(run);

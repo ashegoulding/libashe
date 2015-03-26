@@ -19,12 +19,12 @@
 namespace ashe
 {
 
-/* DescendantProcess: Wrapper class for fork()
- * NOTE: Do not use with multiple threads.
- ** POSIX doesn't support that and it will cause deadlock.
- */
 class DescendantProcess : public Icebank
 {
+/* DescendantProcess: Wrapper class for fork()
+* NOTE: Do not use with multiple threads.
+** POSIX doesn't support that and it will cause deadlock.
+*/
 public:
 	typedef Icebank motherClass;
 	typedef DescendantProcess thisClass;

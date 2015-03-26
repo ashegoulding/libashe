@@ -7,7 +7,6 @@
 #include <array>
 #include <sstream>
 #include <algorithm>
-#include <assert.h>
 #include <mutex>
 #include <iomanip>
 
@@ -23,7 +22,7 @@ const UUID UUID_NS_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 // For version (1 to 5, version digit) + (89ab magic digit)
 const std::regex UUID_REGEX("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}");
 
-static UUID::RandomEngine __defaultEngine__;
+static UUID::MersenneTwisterEngine __defaultEngine__;
 
 UUID::UUID() noexcept
 {
@@ -32,7 +31,9 @@ UUID::UUID() noexcept
 
 UUID::UUID(const unsigned long long seed) noexcept
 {
-	std::vector<unsigned long long> buffer(seed, (unsigned long long)std::chrono::system_clock::now().time_since_epoch().count());
+	std::array<unsigned long long, 2> buffer;
+	buffer[0] = seed;
+	buffer[1] = (unsigned long long)std::chrono::high_resolution_clock::now().time_since_epoch().count();
 	std::array<unsigned char, SHA1_DIGEST_SIZE> hashed;
 	::sha1_buffer((const char*)buffer.data(), buffer.size()*sizeof(unsigned long long), hashed.data());
 	::memcpy(this->data, hashed.data(), thisClass::UUID_BYTE_SIZE);
@@ -418,22 +419,16 @@ std::string UUID::versionToString__(const Version v) noexcept
 namespace ashe
 {
 
-UUID::RandomEngine::RandomEngine() noexcept
-{
-	this->className = "UUID::RandomEngine";
-	this->randomise().random();
-}
-
-UUID::RandomEngine::RandomEngine(const thisClass& src) throw(StrongRune)
-{
-	throw StrongRune("RandomEngine is not for copying");
-}
-
 UUID::RandomEngine::~RandomEngine()noexcept{}
 
-UUID::RandomEngine::thisClass& UUID::RandomEngine::operator =(const thisClass& src) throw(StrongRune)
+void UUID::RandomEngine::__construct(const thisClass &src) noexcept
 {
-	throw StrongRune("RandomEngine is not for copying");
+	this->poolSize = src.poolSize;
+}
+
+UUID::RandomEngine::thisClass& UUID::RandomEngine::operator =(const thisClass& src) noexcept
+{
+	this->__construct(src);
 	return *this;
 }
 
@@ -453,12 +448,6 @@ size_t UUID::RandomEngine::getPoolSize() const noexcept
 	return this->poolSize;
 }
 
-UUID::RandomEngine::thisClass& UUID::RandomEngine::randomise() noexcept
-{
-	this->__theEngine.seed(std::chrono::system_clock::now().time_since_epoch().count());
-	return *this;
-}
-
 UUID UUID::RandomEngine::generate() noexcept
 {
 	UUID y;
@@ -466,16 +455,52 @@ UUID UUID::RandomEngine::generate() noexcept
 	std::array<unsigned char, SHA1_DIGEST_SIZE> hashed;
 
 	for(auto &v : content)
-		v = this->__theEngine();
+		v = this->random();
 	::sha1_buffer((char*)content.data(), content.size(), hashed.data());
 	y.__build(hashed.data(), hashed.size(), UUID::VER_RANDOM);
 
 	return y;
 }
 
-unsigned long long UUID::RandomEngine::random() noexcept
+}
+
+namespace ashe
 {
-	return this->__theEngine();
+
+UUID::MersenneTwisterEngine::MersenneTwisterEngine() noexcept
+{
+	this->className = "ashe::UUID::MersenneTwisterEngine";
+	this->randomise();
+}
+
+UUID::MersenneTwisterEngine::MersenneTwisterEngine(const thisClass& src) noexcept
+{
+	this->className = "ashe::UUID::MersenneTwisterEngine";
+	motherClass::__construct(src);
+	this->randomise();
+}
+
+UUID::MersenneTwisterEngine::~MersenneTwisterEngine() noexcept
+{
+}
+
+UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::operator =(const thisClass& src) noexcept
+{
+	motherClass::__construct(src);
+	this->randomise();
+	return *this;
+}
+
+UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::randomise() noexcept
+{
+	auto seed = (unsigned long long)std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	this->__engine.seed(seed);
+	return *this;
+}
+
+unsigned long long UUID::MersenneTwisterEngine::random() noexcept
+{
+	return this->__engine();
 }
 
 }

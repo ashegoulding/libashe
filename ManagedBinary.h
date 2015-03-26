@@ -23,13 +23,14 @@
 
 namespace ashe
 {
-/* ManagedBinary, dynamic memory range manager
- * This implementation is for C++98 use.
- * For C++11, use std::vector<T>::data()
- */
+
 template <class T>
 class ManagedBinary : public Fjord
 {
+/* ManagedBinary, dynamic memory range manager
+* This implementation is for C++98 use.
+* For C++11, use std::vector<T>::data()
+*/
 public:
 	typedef ManagedBinary<T> thisClass;
 

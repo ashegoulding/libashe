@@ -21,11 +21,23 @@
 namespace ashe
 {
 
+// Returns a white spaces trimmed string in both start and end of the given string
 extern std::string trim__(const std::string &x) noexcept;
+// Returns a vector contains strings exploded by white space delimiters
 extern std::vector<std::string> explodeSpace__(const std::string &x) noexcept;
+// Returns a vector contains strings exploded by the given delimiter set
 extern std::vector<std::string> explode__(const std::string &x, const std::set<std::string> &delimiters) noexcept;
+// Returns a string converted into upper case letters
 extern std::string toLower__(const std::string &x) noexcept;
+// Returns a string converted into lower case letters
 extern std::string toUpper__(const std::string &x) noexcept;
+/* Returns "first_not_of" white space's position.
+ * The return value will be always zero or positive.
+ *
+ * @RETURN
+ *  0: The string starts with a non-white space character right away OR the string is empty
+ *  (above 0): The start of the string after white space character(s)
+ */
 extern std::string::size_type findStarting__(const std::string &x) noexcept;
 
 }
