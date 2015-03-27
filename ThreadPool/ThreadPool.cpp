@@ -37,7 +37,7 @@ ThreadPool::ThreadPool(const thisClass &src) noexcept
 
 ThreadPool::~ThreadPool() noexcept
 {
-	this->__recall();
+	this->recall();
 }
 
 ThreadPool::thisClass& ThreadPool::operator =(const thisClass& src) noexcept
@@ -50,13 +50,13 @@ ThreadPool::thisClass& ThreadPool::operator =(const thisClass& src) noexcept
 
 void ThreadPool::__construct(const thisClass& src) noexcept
 {
-	this->__recall();
+	this->recall();
 	this->__initialSize = src.__initialSize;
 	this->labourBlocking = src.labourBlocking;
 	this->__spawnPoolThreads(src.__initialSize);
 }
 
-void ThreadPool::__recall() noexcept
+void ThreadPool::recall() noexcept
 {
 	PoolThread *th;
 

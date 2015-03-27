@@ -64,6 +64,7 @@ UUID::UUID(const thisClass& src) noexcept
 	: motherClass(src)
 {
 	this->__construct(src);
+	this->className = "ashe::UUID";
 }
 
 UUID::~UUID()noexcept{}

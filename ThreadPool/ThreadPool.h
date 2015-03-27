@@ -165,8 +165,6 @@ protected:
 
 	void __construct(const thisClass &src) noexcept;
 	virtual void __spawnPoolThreads(const unsigned short x) noexcept;
-	//Calls in all the PoolThreads that the instance is conceiving
-	virtual void __recall() noexcept;
 
 	// PoolThreads reports to this method when their work is done.
 	virtual void __onTickEnd(PoolThread *th) noexcept;
@@ -240,6 +238,13 @@ public:
 	 *  - C_ALL_THREAD_BUSY: All the PoolThread are working and deployed and calling thread should not be blocked
 	 */
 	virtual thisClass &labour(WorkUnit *wu) throw(Rune);
+	/* Calls in all the PoolThreads that the instance is conceiving.
+	* The destructor and copy-constructor invokes this method.
+	*
+	* @NOTE
+	*  - Call this method before fork()
+	*/
+	virtual void recall() noexcept;
 };
 
 } /* namespace ashe */

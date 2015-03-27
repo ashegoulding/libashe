@@ -1,20 +1,20 @@
 /*
- * WebSocket.h
- *
- * C++11, POSIX WebSocket implementation by Ashe
- *
- * @Refer
- *  - https://tools.ietf.org/html/rfc6455
- *  - https://developer.mozilla.org/en-US/docs/WebSockets/Writing_WebSocket_servers
- *  - http://www.websocket.org/echo.html
- * @Maintained
- *  Under development since: 2015 Q1
- * @Author
- *  Ashe David Sterkhus
- *  Blame to: ashe.goulding+blame@gmail.com
- * @COLOPHON
- *  This file is part of libashe, Ashe's C++11/98 utility stuff
- */
+* WebSocket.h
+*
+* C++11, POSIX WebSocket implementation by Ashe
+*
+* @Refer
+*  - https://tools.ietf.org/html/rfc6455
+*  - https://developer.mozilla.org/en-US/docs/WebSockets/Writing_WebSocket_servers
+*  - http://www.websocket.org/echo.html
+* @Maintained
+*  Under development since: 2015 Q1
+* @Author
+*  Ashe David Sterkhus
+*  Blame to: ashe.goulding+blame@gmail.com
+* @COLOPHON
+*  This file is part of libashe, Ashe's C++11/98 utility stuff
+*/
 #ifndef ASHE_WEBSOCKET_H_
 #define ASHE_WEBSOCKET_H_
 
@@ -46,7 +46,7 @@ class WebSocket : public Icebank
 public:
 	typedef Icebank motherClass;
 	typedef WebSocket thisClass;
-	const static int implementedVersion = 13;
+	const static int implementedVersion__ = 13;
 
 	class Frame : public Icebank
 	{
