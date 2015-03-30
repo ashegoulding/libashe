@@ -65,7 +65,14 @@ int WeakRune::getErrorNumber() const noexcept
 std::string WeakRune::getErrorString() const noexcept
 {
 	std::stringstream sb;
-	sb << '(' << this->errorNumber << ')' << ::strerror(this->errorNumber);
+	const auto str = ::strerror(this->errorNumber);
+
+	sb << '(' << this->errorNumber << ')';
+	if(str)
+		sb << ' ' << str;
+	else
+		sb << " Unknown";
+
 	return sb.str();
 }
 

@@ -41,6 +41,21 @@ public:
 	typedef Icebank motherClass;
 	typedef UUID thisClass;
 
+	// One can make one's own namespace in any version, not invading none of existing namespaces as follows:
+	static const UUID NS_DNS/* = "6ba7b810-9dad-11d1-80b4-00c04fd430c8"*/;
+	static const UUID NS_URL/* = "6ba7b811-9dad-11d1-80b4-00c04fd430c8"*/;
+	static const UUID NS_ISO_OID/* = "6ba7b812-9dad-11d1-80b4-00c04fd430c8"*/;
+	static const UUID NS_X500/* = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"*/;
+
+	/* A regular expression for searching an UUID string within a text or a string
+	* It is case sensitive. To search case insensitive, make your own std::regex instance based on this instance.
+	*
+	* @NOTE
+	*  - It also validates version and magic digit. Any UUID string that looks like it but invalid because of the digits,
+	*  - does not meets this expression.
+	*/
+	static const std::regex REGEX/*("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}")*/;
+
 	static const size_t UUID_BYTE_SIZE = 16; // = 128bits
 	static const size_t UUID_STRING_LENGTH = 36; // Including dashes
 
@@ -295,21 +310,6 @@ public:
 	virtual UUID merge(const thisClass &x) const noexcept;
 	virtual UUID merge(const std::string &x) const throw(Rune);
 };
-
-// One can make one's own namespace in any version, not invading none of existing namespaces as follows:
-extern const UUID UUID_NS_DNS/* = "6ba7b810-9dad-11d1-80b4-00c04fd430c8"*/;
-extern const UUID UUID_NS_URL/* = "6ba7b811-9dad-11d1-80b4-00c04fd430c8"*/;
-extern const UUID UUID_NS_ISO_OID/* = "6ba7b812-9dad-11d1-80b4-00c04fd430c8"*/;
-extern const UUID UUID_NS_X500/* = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"*/;
-
-/* A regular expression for searching an UUID string within a text or a string
-* It is case sensitive. To search case insensitive, make your own std::regex instance based on this instance.
-*
-* @NOTE
-*  - It also validates version and magic digit. Any UUID string that looks like it but invalid because of the digits,
-*  - does not meets this expression.
-*/
-extern const std::regex UUID_REGEX/*("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}")*/;
 
 } /* namespace ashe */
 

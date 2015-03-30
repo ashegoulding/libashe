@@ -22,7 +22,7 @@ void libuuidRun()
 
 void asheUUIDRun()
 {
-	ashe::UUID::RandomEngine theEngine;
+	ashe::UUID::MersenneTwisterEngine theEngine;
 	ashe::UUID id = theEngine();
 	while(true)
 	{

@@ -4,13 +4,11 @@
  *  Created on: 2014. 6. 12.
  *      Author: virtue
  */
-
 #ifndef ASHE_DESCENDANTPROCESS_H_
 #define ASHE_DESCENDANTPROCESS_H_
 
 #include "Frelish.h"
 
-// Posix library
 #include <unistd.h>
 #include <wait.h>
 
@@ -30,11 +28,31 @@ public:
 	typedef DescendantProcess thisClass;
 
 	// Return type of wait(), which is join__() in this class.
-	struct JoinedProcess
+	class JoinedProcess : public Icebank
 	{
-		thisClass *instance; // Can be NULL, if an instance that handles its process has been deleted
-		pid_t pid;
-		int status;
+	public:
+		typedef Icebank motherClass;
+		typedef JoinedProcess thisClass;
+
+		DescendantProcess *instance = NULL; // Can be NULL, if an instance that handles its process has been deleted
+		pid_t pid = -1;
+		int rawCode = 0;
+
+		void __construct(const thisClass &src) noexcept;
+
+	public:
+		JoinedProcess(const int rawCode, const pid_t pid = -1, void *instance = NULL) noexcept;
+		JoinedProcess(const thisClass &src) noexcept;
+		virtual ~JoinedProcess() noexcept;
+
+		virtual thisClass &operator =(const thisClass &src) noexcept;
+
+		virtual bool exitedNormally() const noexcept;
+		virtual int exitCode() const noexcept;
+		virtual bool signaled() const noexcept;
+		virtual int signalNumber() const noexcept;
+		virtual std::string signalString() const noexcept;
+		virtual bool coreDumped() const throw(WeakRune);
 	};
 
 	/* Waits any child process by wait()
@@ -57,7 +75,7 @@ protected:
 	pid_t pid = -1;
 	bool detached = false;
 	// If set, the thread will not wait for child process to exit on delete.
-	bool daemonic = true;
+	bool __daemonic = true;
 
 	/* main function of the forked process.
 	 * Override this function to implement a process.
@@ -65,7 +83,9 @@ protected:
 	 * Return: Exit code of the process (like usual main() return)
 	 */
 	virtual int main();
+
 	void __construct(const thisClass &src) noexcept;
+	virtual void __checkValidity() const throw(WeakRune);
 
 public:
 	DescendantProcess() noexcept;
@@ -84,7 +104,7 @@ public:
 	 *
 	 * Throws WeakRune: When 'src' is running or not detached
 	 */
-	virtual thisClass &operator =(const thisClass &src) throw(WeakRune);
+	virtual thisClass &operator =(const thisClass &src) throw(WeakRune, StrongRune);
 	/* Detaches the instance for another instance to use.
 	 * This method can be invoked even if the process has started.
 	 */
@@ -97,7 +117,7 @@ public:
 	 ** When the process is already running
 	 ** OS-defined error whilst fork(): Permission or system limit
 	 */
-	virtual thisClass &start() throw(WeakRune);
+	virtual thisClass &start() throw(WeakRune, StrongRune);
 	/* Joins with the started process.
 	 * After this method, pid will be set to -1 which means the instance will return to original state.
 	 *
@@ -109,7 +129,7 @@ public:
 	 ** A process was not running
 	 ** Rare case, OS-defined error whilst waitpid()
 	 */
-	virtual int join(const bool wait = true) throw(WeakRune);
+	virtual JoinedProcess join(const bool wait = true) throw(WeakRune, StrongRune);
 	/* Sends a signal to the running process.
 	 * By default, sends 'SIGKILL' signal
 	 *
@@ -126,12 +146,13 @@ public:
 	 *
 	 * Return: PID that the instance is handling
 	 */
-	virtual pid_t getPID() const noexcept;
+	virtual pid_t getPID() const throw(WeakRune);
+	virtual bool child() const throw(WeakRune);
 	/* Tests daemonic state of the instance.
 	 *
 	 * Return: 'true' when the instance, and its process is daemonic
 	 */
-	virtual bool isDaemonic() const noexcept;
+	virtual bool daemonic() const noexcept;
 	/* Sets the instance daemonic. Invoke this method after a process starts, before join() method.
 	 * If the instance is daemonic, the thread will not wait for the process on delete.
 	 * After instance deletion, the only way to join with that process is using join__() method.
@@ -140,7 +161,7 @@ public:
 	 *
 	 * Throws WeakRune: When the instance is not running or detached
 	 */
-	virtual thisClass &setDaemonic(const bool daemonic = true) throw(WeakRune);
+	virtual thisClass &daemonic(const bool daemonic = true) throw(WeakRune);
 
 	/* Returns a string describing the instance.
 	 *

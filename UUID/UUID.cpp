@@ -14,13 +14,13 @@ namespace ashe
 {
 
 // One can make one's own namespace, in any version
-const UUID UUID_NS_DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
-const UUID UUID_NS_URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
-const UUID UUID_NS_ISO_OID = "6ba7b812-9dad-11d1-80b4-00c04fd430c8";
-const UUID UUID_NS_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
+const UUID UUID::NS_DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const UUID UUID::NS_URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
+const UUID UUID::NS_ISO_OID = "6ba7b812-9dad-11d1-80b4-00c04fd430c8";
+const UUID UUID::NS_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 
 // For version (1 to 5, version digit) + (89ab magic digit)
-const std::regex UUID_REGEX("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}");
+const std::regex UUID::REGEX("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}");
 
 static std::mutex __mtx__;
 static UUID::MersenneTwisterEngine __defaultEngine__;

@@ -61,8 +61,18 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.so.debug.369640419.1909954943" name="/" resourcePath="Descendants/example">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.so.debug.34869222" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.base.812637685" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.969265487"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.171915906" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.1377074289"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.debug.2074366575" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1685532633"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.147447304" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug.1184483222"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.521343271" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.904646880"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.so.debug.304444678" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.debug.871811682"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="ThreadPool/examples|WebSocket/examples|Semaphore/examples|UUID/examples|Logger" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Descendants/example|ThreadPool/examples|WebSocket/examples|Semaphore/examples|UUID/examples|Logger" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -129,6 +139,16 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.so.release.1706740653.1858741436" name="/" resourcePath="Descendants/example">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.so.release.1331213840" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.release" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1089564217" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1780315652"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.1452532099" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.1009650888"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.release.1261373932" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.release.1626980310"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.release.1048208657" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.release.1563105560"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.release.1996219231" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.release.1257366046"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.so.release.519824654" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.release.1419378065"/>
+						</toolChain>
+					</folderInfo>
 					<folderInfo id="cdt.managedbuild.config.gnu.so.release.1706740653.1557127941" name="/" resourcePath="UUID/examples">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.so.release.1119235840" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.release" unusedChildren="">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.so.release" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.so.release"/>
@@ -148,7 +168,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="ThreadPool/examples|WebSocket/examples|Semaphore/examples|UUID/examples|Logger" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Descendants/example|ThreadPool/examples|WebSocket/examples|Semaphore/examples|UUID/examples|Logger" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

@@ -1,3 +1,19 @@
+/*
+* DescendantProcess.h
+*
+* Ashe's UUID utility with C++11
+*
+* @Maintained
+*  Under development since: 2015 Q1
+* @Author
+*  Ashe David Sterkhus
+*  Blame to: ashe.goulding+blame@gmail.com
+* @COLOPHON
+*  This file is part of libashe, Ashe's C++11/98 utility stuff
+*
+* @DESCRIPTION
+*  - Wrapping class for posix anonymous pipe.
+*/
 #ifndef ASHE_DESCENDANTPIPE_H_
 #define ASHE_DESCENDANTPIPE_H_
 
@@ -99,6 +115,8 @@ public:
 	virtual thisClass &bufferSize(const size_t size) throw(WeakRune); //@Implement
 	virtual bool blocking() const throw(WeakRune); //@Implement
 	virtual thisClass &blocking(const bool blocking) throw(WeakRune); //@Implement
+
+	virtual thisClass &descriptors(std::set<int> &y) throw(WeakRune); //@Implement
 
 	virtual bool valid() const noexcept; //@Implement
 

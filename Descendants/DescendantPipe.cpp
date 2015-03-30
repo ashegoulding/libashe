@@ -84,7 +84,7 @@ void DescendantPipe::__close() noexcept
 	this->__setStateBits(fatherClass::SB_ENDED, true);
 	this->detached = false;
 	this->__stash.clear();
-	this->retrievedSize = this->sentSize = 0;
+	this->lastRetrievedSize = this->lastSentSize = 0;
 }
 
 bool DescendantPipe::__isClosed() const noexcept
@@ -189,6 +189,8 @@ DescendantPipe::thisClass& DescendantPipe::post() throw (WeakRune)
 			case EINVAL:
 			case EFAULT:
 				this->__close();
+				msg = "The pipe is no longer valid.";
+				break;
 			default:
 				msg = "Could not transfer the data.";
 			}
@@ -200,7 +202,7 @@ DescendantPipe::thisClass& DescendantPipe::post() throw (WeakRune)
 
 		auto it = this->__stash.begin();
 		this->__stash.erase(it, it + rwSize);
-		this->sentSize = (size_t)rwSize;
+		this->__accumilateSentSize((size_t)rwSize);
 		if((size_t)rwSize < this->__stash.size())
 		{
 			WeakRune e("Data transfer delayed.");
@@ -231,6 +233,8 @@ DescendantPipe::thisClass& DescendantPipe::receive(void* data, const size_t len)
 		case EBADF:
 		case EINVAL:
 			this->__close();
+			msg = "The pipe is no longer valid.";
+			break;
 		default:
 			msg = "Could not read data from the pipe.";
 		}
@@ -239,8 +243,7 @@ DescendantPipe::thisClass& DescendantPipe::receive(void* data, const size_t len)
 		WeakRune e(msg);
 		throw e.setError();
 	}
-
-	this->retrievedSize = (size_t)rwSize;
+	this->__accumilateRetrievedSize((size_t)rwSize);
 	this->__setStateBits(fatherClass::SB_GOOD, true);
 
 	return *this;
@@ -319,6 +322,15 @@ std::string DescendantPipe::toString() const noexcept
 		sb << " (Detached)";
 
 	return sb.str();
+}
+
+DescendantPipe::thisClass& DescendantPipe::descriptors(std::set<int>& y) throw (WeakRune)
+{
+	y.clear();
+	y.insert(this->pipe[0]);
+	y.insert(this->pipe[1]);
+
+	return *this;
 }
 
 }
