@@ -153,16 +153,16 @@ DescendantPipe::thisClass& DescendantPipe::blocking(const bool blocking) throw(T
 
 DescendantPipe::thisClass& DescendantPipe::post(const void* data, const size_t len) throw (TransitiveRune)
 {
-	const std::vector<unsigned char> x((unsigned char*)data, (unsigned char*)data + len);
+	const std::vector<uint8_t> x((uint8_t*)data, (uint8_t*)data + len);
 	return this->post(x);
 }
 
-DescendantPipe::thisClass& DescendantPipe::post(const std::vector<unsigned char>& data) throw (TransitiveRune)
+DescendantPipe::thisClass& DescendantPipe::post(const std::vector<uint8_t>& data) throw (TransitiveRune)
 {
 	return this->post(data, data.size());
 }
 
-DescendantPipe::thisClass& DescendantPipe::post(const std::vector<unsigned char>& data, const size_t len) throw (TransitiveRune)
+DescendantPipe::thisClass& DescendantPipe::post(const std::vector<uint8_t>& data, const size_t len) throw (TransitiveRune)
 {
 	if(data.empty())
 		throw TransitiveRune(TransitiveRune::C_NO_DATA_GIVEN, "No data given for post()");
@@ -263,12 +263,12 @@ DescendantPipe::thisClass& DescendantPipe::receive(void* data, const size_t len)
 	return *this;
 }
 
-DescendantPipe::thisClass& DescendantPipe::receive(std::vector<unsigned char>& data) throw (TransitiveRune)
+DescendantPipe::thisClass& DescendantPipe::receive(std::vector<uint8_t>& data) throw (TransitiveRune)
 {
 	return this->receive(data.data(), data.size());
 }
 
-DescendantPipe::thisClass& DescendantPipe::receive(std::vector<unsigned char>& data, const size_t len) throw (TransitiveRune)
+DescendantPipe::thisClass& DescendantPipe::receive(std::vector<uint8_t>& data, const size_t len) throw (TransitiveRune)
 {
 	if(! len)
 		throw TransitiveRune(TransitiveRune::C_NO_DATA_GIVEN, "No data range given for receive()");

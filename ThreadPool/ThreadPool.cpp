@@ -20,7 +20,7 @@
 namespace ashe
 {
 
-ThreadPool::ThreadPool(const unsigned short spawn/* = std::thread::hardware_concurrency()*/) noexcept
+ThreadPool::ThreadPool(const uint16_t spawn/* = std::thread::hardware_concurrency()*/) noexcept
 		: __initialSize(spawn)
 {
 	this->className = "ashe::ThreadPool";
@@ -88,10 +88,10 @@ void ThreadPool::recall() noexcept
 	}
 }
 
-void ThreadPool::__spawnPoolThreads(const unsigned short x) noexcept
+void ThreadPool::__spawnPoolThreads(const uint16_t x) noexcept
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
-	unsigned short i;
+	uint16_t i;
 
 	for(i=0; i<x; ++i)
 		this->__resting.push(new PoolThread(this));
@@ -106,8 +106,8 @@ void ThreadPool::__onTickEnd(PoolThread* th) noexcept
 	{
 		this->__working.erase(pos);
 		this->__resting.push(th);
-		this->__restingEvent.set_value((unsigned short)this->__resting.size());
-		this->__restingEvent = std::promise<unsigned short>();
+		this->__restingEvent.set_value((uint16_t)this->__resting.size());
+		this->__restingEvent = std::promise<uint16_t>();
 	}
 }
 
@@ -126,7 +126,7 @@ ThreadPool::thisClass& ThreadPool::labour(WorkUnit* wu) throw(Rune)
 				throw Rune(Rune::C_EMPTY_POOL, "Was trying to block");
 			}
 
-			std::future<unsigned short> restingFuture;
+			std::future<uint16_t> restingFuture;
 			do
 			{
 				restingFuture = this->__restingEvent.get_future();
@@ -162,30 +162,30 @@ ThreadPool::thisClass& ThreadPool::labour(WorkUnit* wu) throw(Rune)
 	return *this;
 }
 
-unsigned short ThreadPool::size() const noexcept
+uint16_t ThreadPool::size() const noexcept
 {
 	return this->__initialSize;
 }
 
-unsigned short ThreadPool::countResting() noexcept
+uint16_t ThreadPool::countResting() noexcept
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
-	return (unsigned short)this->__resting.size();
+	return (uint16_t)this->__resting.size();
 }
 
-unsigned short ThreadPool::countWorking() noexcept
+uint16_t ThreadPool::countWorking() noexcept
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
-	return (unsigned short)this->__working.size();
+	return (uint16_t)this->__working.size();
 }
 
-ThreadPool::thisClass& ThreadPool::count(unsigned short * resting, unsigned short * working) noexcept
+ThreadPool::thisClass& ThreadPool::count(uint16_t * resting, uint16_t * working) noexcept
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
 	if(resting)
-		*resting = (unsigned short)this->__resting.size();
+		*resting = (uint16_t)this->__resting.size();
 	if(working)
-		*working = (unsigned short)this->__working.size();
+		*working = (uint16_t)this->__working.size();
 
 	return *this;
 }

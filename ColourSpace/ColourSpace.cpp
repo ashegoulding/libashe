@@ -3,7 +3,7 @@
 namespace ashe
 {
 
-ColourSpace::ColourSpace(ColourFormat from, ColourFormat to, const unsigned int width, const unsigned int height)
+ColourSpace::ColourSpace(ColourFormat from, ColourFormat to, const uint32_t width, const uint32_t height)
 	throw(Exception)
 	: from(from)
 	, to(to)
@@ -67,7 +67,7 @@ ColourSpace::~ColourSpace() throw()
 {
 }
 
-ColourSpace::thisClass & ColourSpace::hand(unsigned char *data, const size_t size) throw(Exception)
+ColourSpace::thisClass & ColourSpace::hand(uint8_t *data, const size_t size) throw(Exception)
 {
 	if (!data)
 	{
@@ -145,12 +145,12 @@ ColourSpace::ColourFormat ColourSpace::getToFormat() const throw()
 	return this->to;
 }
 
-unsigned int ColourSpace::getWidth() const throw()
+uint32_t ColourSpace::getWidth() const throw()
 {
 	return this->width;
 }
 
-unsigned int ColourSpace::getHeight() const throw()
+uint32_t ColourSpace::getHeight() const throw()
 {
 	return this->height;
 }
@@ -183,16 +183,16 @@ size_t ColourSpace::getSizeOf(const ColourFormat format) const throw()
 	return 0;
 }
 
-unsigned char ColourSpace::clamp__(const int x) throw()
+uint8_t ColourSpace::clamp__(const int x) throw()
 {
 	if (x > 255)
 		return 255;
 	else if (x < 0)
 		return 0;
-	return (unsigned char)x;
+	return (uint8_t)x;
 }
 
-void ColourSpace::YUV444toRGB888__(const unsigned char y, const unsigned char u, const unsigned char v, unsigned char *r, unsigned char *g, unsigned char *b) throw()
+void ColourSpace::YUV444toRGB888__(const uint8_t y, const uint8_t u, const uint8_t v, uint8_t *r, uint8_t *g, uint8_t *b) throw()
 {
 	const int
 		c = y - 16,
@@ -216,7 +216,7 @@ unsigned long long ColourSpace::getManoeuvreCount() const throw()
 	return this->manoeuvreCount;
 }
 
-void ColourSpace::RGB888toYUV444__(const unsigned char r, const unsigned char g, const unsigned char b, unsigned char *y, unsigned char *u, unsigned char *v) throw()
+void ColourSpace::RGB888toYUV444__(const uint8_t r, const uint8_t g, const uint8_t b, uint8_t *y, uint8_t *u, uint8_t *v) throw()
 {
 	*y = clamp__((299 * r + 587 * g + 114 * b) / 1000);
 	*u = clamp__(128 - (14 * r + 29 * g + 43 * b) / 100);
@@ -240,10 +240,10 @@ void ColourSpace::__construct(const thisClass &src) throw()
 	this->deck = src.deck;
 }
 
-void ColourSpace::__GREYSCALEToRGB(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__GREYSCALEToRGB(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char *c = this->deck.data;
-	const unsigned char *end = data + size;
+	uint8_t *c = this->deck.data;
+	const uint8_t *end = data + size;
 
 	while (data < end)
 	{
@@ -254,10 +254,10 @@ void ColourSpace::__GREYSCALEToRGB(const unsigned char *data, const size_t size)
 	}
 }
 
-void ColourSpace::__GREYSCALEToRGBA(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__GREYSCALEToRGBA(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char *c = this->deck.data;
-	const unsigned char *end = data + size;
+	uint8_t *c = this->deck.data;
+	const uint8_t *end = data + size;
 
 	while (data < end)
 	{
@@ -269,15 +269,15 @@ void ColourSpace::__GREYSCALEToRGBA(const unsigned char *data, const size_t size
 	}
 }
 
-void ColourSpace::__GREYSCALEToYUV422(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__GREYSCALEToYUV422(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char
+	uint8_t
 		*y0 = this->deck.data,
 		*u = this->deck.data + 1,
 		*y1 = this->deck.data + 2,
 		*v = this->deck.data + 3;
-	const unsigned char *end = data + size;
-	unsigned char u0, u1, v0, v1;
+	const uint8_t *end = data + size;
+	uint8_t u0, u1, v0, v1;
 
 	while (data < end)
 	{
@@ -285,8 +285,8 @@ void ColourSpace::__GREYSCALEToYUV422(const unsigned char *data, const size_t si
 		++data;
 		thisClass::RGB888toYUV444__(*data, *data, *data, y1, &u1, &v1);
 		++data;
-		*u = (unsigned char)((u0 + u1) / 2);
-		*v = (unsigned char)((v0 + v1) / 2);
+		*u = (uint8_t)((u0 + u1) / 2);
+		*v = (uint8_t)((v0 + v1) / 2);
 
 		y0 += 4;
 		u += 4;
@@ -295,15 +295,15 @@ void ColourSpace::__GREYSCALEToYUV422(const unsigned char *data, const size_t si
 	}
 }
 
-void ColourSpace::__GREYSCALEToYUV422P(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__GREYSCALEToYUV422P(const uint8_t *data, const size_t size) throw()
 {
 	const size_t CNT = this->countPixels();
-	unsigned char
+	uint8_t
 		*y = this->deck.data,
 		*u = this->deck.data + CNT,
 		*v = this->deck.data + CNT + CNT / 2;
-	const unsigned char *end = data + size;
-	unsigned char u0, u1, v0, v1;
+	const uint8_t *end = data + size;
+	uint8_t u0, u1, v0, v1;
 
 	while (data < end)
 	{
@@ -311,27 +311,27 @@ void ColourSpace::__GREYSCALEToYUV422P(const unsigned char *data, const size_t s
 		++data;
 		thisClass::RGB888toYUV444__(*data, *data, *data, y++, &u1, &v1);
 		++data;
-		*(u++) = (unsigned char)((u0 + u1) / 2);
-		*(v++) = (unsigned char)((v0 + v1) / 2);
+		*(u++) = (uint8_t)((u0 + u1) / 2);
+		*(v++) = (uint8_t)((v0 + v1) / 2);
 	}
 }
 
-void ColourSpace::__RGBToGREYSCALE(const unsigned char *data) throw()
+void ColourSpace::__RGBToGREYSCALE(const uint8_t *data) throw()
 {
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = p + this->deck.size;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = p + this->deck.size;
 
 	while (p < end)
 	{
-		*(p++) = (unsigned char)((data[0] + data[1] + data[2]) / 3);
+		*(p++) = (uint8_t)((data[0] + data[1] + data[2]) / 3);
 		data += 3;
 	}
 }
 
-void ColourSpace::__RGBToRGBA(const unsigned char *data) throw()
+void ColourSpace::__RGBToRGBA(const uint8_t *data) throw()
 {
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = p + this->deck.size;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = p + this->deck.size;
 
 	while (p < end)
 	{
@@ -342,16 +342,16 @@ void ColourSpace::__RGBToRGBA(const unsigned char *data) throw()
 	}
 }
 
-void ColourSpace::__RGBToYUV422(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__RGBToYUV422(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char r1, g1, b1, r2, g2, b2;
-	const unsigned char *org = data;
-	unsigned char
+	uint8_t r1, g1, b1, r2, g2, b2;
+	const uint8_t *org = data;
+	uint8_t
 		*y0p = this->deck.data,
 		*up = this->deck.data + 1,
 		*y1p = this->deck.data + 2,
 		*vp = this->deck.data + 3;
-	const unsigned char *end = org + size;
+	const uint8_t *end = org + size;
 
 	while (org < end)
 	{
@@ -374,16 +374,16 @@ void ColourSpace::__RGBToYUV422(const unsigned char *data, const size_t size) th
 	}
 }
 
-void ColourSpace::__RGBToYUV422P(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__RGBToYUV422P(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char r1, g1, b1, r2, g2, b2;
+	uint8_t r1, g1, b1, r2, g2, b2;
 	const size_t CNT = this->countPixels();
-	const unsigned char *org = data;
-	unsigned char
+	const uint8_t *org = data;
+	uint8_t
 		*yp = this->deck.data,
 		*up = this->deck.data + CNT,
 		*vp = this->deck.data + CNT + CNT / 2;
-	const unsigned char *end = org + size;
+	const uint8_t *end = org + size;
 
 	while (org < end)
 	{
@@ -401,22 +401,22 @@ void ColourSpace::__RGBToYUV422P(const unsigned char *data, const size_t size) t
 	}
 }
 
-void ColourSpace::__RGBAToGREYSCALE(const unsigned char *data) throw()
+void ColourSpace::__RGBAToGREYSCALE(const uint8_t *data) throw()
 {
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = p + this->deck.size;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = p + this->deck.size;
 
 	while (p < end)
 	{
-		*(p++) = (unsigned char)((data[0] + data[1] + data[2]) / 3);
+		*(p++) = (uint8_t)((data[0] + data[1] + data[2]) / 3);
 		data += 3;
 	}
 }
 
-void ColourSpace::__RGBAToRGB(const unsigned char *data) throw()
+void ColourSpace::__RGBAToRGB(const uint8_t *data) throw()
 {
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = p + this->deck.size;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = p + this->deck.size;
 
 	while (p < end)
 	{
@@ -427,10 +427,10 @@ void ColourSpace::__RGBAToRGB(const unsigned char *data) throw()
 	}
 }
 
-void ColourSpace::__YUV422ToGREYSCALE(const unsigned char *data) throw()
+void ColourSpace::__YUV422ToGREYSCALE(const uint8_t *data) throw()
 {
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = p + this->deck.size;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = p + this->deck.size;
 
 	while (p < end)
 	{
@@ -439,12 +439,12 @@ void ColourSpace::__YUV422ToGREYSCALE(const unsigned char *data) throw()
 	}
 }
 
-void ColourSpace::__YUV422ToRGB(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__YUV422ToRGB(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char y0, y1, u, v, r, g, b;
-	const unsigned char *org = data;
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = org + size;
+	uint8_t y0, y1, u, v, r, g, b;
+	const uint8_t *org = data;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = org + size;
 
 	while (org < end)
 	{
@@ -463,21 +463,21 @@ void ColourSpace::__YUV422ToRGB(const unsigned char *data, const size_t size) th
 	}
 }
 
-void ColourSpace::__YUV422PToGREYSCALE(const unsigned char *data) throw()
+void ColourSpace::__YUV422PToGREYSCALE(const uint8_t *data) throw()
 {
 	memcpy(this->deck.data, data, this->deck.size);
 }
 
-void ColourSpace::__YUV422PToRGB(const unsigned char *data) throw()
+void ColourSpace::__YUV422PToRGB(const uint8_t *data) throw()
 {
-	unsigned char y0, y1, u, v, r, g, b;
+	uint8_t y0, y1, u, v, r, g, b;
 	const size_t CNT = this->countPixels();
-	const unsigned char
+	const uint8_t
 		*yp = data,
 		*up = data + CNT,
 		*vp = data + CNT + CNT / 2;
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = p + this->deck.size;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = p + this->deck.size;
 
 	while (p < end)
 	{
@@ -496,16 +496,16 @@ void ColourSpace::__YUV422PToRGB(const unsigned char *data) throw()
 	}
 }
 
-void ColourSpace::__RGBAToYUV422(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__RGBAToYUV422(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char r1, g1, b1, r2, g2, b2;
-	const unsigned char *org = data;
-	unsigned char
+	uint8_t r1, g1, b1, r2, g2, b2;
+	const uint8_t *org = data;
+	uint8_t
 		*y0p = this->deck.data,
 		*up = this->deck.data + 1,
 		*y1p = this->deck.data + 2,
 		*vp = this->deck.data + 3;
-	const unsigned char *end = org + size;
+	const uint8_t *end = org + size;
 
 	while (org < end)
 	{
@@ -530,16 +530,16 @@ void ColourSpace::__RGBAToYUV422(const unsigned char *data, const size_t size) t
 	}
 }
 
-void ColourSpace::__RGBAToYUV422P(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__RGBAToYUV422P(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char r1, g1, b1, r2, g2, b2;
+	uint8_t r1, g1, b1, r2, g2, b2;
 	const size_t CNT = this->countPixels();
-	const unsigned char *org = data;
-	unsigned char
+	const uint8_t *org = data;
+	uint8_t
 		*yp = this->deck.data,
 		*up = this->deck.data + CNT,
 		*vp = this->deck.data + CNT + CNT / 2;
-	const unsigned char *end = org + size;
+	const uint8_t *end = org + size;
 
 	while (org < end)
 	{
@@ -559,12 +559,12 @@ void ColourSpace::__RGBAToYUV422P(const unsigned char *data, const size_t size) 
 	}
 }
 
-void ColourSpace::__YUV422ToRGBA(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__YUV422ToRGBA(const uint8_t *data, const size_t size) throw()
 {
-	unsigned char y0, y1, u, v, r, g, b;
-	const unsigned char *org = data;
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = org + size;
+	uint8_t y0, y1, u, v, r, g, b;
+	const uint8_t *org = data;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = org + size;
 
 	while (org < end)
 	{
@@ -585,19 +585,19 @@ void ColourSpace::__YUV422ToRGBA(const unsigned char *data, const size_t size) t
 	}
 }
 
-void ColourSpace::__YUV422ToYUV422P(const unsigned char *data, const size_t size) throw()
+void ColourSpace::__YUV422ToYUV422P(const uint8_t *data, const size_t size) throw()
 {
 	const size_t CNT = this->countPixels();
-	const unsigned char
+	const uint8_t
 		*y0 = data,
 		*u = data + 1,
 		*y1 = data + 2,
 		*v = data + 3;
-	unsigned char
+	uint8_t
 		*outY = this->deck.data,
 		*outU = this->deck.data + CNT,
 		*outV = this->deck.data + CNT + CNT / 2;
-	const unsigned char *end = data + size;
+	const uint8_t *end = data + size;
 
 	while (y0 < end)
 	{
@@ -613,16 +613,16 @@ void ColourSpace::__YUV422ToYUV422P(const unsigned char *data, const size_t size
 	}
 }
 
-void ColourSpace::__YUV422PToRGBA(const unsigned char *data) throw()
+void ColourSpace::__YUV422PToRGBA(const uint8_t *data) throw()
 {
-	unsigned char y0, y1, u, v, r, g, b;
+	uint8_t y0, y1, u, v, r, g, b;
 	const size_t CNT = this->countPixels();
-	const unsigned char
+	const uint8_t
 		*yp = data,
 		*up = data + CNT,
 		*vp = data + CNT + CNT / 2;
-	unsigned char *p = this->deck.data;
-	const unsigned char *end = p + this->deck.size;
+	uint8_t *p = this->deck.data;
+	const uint8_t *end = p + this->deck.size;
 
 	while (p < end)
 	{
@@ -643,19 +643,19 @@ void ColourSpace::__YUV422PToRGBA(const unsigned char *data) throw()
 	}
 }
 
-void ColourSpace::__YUV422PToYUV422(const unsigned char *data) throw()
+void ColourSpace::__YUV422PToYUV422(const uint8_t *data) throw()
 {
 	const size_t CNT = this->countPixels();
-	const unsigned char
+	const uint8_t
 		*y = data,
 		*u = data + CNT,
 		*v = data + CNT + CNT / 2;
-	unsigned char
+	uint8_t
 		*outY0 = this->deck.data,
 		*outU = this->deck.data + 1,
 		*outY1 = this->deck.data + 2,
 		*outV = this->deck.data + 3;
-	const unsigned char *end = outY0 + this->deck.size;
+	const uint8_t *end = outY0 + this->deck.size;
 
 	while (outY0 < end)
 	{

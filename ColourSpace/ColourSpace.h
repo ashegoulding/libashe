@@ -7,6 +7,7 @@
 #include <exception>
 
 #include "ManagedBinary.h"
+#include <cstdint>
 
 #ifdef _MSC_BUILD
 
@@ -75,64 +76,64 @@ public:
 	};
 
 protected:	
-	unsigned int width, height;
-	unsigned long long manoeuvreCount;
+	uint32_t width, height;
+	uint64_t manoeuvreCount;
 	size_t fromSize;
 	ColourFormat from, to;
 
 	virtual void __construct(const thisClass &src) throw();
 
-	virtual void __GREYSCALEToRGB(const unsigned char *data, const size_t size) throw();
-	virtual void __GREYSCALEToRGBA(const unsigned char *data, const size_t size) throw();
-	virtual void __GREYSCALEToYUV422(const unsigned char *data, const size_t size) throw();
-	virtual void __GREYSCALEToYUV422P(const unsigned char *data, const size_t size) throw();
+	virtual void __GREYSCALEToRGB(const uint8_t *data, const size_t size) throw();
+	virtual void __GREYSCALEToRGBA(const uint8_t *data, const size_t size) throw();
+	virtual void __GREYSCALEToYUV422(const uint8_t *data, const size_t size) throw();
+	virtual void __GREYSCALEToYUV422P(const uint8_t *data, const size_t size) throw();
 
-	virtual void __RGBToGREYSCALE(const unsigned char *data) throw();
-	virtual void __RGBToRGBA(const unsigned char *data) throw();
-	virtual void __RGBToYUV422(const unsigned char *data, const size_t size) throw();
-	virtual void __RGBToYUV422P(const unsigned char *data, const size_t size) throw();
+	virtual void __RGBToGREYSCALE(const uint8_t *data) throw();
+	virtual void __RGBToRGBA(const uint8_t *data) throw();
+	virtual void __RGBToYUV422(const uint8_t *data, const size_t size) throw();
+	virtual void __RGBToYUV422P(const uint8_t *data, const size_t size) throw();
 
-	virtual void __RGBAToGREYSCALE(const unsigned char *data) throw();
-	virtual void __RGBAToRGB(const unsigned char *data) throw();
-	virtual void __RGBAToYUV422(const unsigned char *data, const size_t size) throw();
-	virtual void __RGBAToYUV422P(const unsigned char *data, const size_t size) throw();
+	virtual void __RGBAToGREYSCALE(const uint8_t *data) throw();
+	virtual void __RGBAToRGB(const uint8_t *data) throw();
+	virtual void __RGBAToYUV422(const uint8_t *data, const size_t size) throw();
+	virtual void __RGBAToYUV422P(const uint8_t *data, const size_t size) throw();
 
-	virtual void __YUV422ToGREYSCALE(const unsigned char *data) throw();
-	virtual void __YUV422ToRGB(const unsigned char *data, const size_t size) throw();
-	virtual void __YUV422ToRGBA(const unsigned char *data, const size_t size) throw();
-	virtual void __YUV422ToYUV422P(const unsigned char *data, const size_t size) throw();
+	virtual void __YUV422ToGREYSCALE(const uint8_t *data) throw();
+	virtual void __YUV422ToRGB(const uint8_t *data, const size_t size) throw();
+	virtual void __YUV422ToRGBA(const uint8_t *data, const size_t size) throw();
+	virtual void __YUV422ToYUV422P(const uint8_t *data, const size_t size) throw();
 
-	virtual void __YUV422PToGREYSCALE(const unsigned char *data) throw();
-	virtual void __YUV422PToRGB(const unsigned char *data) throw();
-	virtual void __YUV422PToRGBA(const unsigned char *data) throw();
-	virtual void __YUV422PToYUV422(const unsigned char *data) throw();
+	virtual void __YUV422PToGREYSCALE(const uint8_t *data) throw();
+	virtual void __YUV422PToRGB(const uint8_t *data) throw();
+	virtual void __YUV422PToRGBA(const uint8_t *data) throw();
+	virtual void __YUV422PToYUV422(const uint8_t *data) throw();
 
 public:
-	ashe::ManagedBinary<unsigned char> deck;
+	ashe::ManagedBinary<uint8_t> deck;
 
-	ColourSpace(const ColourFormat from, const ColourFormat to, const unsigned int width, const unsigned int height)
+	ColourSpace(const ColourFormat from, const ColourFormat to, const uint32_t width, const uint32_t height)
 		throw(Exception);
 	ColourSpace(const thisClass &src) throw();
 	virtual ~ColourSpace() throw();
 
 	thisClass &operator =(const thisClass &src) throw();
 
-	virtual thisClass &hand(unsigned char *data, const size_t size) throw(Exception);
+	virtual thisClass &hand(uint8_t *data, const size_t size) throw(Exception);
 	virtual thisClass &flush() throw();
 
 	virtual ColourFormat getFromFormat() const throw();
 	virtual ColourFormat getToFormat() const throw();
-	virtual unsigned int getWidth() const throw();
-	virtual unsigned int getHeight() const throw();
+	virtual uint32_t getWidth() const throw();
+	virtual uint32_t getHeight() const throw();
 	virtual size_t getFromSize() const throw();
 	virtual size_t getToSize() const throw();
 	virtual size_t countPixels() const throw();
 	virtual size_t getSizeOf(const ColourFormat format) const throw();
 	virtual unsigned long long getManoeuvreCount() const throw();
 
-	static unsigned char clamp__(const int x) throw();
-	static void YUV444toRGB888__(const unsigned char y, const unsigned char u, const unsigned char v, unsigned char *r, unsigned char *g, unsigned char *b) throw();
-	static void RGB888toYUV444__(const unsigned char r, const unsigned char g, const unsigned char b, unsigned char *y, unsigned char *u, unsigned char *v) throw();
+	static uint8_t clamp__(const int x) throw();
+	static void YUV444toRGB888__(const uint8_t y, const uint8_t u, const uint8_t v, uint8_t *r, uint8_t *g, uint8_t *b) throw();
+	static void RGB888toYUV444__(const uint8_t r, const uint8_t g, const uint8_t b, uint8_t *y, uint8_t *u, uint8_t *v) throw();
 };
 
 } /* namespace 'ashe' */

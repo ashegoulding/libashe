@@ -30,13 +30,13 @@ UUID::UUID() noexcept
 	this->className = "ashe::UUID";
 }
 
-UUID::UUID(const unsigned long long seed) noexcept
+UUID::UUID(const uint64_t seed) noexcept
 {
-	std::array<unsigned long long, 2> buffer;
+	std::array<uint64_t, 2> buffer;
 	buffer[0] = seed;
-	buffer[1] = (unsigned long long)std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	std::array<unsigned char, SHA1_DIGEST_SIZE> hashed;
-	::sha1_buffer((const char*)buffer.data(), buffer.size()*sizeof(unsigned long long), hashed.data());
+	buffer[1] = (uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	std::array<uint8_t, SHA1_DIGEST_SIZE> hashed;
+	::sha1_buffer((const char*)buffer.data(), buffer.size()*sizeof(uint64_t), hashed.data());
 	::memcpy(this->data, hashed.data(), thisClass::UUID_BYTE_SIZE);
 
 	this->className = "ashe::UUID";
@@ -138,7 +138,7 @@ void UUID::__parse(const char* x, const size_t len) throw (Rune)
 			if(! (j%2))
 			{
 				digit[1] = v;
-				this->data[p++] = (unsigned char)std::stoul(digit, 0, 16);
+				this->data[p++] = (uint8_t)std::stoul(digit, 0, 16);
 			}
 			else
 				digit[0] = v;
@@ -277,9 +277,9 @@ UUID UUID::operator +(const char* x) const throw (Rune)
 	return this->merge(x, strlen(x)); // Throws Rune
 }
 
-std::array<unsigned char, UUID::UUID_BYTE_SIZE> UUID::toBinary() const noexcept
+std::array<uint8_t, UUID::UUID_BYTE_SIZE> UUID::toBinary() const noexcept
 {
-	std::array<unsigned char, UUID::UUID_BYTE_SIZE> y;
+	std::array<uint8_t, UUID::UUID_BYTE_SIZE> y;
 	::memcpy(y.data(), this->data, thisClass::UUID_BYTE_SIZE);
 	return y;
 }
@@ -296,7 +296,7 @@ std::string UUID::toString(const bool upper/* = false*/) const noexcept
 		sb.unsetf(std::ios::uppercase);
 
 	for(i=0; i<thisClass::UUID_BYTE_SIZE; ++i)
-		sb << std::setw(2) << std::setfill('0') << std::hex << (unsigned short)this->data[i];
+		sb << std::setw(2) << std::setfill('0') << std::hex << (uint16_t)this->data[i];
 
 	y = sb.str();
 	y.insert(8, "-");
@@ -317,8 +317,8 @@ UUID UUID::merge(const void* x, const size_t len) const throw(Rune)
 	if(! len)
 		throw Rune(Rune::C_EMPTY_CONTENT, "Tried to merge with namespace UUID");
 	UUID y;
-	std::vector<unsigned char> concatenated(thisClass::UUID_BYTE_SIZE + len);
-	std::array<unsigned char, SHA1_DIGEST_SIZE> hashed;
+	std::vector<uint8_t> concatenated(thisClass::UUID_BYTE_SIZE + len);
+	std::array<uint8_t, SHA1_DIGEST_SIZE> hashed;
 
 	::memcpy(concatenated.data(), this->data, thisClass::UUID_BYTE_SIZE);
 	::memcpy(concatenated.data() + thisClass::UUID_BYTE_SIZE, x, len);
@@ -331,8 +331,8 @@ UUID UUID::merge(const void* x, const size_t len) const throw(Rune)
 UUID UUID::merge(const thisClass& x) const noexcept
 {
 	UUID y;
-	std::array<unsigned char, SHA1_DIGEST_SIZE> hashed;
-	std::array<unsigned char, thisClass::UUID_BYTE_SIZE*2> concatenated;
+	std::array<uint8_t, SHA1_DIGEST_SIZE> hashed;
+	std::array<uint8_t, thisClass::UUID_BYTE_SIZE*2> concatenated;
 
 	::memcpy(concatenated.data(), this->data, thisClass::UUID_BYTE_SIZE);
 	::memcpy(concatenated.data() + thisClass::UUID_BYTE_SIZE, x.data, thisClass::UUID_BYTE_SIZE);
@@ -355,8 +355,8 @@ UUID UUID::generate__() noexcept
 
 void UUID::__putGlamour__(void* x, const Version ver) throw(StrongRune)
 {
-	unsigned char *p = (unsigned char*)x;
-	unsigned char theDigit;
+	uint8_t *p = (uint8_t*)x;
+	uint8_t theDigit;
 
 	switch(ver)
 	{
@@ -378,7 +378,7 @@ void UUID::__putGlamour__(void* x, const Version ver) throw(StrongRune)
 
 void UUID::validate__(const void* x) throw (Rune)
 {
-	const unsigned char *p = (const unsigned char*)x;
+	const uint8_t *p = (const uint8_t*)x;
 	switch(p[6] & 0xF0)
 	{
 	case 0x10:
@@ -452,8 +452,8 @@ size_t UUID::RandomEngine::getPoolSize() const noexcept
 UUID UUID::RandomEngine::generate() noexcept
 {
 	UUID y;
-	std::vector<unsigned long long> content(this->poolSize);
-	std::array<unsigned char, SHA1_DIGEST_SIZE> hashed;
+	std::vector<uint64_t> content(this->poolSize);
+	std::array<uint8_t, SHA1_DIGEST_SIZE> hashed;
 
 	for(auto &v : content)
 		v = this->random();
@@ -495,12 +495,12 @@ UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::operator =(
 UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::randomise() noexcept
 {
 	std::lock_guard<std::mutex> lg(__mtx__);
-	std::seed_seq sq = {__defaultEngine__.random(), (unsigned long long)std::chrono::high_resolution_clock::now().time_since_epoch().count()};
+	std::seed_seq sq = {__defaultEngine__.random(), (uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count()};
 	this->__engine.seed(sq);
 	return *this;
 }
 
-unsigned long long UUID::MersenneTwisterEngine::random() noexcept
+uint64_t UUID::MersenneTwisterEngine::random() noexcept
 {
 	return this->__engine();
 }

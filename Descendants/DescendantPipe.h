@@ -48,7 +48,7 @@ protected:
 	*  - Before send(), the instance appends given data to send to this vector.
 	*  - The sent data will be truncated within this vector.
 	*/
-	std::vector<unsigned char> __stash;
+	std::vector<uint8_t> __stash;
 
 	/* Destructs the instance and copy constructs the instance.
 	*
@@ -106,8 +106,8 @@ public:
 	*  - The data was written but incompletely, delay has occurred.
 	*/
 	virtual thisClass &post(const void *data, const size_t len) throw(TransitiveRune); //@Implement
-	virtual thisClass &post(const std::vector<unsigned char> &data) throw(TransitiveRune); //@Implement
-	virtual thisClass &post(const std::vector<unsigned char> &data, const size_t len) throw(TransitiveRune); //@Implement
+	virtual thisClass &post(const std::vector<uint8_t> &data) throw(TransitiveRune); //@Implement
+	virtual thisClass &post(const std::vector<uint8_t> &data, const size_t len) throw(TransitiveRune); //@Implement
 	/* Posts pending remaining data in __stash. It's for non-blocking mode support.
 	* For more detail, refer to post() method with data arguments.
 	*
@@ -136,7 +136,7 @@ public:
 	*  - Reads amount of data as 'data' vector's size.
 	*  - If it's empty, it will throw.
 	*/
-	virtual thisClass &receive(std::vector<unsigned char> &data) throw(TransitiveRune); //@Implement
+	virtual thisClass &receive(std::vector<uint8_t> &data) throw(TransitiveRune); //@Implement
 	/* Reads the pipe with given vector, for 'len'
 	* Refer to receive(void *data, const size_t len) for more detail.
 	*
@@ -144,7 +144,7 @@ public:
 	*  - Reads amount of data as 'len'
 	*  - It will throw if 'len' is zero or 'data' vector is shorter than 'len' that would have caused SEGFAULT.
 	*/
-	virtual thisClass &receive(std::vector<unsigned char> &data, const size_t len) throw(TransitiveRune); //@Implement
+	virtual thisClass &receive(std::vector<uint8_t> &data, const size_t len) throw(TransitiveRune); //@Implement
 
 	/* Returns actual buffer size of the pipe.
 	*

@@ -16,6 +16,7 @@
 #define ASHE_TRANSITIVEINTERFACE_H_
 
 #include <cstdlib>
+#include <cstdint>
 #include <vector>
 #include <set>
 
@@ -52,8 +53,8 @@ public:
 		static std::string codeToString__(const Code x) noexcept;
 
 	protected:
-		// This is unsigned int for a reason
-		unsigned int code = (unsigned int)C_UNKNOWN;
+		// This is uint32_t for a reason
+		uint32_t code = (uint32_t)C_UNKNOWN;
 
 		void __construct(const thisClass &src) noexcept;
 
@@ -64,19 +65,19 @@ public:
 
 		virtual thisClass &operator =(const thisClass &src) noexcept;
 
-		virtual unsigned int getCode() const noexcept;
+		virtual uint32_t getCode() const noexcept;
 	};
 
 protected:
-	const static unsigned int SB_GOOD/* =		 	0*/;
+	const static uint32_t SB_GOOD/* =		 	0*/;
 	// Last transmission failed.
-	const static unsigned int SB_FAILED/* = 	0b00000000000000000000000000000001*/;
+	const static uint32_t SB_FAILED/* = 	0b00000000000000000000000000000001*/;
 	// Last transmission delayed.
-	const static unsigned int SB_DELAYED/* = 	0b00000000000000000000000000000010*/;
+	const static uint32_t SB_DELAYED/* = 	0b00000000000000000000000000000010*/;
 	// End of transmission: like shutdown in TCP socket
-	const static unsigned int SB_ENDED/* = 		0b00000000000000000000000000000100*/;
+	const static uint32_t SB_ENDED/* = 		0b00000000000000000000000000000100*/;
 	// The instance has closed (EOF)
-	const static unsigned int SB_CLOSED/* = 	0b00000000000000000000000000001000*/;
+	const static uint32_t SB_CLOSED/* = 	0b00000000000000000000000000001000*/;
 
 	/* Transmission statistics.
 	* - lastRetrievedSize: Retrieved data length on last transmission
@@ -84,26 +85,26 @@ protected:
 	* - retrievedSize: (Overall)
 	* - sentSize: (Overall)
 	*/
-	size_t lastRetrievedSize = 0, lastSentSize = 0, retrievedSize = 0, sentSize = 0;
-	unsigned int stateBits = SB_GOOD;
+	uint64_t lastRetrievedSize = 0, lastSentSize = 0, retrievedSize = 0, sentSize = 0;
+	uint32_t stateBits = SB_GOOD;
 	// Detached state. Mostly for resource saving.
 	bool __detached = false;
 
-	virtual void __setStateBits(const unsigned int &bit, const bool set) noexcept;
-	virtual void __accumilateSentSize(const size_t sent) noexcept;
-	virtual void __accumilateRetrievedSize(const size_t sent) noexcept;
+	virtual void __setStateBits(const uint32_t &bit, const bool set) noexcept;
+	virtual void __accumilateSentSize(const uint64_t sent) noexcept;
+	virtual void __accumilateRetrievedSize(const uint64_t sent) noexcept;
 
 public:
 	virtual ~TransitiveInterface() noexcept;
 
 	virtual thisClass &post(const void *data, const size_t len) = 0; //@Pure virtual
-	virtual thisClass &post(const std::vector<unsigned char> &data) = 0; //@Pure virtual
-	virtual thisClass &post(const std::vector<unsigned char> &data, const size_t len) = 0; //@Pure virtual
+	virtual thisClass &post(const std::vector<uint8_t> &data) = 0; //@Pure virtual
+	virtual thisClass &post(const std::vector<uint8_t> &data, const size_t len) = 0; //@Pure virtual
 	// For non-blocking mode support
 	virtual thisClass &post() = 0; //@Pure virtual
 	virtual thisClass &receive(void *data, const size_t len) = 0; //@Pure virtual
-	virtual thisClass &receive(std::vector<unsigned char> &data) = 0; //@Pure virtual
-	virtual thisClass &receive(std::vector<unsigned char> &data, const size_t len) = 0; //@Pure virtual
+	virtual thisClass &receive(std::vector<uint8_t> &data) = 0; //@Pure virtual
+	virtual thisClass &receive(std::vector<uint8_t> &data, const size_t len) = 0; //@Pure virtual
 
 	// Tests if the instance is on non-blocking mode.
 	virtual bool blocking() const = 0; //@Pure virtual
@@ -138,19 +139,19 @@ public:
 	virtual thisClass &descriptors(std::set<int>& y) = 0;
 
 	// Returns retrieved data length in bytes.
-	virtual size_t retrieved(const bool overall = false) const noexcept;
+	virtual uint64_t retrieved(const bool overall = false) const noexcept;
 	// Returns sent data length in bytes.
-	virtual size_t sent(const bool overall = false) const noexcept;
+	virtual uint64_t sent(const bool overall = false) const noexcept;
 	// Sets overall statistic members to zero.
 	// NOTE: This does not set 'last' members also to zero. They shall be left intact.
 	virtual thisClass &resetStatistics(const bool sent = true, const bool retrieved = true) noexcept;
 
 	// Event handler for 'sentSize' member overflow.
-	// NOTE: It is about 16,384PB on 64bits machines, 4GB on 32bits. This may vary by size_t's actual type.
-	virtual void onSentSizeOverflow(const size_t sizeToAdd, const size_t previousSize) noexcept;
+	// NOTE: It is about 16,384PB
+	virtual void onSentSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) noexcept;
 	// Event handler for 'retrievedSize' member overflow.
-	// NOTE: It is about 16,384PB on 64bits machines, 4GB on 32bits. This may vary by size_t's actual type.
-	virtual void onRetrievedSizeOverflow(const size_t sizeToAdd, const size_t previousSize) noexcept;
+	// NOTE: It is about 16,384PB
+	virtual void onRetrievedSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) noexcept;
 };
 
 } /* namespace ashe */

@@ -21,6 +21,7 @@
 
 #include "Frelish.h"
 #include <string>
+#include <cstdint>
 
 #include <queue>
 #include <set>
@@ -152,7 +153,7 @@ protected:
 		virtual thisClass &die() noexcept;
 	};
 
-	unsigned short __initialSize; // The constructed number of threads
+	uint16_t __initialSize; // The constructed number of threads
 	bool labourBlocking = true; // Does not blocks current thread if true
 
 	std::mutex __methodMtx; // A mutex for __resting, __working, __restingEvent
@@ -164,7 +165,7 @@ protected:
 	std::promise<unsigned short> __restingEvent;
 
 	void __construct(const thisClass &src) noexcept;
-	virtual void __spawnPoolThreads(const unsigned short x) noexcept;
+	virtual void __spawnPoolThreads(const uint16_t x) noexcept;
 
 	// PoolThreads reports to this method when their work is done.
 	virtual void __onTickEnd(PoolThread *th) noexcept;
@@ -177,7 +178,7 @@ public:
 	 *  - Be sure to instantiate with non-zero number of spawn threads
 	 *  - Empty ThreadPool's labour() method shall only throw Rune
 	 */
-	ThreadPool(const unsigned short spawn = std::thread::hardware_concurrency()) noexcept;
+	ThreadPool(const uint16_t spawn = (uint16_t)std::thread::hardware_concurrency()) noexcept;
 	// Refer to operator =()
 	ThreadPool(const thisClass &src) noexcept;
 	virtual ~ThreadPool() noexcept;
@@ -196,19 +197,19 @@ public:
 	 * @Note
 	 *  - The return value is not the number of the PoolThreads currently active
 	 */
-	virtual unsigned short size() const noexcept;
+	virtual uint16_t size() const noexcept;
 	/* Counts currently sleeping, resting PoolThreads
 	 *
 	 * @Note
 	 *  - Uses mutex. Calling this often may cause bottleneck
 	 */
-	virtual unsigned short countResting() noexcept;
+	virtual uint16_t countResting() noexcept;
 	/* Counts currently working, deployed PoolThreads
 	 *
 	 * @Note
 	 *  - Uses mutex internally. Calling this often may cause bottleneck
 	 */
-	virtual unsigned short countWorking() noexcept;
+	virtual uint16_t countWorking() noexcept;
 	/* Combination of countResting(), countWorking() methods.
 	 * With previous methods, there was no way to know both resting and working PoolThread
 	 * at a certain time point, calling those two methods separately couldn't get exact readings due to data race.
@@ -216,7 +217,7 @@ public:
 	 * @Note
 	 *  - Uses mutex internally. Calling this often may cause bottleneck
 	 */
-	virtual thisClass &count(unsigned short *resting, unsigned short *working) noexcept;
+	virtual thisClass &count(uint16_t *resting, uint16_t *working) noexcept;
 
 	/* Sets whether labour() method should block calling thread when all the PoolThreads are busy
 	 *

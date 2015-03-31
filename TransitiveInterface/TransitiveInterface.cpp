@@ -5,15 +5,15 @@
 namespace ashe
 {
 
-const unsigned int TransitiveInterface::SB_GOOD =			0;
-const unsigned int TransitiveInterface::SB_FAILED = 	0b00000000000000000000000000000001;
-const unsigned int TransitiveInterface::SB_DELAYED = 	0b00000000000000000000000000000010;
-const unsigned int TransitiveInterface::SB_ENDED = 		0b00000000000000000000000000000100;
-const unsigned int TransitiveInterface::SB_CLOSED = 	0b00000000000000000000000000001000;
+const uint32_t TransitiveInterface::SB_GOOD =			0;
+const uint32_t TransitiveInterface::SB_FAILED = 	0b00000000000000000000000000000001;
+const uint32_t TransitiveInterface::SB_DELAYED = 	0b00000000000000000000000000000010;
+const uint32_t TransitiveInterface::SB_ENDED = 		0b00000000000000000000000000000100;
+const uint32_t TransitiveInterface::SB_CLOSED = 	0b00000000000000000000000000001000;
 
 TransitiveInterface::~TransitiveInterface() noexcept {}
 
-void TransitiveInterface::__setStateBits(const unsigned int& bit, const bool set) noexcept
+void TransitiveInterface::__setStateBits(const uint32_t& bit, const bool set) noexcept
 {
 	if(set)
 	{
@@ -56,17 +56,17 @@ bool TransitiveInterface::closed() const noexcept
 	return (this->stateBits & SB_CLOSED) != 0;
 }
 
-size_t TransitiveInterface::retrieved(const bool overall/* = false*/) const noexcept
+uint64_t TransitiveInterface::retrieved(const bool overall/* = false*/) const noexcept
 {
 	return overall? this->retrievedSize : this->lastRetrievedSize;
 }
 
-size_t TransitiveInterface::sent(const bool overall/* = false*/) const noexcept
+uint64_t TransitiveInterface::sent(const bool overall/* = false*/) const noexcept
 {
 	return overall? this->sentSize :  this->lastSentSize;
 }
 
-void TransitiveInterface::__accumilateSentSize(const size_t sent) noexcept
+void TransitiveInterface::__accumilateSentSize(const uint64_t sent) noexcept
 {
 	const size_t prev = this->sentSize;
 	this->sentSize += sent;
@@ -74,7 +74,7 @@ void TransitiveInterface::__accumilateSentSize(const size_t sent) noexcept
 		this->onSentSizeOverflow(sent, prev);
 }
 
-void TransitiveInterface::__accumilateRetrievedSize(const size_t sent) noexcept
+void TransitiveInterface::__accumilateRetrievedSize(const uint64_t sent) noexcept
 {
 	const size_t prev = this->retrievedSize;
 	this->retrievedSize += sent;
@@ -82,9 +82,9 @@ void TransitiveInterface::__accumilateRetrievedSize(const size_t sent) noexcept
 		this->onRetrievedSizeOverflow(sent, prev);
 }
 
-void TransitiveInterface::onRetrievedSizeOverflow(const size_t sizeToAdd, const size_t previousSize) noexcept{}
+void TransitiveInterface::onRetrievedSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) noexcept{}
 
-void TransitiveInterface::onSentSizeOverflow(const size_t sizeToAdd, const size_t previousSize) noexcept{}
+void TransitiveInterface::onSentSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) noexcept{}
 
 TransitiveInterface::thisClass& TransitiveInterface::resetStatistics(const bool sent/* = true*/, const bool retrieved/* = true*/) noexcept
 {
@@ -133,7 +133,7 @@ void TransitiveInterface::TransitiveRune::__construct(const thisClass& src) noex
 	this->code = src.code;
 }
 
-unsigned int TransitiveInterface::TransitiveRune::getCode() const noexcept
+uint32_t TransitiveInterface::TransitiveRune::getCode() const noexcept
 {
 	return this->code;
 }

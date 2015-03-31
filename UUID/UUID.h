@@ -24,6 +24,7 @@
 
 #include <regex>
 #include <random>
+#include <cstdint>
 
 namespace ashe
 {
@@ -144,7 +145,7 @@ public:
 		// Randomise the instance's random engine here like: srand(time(NULL)), std::seed() ...
 		virtual thisClass &randomise() noexcept = 0; //@Pure virtual
 		// Generate and return a random number
-		virtual unsigned long long random() noexcept = 0; //@Pure virtual
+		virtual uint64_t random() noexcept = 0; //@Pure virtual
 	};
 
 	class MersenneTwisterEngine : public RandomEngine
@@ -165,7 +166,7 @@ public:
 		virtual thisClass &operator =(const thisClass &src) noexcept;
 
 		virtual thisClass &randomise() noexcept; //@Implement
-		virtual unsigned long long random() noexcept; //@Implement
+		virtual uint64_t random() noexcept; //@Implement
 	};
 
 	static const unsigned int IMPL_VERSION = (unsigned int)VER_SHA1_AND_NAMESPACE;
@@ -185,7 +186,7 @@ public:
 	static UUID generate__() noexcept;
 
 protected:
-	unsigned char data[UUID_BYTE_SIZE]; // It's 16bytes / 128bits.
+	uint8_t data[UUID_BYTE_SIZE]; // It's 16bytes / 128bits.
 
 	/* Constructs the instance from given raw array, without encoding and dashes.
 	*
@@ -234,7 +235,7 @@ public:
 	*  - Wish to give 0 as 'seed'? Just 0 is ambiguous with NULL. Use UUID((unsigned long long)0)
 	*  - It is not RFC standard, recommended version 1! Intended for simple, short scalable use.
 	*/
-	UUID(const unsigned long long seed) noexcept;
+	UUID(const uint64_t seed) noexcept;
 	// Alias of UUID(const char *x, const size_t len = thisClass::UUID_STRING_LENGTH) throw(Rune)
 	UUID(const std::string &x) throw(Rune);
 	/* Constructs an instance from given string.
@@ -287,7 +288,7 @@ public:
 	virtual UUID operator +(const char *x) const throw(Rune);
 
 	// Returns raw array of the instance's UUID data
-	virtual std::array<unsigned char, thisClass::UUID_BYTE_SIZE> toBinary() const noexcept;
+	virtual std::array<uint8_t, thisClass::UUID_BYTE_SIZE> toBinary() const noexcept;
 	/* Returns a string representing the instance's UUID data with dashes, numbers and hexadecimal characters.
 	*
 	* @NOTE
