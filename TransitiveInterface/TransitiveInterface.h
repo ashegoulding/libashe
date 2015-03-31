@@ -12,8 +12,8 @@
 * @DESCRIPTION
 *  - Supreme interface for transitive descriptor like pipe, fifo, socket
 */
-#ifndef TRANSITIVEINTERFACE_H_
-#define TRANSITIVEINTERFACE_H_
+#ifndef ASHE_TRANSITIVEINTERFACE_H_
+#define ASHE_TRANSITIVEINTERFACE_H_
 
 #include <cstdlib>
 #include <vector>

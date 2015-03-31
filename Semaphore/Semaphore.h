@@ -12,8 +12,8 @@
  * @COLOPHON
  *  This file is part of libashe, Ashe's C++11/98 utility stuff
  */
-#ifndef SEMAPHORE_H_
-#define SEMAPHORE_H_
+#ifndef ASHE_SEMAPHORE_H_
+#define ASHE_SEMAPHORE_H_
 
 #include "Frelish.h"
 

@@ -17,8 +17,8 @@
 *  xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx (32 or 36)
 *  Where M is version number in heximal and N is one of 8, 9, A or B
 */
-#ifndef UUID_H_
-#define UUID_H_
+#ifndef ASHE_UUID_H_
+#define ASHE_UUID_H_
 
 #include "Frelish.h"
 

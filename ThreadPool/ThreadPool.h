@@ -12,8 +12,8 @@
 * @COLOPHON
 *  This file is part of libashe, Ashe's C++11/98 utility stuff
 */
-#ifndef THREADPOOL_H_
-#define THREADPOOL_H_
+#ifndef ASHE_THREADPOOL_H_
+#define ASHE_THREADPOOL_H_
 
 #include <thread>
 #include <mutex>
