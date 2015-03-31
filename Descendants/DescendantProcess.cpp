@@ -7,6 +7,7 @@ namespace ashe
 {
 
 DescendantProcess::__PIDMapType DescendantProcess::__pidMap__;
+std::mutex DescendantProcess::__pidMapMtx__;
 
 int DescendantProcess::main()
 {
@@ -33,7 +34,6 @@ DescendantProcess::DescendantProcess(const thisClass& src) throw (WeakRune)
 
 DescendantProcess::~DescendantProcess() noexcept
 {
-
 	try
 	{
 		if(! (this->__daemonic || this->detached))
@@ -61,6 +61,7 @@ DescendantProcess::JoinedProcess DescendantProcess::join(const bool wait) throw 
 		throw e;
 	}
 
+	std::lock_guard<std::mutex> lg(thisClass::__pidMapMtx__);
 	JoinedProcess y(rawCode, this->pid, this);
 	thisClass::__pidMap__.erase(this->pid);
 	this->pid = -1;
@@ -174,19 +175,16 @@ DescendantProcess::thisClass& DescendantProcess::detach() noexcept
 	return *this;
 }
 
-bool DescendantProcess::daemonic() const noexcept
+bool DescendantProcess::daemonic() const throw(WeakRune)
 {
+	this->__checkValidity();
 	return this->__daemonic;
 }
 
 DescendantProcess::thisClass& DescendantProcess::daemonic(const bool daemonic)  throw(WeakRune)
 {
-	if(this->detached || this->pid <= 0)
-	{
-		WeakRune e("Invalid action: Instance is detached or not running.");
-		throw e;
-	}
-
+	this->__checkValidity();
+	std::lock_guard<std::mutex> lg(thisClass::__pidMapMtx__);
 	if((this->__daemonic = daemonic))
 		thisClass::__pidMap__[this->pid] = this;
 	else
@@ -210,23 +208,38 @@ std::string DescendantProcess::toString() const noexcept
 	return sb.str();
 }
 
-DescendantProcess::JoinedProcess DescendantProcess::join__() throw(WeakRune)
+bool DescendantProcess::valid() const noexcept
+{
+	try
+	{
+		this->__checkValidity();
+		return true;
+	}
+	catch(...){}
+	return false;
+}
+
+DescendantProcess::JoinedProcess DescendantProcess::join__(const bool wait/* = true*/) throw(WeakRune)
 {
 	int rawCode;
-	const auto pid = ::wait(&rawCode);
+	const auto pid = ::waitpid(-1, &rawCode, (wait? 0 : WNOHANG));
 
 	if(pid < 0)
 	{
 		WeakRune e("Whilst ::wait()");
 		throw e.setError();
 	}
+	else if(! pid)
+		throw WeakRune("No child has returned.");
 
+	std::lock_guard<std::mutex> lg(thisClass::__pidMapMtx__);
 	const auto it = thisClass::__pidMap__.find(pid);
 	DescendantProcess *instance = NULL;
 	if(it != thisClass::__pidMap__.end())
 	{
 		instance = it->second;
 		instance->pid = -1;
+		thisClass::__pidMap__.erase(it);
 	}
 
 	return JoinedProcess(rawCode, pid, instance);

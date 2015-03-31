@@ -2,7 +2,6 @@
 
 #include "Descendants/DescendantPipe.h"
 #include "Descendants/DescendantProcess.h"
-#include "UUID/UUID.h"
 
 #include <signal.h>
 
