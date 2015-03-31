@@ -1,9 +1,17 @@
 /*
- * DescendantProcess.h
- *
- *  Created on: 2014. 6. 12.
- *      Author: virtue
- */
+* DescendantProcess.h
+*
+* @Maintained
+*  Under development since: 2015 Q1
+* @Author
+*  Ashe David Sterkhus
+*  Blame to: ashe.goulding+blame@gmail.com
+* @COLOPHON
+*  This file is part of libashe, Ashe's C++11/98 utility stuff
+*
+* @DESCRIPTION
+*  - Wrapping class for posix fork() and wait()
+*/
 #ifndef ASHE_DESCENDANTPROCESS_H_
 #define ASHE_DESCENDANTPROCESS_H_
 
@@ -53,6 +61,8 @@ public:
 		virtual int signalNumber() const noexcept;
 		virtual std::string signalString() const noexcept;
 		virtual bool coreDumped() const throw(WeakRune);
+
+		virtual std::string toString() const noexcept;
 	};
 
 	/* Waits any child process by wait()

@@ -1,5 +1,7 @@
 #include "TransitiveInterface.h"
 
+#include <sstream>
+
 namespace ashe
 {
 
@@ -24,9 +26,9 @@ void TransitiveInterface::__setStateBits(const unsigned int& bit, const bool set
 		this->stateBits &= ~bit;
 }
 
-bool TransitiveInterface::hasDetached() const noexcept
+bool TransitiveInterface::detached() const noexcept
 {
-	return this->detached;
+	return this->__detached;
 }
 
 bool TransitiveInterface::good() const noexcept
@@ -80,9 +82,75 @@ void TransitiveInterface::__accumilateRetrievedSize(const size_t sent) noexcept
 		this->onRetrievedSizeOverflow(sent, prev);
 }
 
-void ashe::TransitiveInterface::onRetrievedSizeOverflow(const size_t sizeToAdd, const size_t previousSize) noexcept{}
+void TransitiveInterface::onRetrievedSizeOverflow(const size_t sizeToAdd, const size_t previousSize) noexcept{}
 
-void ashe::TransitiveInterface::onSentSizeOverflow(const size_t sizeToAdd, const size_t previousSize) noexcept{}
+void TransitiveInterface::onSentSizeOverflow(const size_t sizeToAdd, const size_t previousSize) noexcept{}
+
+TransitiveInterface::thisClass& TransitiveInterface::resetStatistics(const bool sent/* = true*/, const bool retrieved/* = true*/) noexcept
+{
+	if(sent)
+		this->sentSize = 0;
+	if(retrieved)
+		this->retrievedSize = 0;
+
+	return *this;
+}
 
 } /* namespace ashe */
+
+namespace ashe
+{
+
+TransitiveInterface::TransitiveRune::TransitiveRune(const Code code, const std::string msg) noexcept
+		: code(code)
+{
+	std::stringstream sb;
+	this->className = "ashe::TransitiveInterface::TransitiveRune";
+	sb << this->className << '[' << thisClass::codeToString__(code) << ']';
+	if(! msg.empty())
+		sb << ' ' << msg;
+	this->whatString = sb.str();
+}
+
+TransitiveInterface::TransitiveRune::TransitiveRune(const thisClass& src) noexcept
+		: motherClass(src)
+{
+	this->className = "ashe::TransitiveInterface::TransitiveRune";
+	this->__construct(src);
+}
+
+TransitiveInterface::TransitiveRune::~TransitiveRune() noexcept{}
+
+TransitiveInterface::TransitiveRune::thisClass& TransitiveInterface::TransitiveRune::operator =(const thisClass& src) noexcept
+{
+	motherClass::__construct(src);
+	this->__construct(src);
+	return *this;
+}
+
+void TransitiveInterface::TransitiveRune::__construct(const thisClass& src) noexcept
+{
+	this->code = src.code;
+}
+
+unsigned int TransitiveInterface::TransitiveRune::getCode() const noexcept
+{
+	return this->code;
+}
+
+std::string TransitiveInterface::TransitiveRune::codeToString__(const Code x) noexcept
+{
+	switch(x)
+	{
+	case C_ILLEGAL_STATE: return "Illegal instance state";
+	case C_INTERNAL_ERROR: return "Internal error (errno set)";
+	case C_DELAYED: return "Data transfer delayed";
+	case C_NO_DATA_GIVEN: return "No data given for transfer";
+	case C_SHORT_LENGTH: return "Short data range";
+	case C_EMPTY_BUFFER: return "No data to read in the buffer";
+	}
+	return "Unknown";
+}
+
+}
 

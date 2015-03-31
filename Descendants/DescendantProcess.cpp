@@ -312,5 +312,24 @@ bool DescendantProcess::JoinedProcess::coreDumped() const throw (WeakRune)
 #endif
 }
 
+std::string DescendantProcess::JoinedProcess::toString() const noexcept
+{
+	std::stringstream sb;
+
+	sb << motherClass::toString();
+	if(this->exitedNormally())
+		sb << " returned code: " << this->exitCode();
+	if(this->signaled())
+		sb << " with signal: " << this->signalString();
+	try
+	{
+		if(this->coreDumped())
+			sb << " (core dumped)";
+	}
+	catch(...){}
+
+	return sb.str();
+}
+
 }
 

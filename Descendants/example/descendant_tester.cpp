@@ -58,18 +58,7 @@ void onChild(const int signal)
 	auto test = joinResult;
 	joinResult = test;
 
-	if(joinResult.exitedNormally())
-		std::cerr << "My daughter(" << joinResult.pid << ") returned: " << joinResult.exitCode() << std::endl;
-	else
-	{
-		std::cerr << "My daughter(" << joinResult.pid << ") has been terminated with signal: " << joinResult.signalString() << std::endl;
-		try
-		{
-			if(joinResult.coreDumped())
-				std::cerr << "The core has dumped." << std::endl;
-		}
-		catch(...){}
-	}
+	std::cerr << joinResult.toString() << std::endl;
 
 	exit(0);
 }
