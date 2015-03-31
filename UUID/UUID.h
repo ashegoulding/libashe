@@ -118,11 +118,11 @@ public:
 
 	protected:
 		/*
-		* Generates 256 random 64bit integers to make a random UUID.
+		* Generates 32 random 64bit integers to make a random UUID.
 		* Larger the value, the less chance of collision occurrence.
-		* But 256 (possible combination = 2^(256*8*8)) is just fine
+		* But 32 (possible combination = 2^(32*8*8)) is just fine
 		*/
-		size_t poolSize = 256;
+		size_t poolSize = 32;
 
 		void __construct(const thisClass &src) noexcept;
 

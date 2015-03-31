@@ -457,7 +457,7 @@ UUID UUID::RandomEngine::generate() noexcept
 
 	for(auto &v : content)
 		v = this->random();
-	::sha1_buffer((char*)content.data(), content.size(), hashed.data());
+	::sha1_buffer((char*)content.data(), content.size() * sizeof(uint64_t), hashed.data());
 	y.__build(hashed.data(), hashed.size(), UUID::VER_RANDOM);
 
 	return y;

@@ -20,7 +20,7 @@ IPEndpoint::IPEndpoint(const Version ver/* = V_NONE*/) noexcept
 }
 
 IPEndpoint::IPEndpoint(const struct sockaddr_in& ipv4) noexcept
-	: __address((unsigned char*)&ipv4.sin_addr, 4)
+	: __address((uint8_t*)&ipv4.sin_addr, 4)
 	, __port(ipv4.sin_port)
 {
 }

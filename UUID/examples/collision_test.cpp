@@ -48,14 +48,14 @@ void run()
 
 int main()
 {
-	ashe::UUID id = ashe::UUID_NS_DNS;
+	ashe::UUID id = ashe::UUID::NS_DNS;
 	ashe::UUID::MersenneTwisterEngine theEngine;
 	std::vector<std::thread> threadVector(std::thread::hardware_concurrency());
 
-	std::cerr << ashe::UUID_NS_DNS.toString() << std::endl;
-	std::cerr << ashe::UUID_NS_ISO_OID.toString() << std::endl;
-	std::cerr << ashe::UUID_NS_URL.toString() << std::endl;
-	std::cerr << ashe::UUID_NS_X500.toString() << std::endl;
+	std::cerr << ashe::UUID::NS_DNS.toString() << std::endl;
+	std::cerr << ashe::UUID::NS_ISO_OID.toString() << std::endl;
+	std::cerr << ashe::UUID::NS_URL.toString() << std::endl;
+	std::cerr << ashe::UUID::NS_X500.toString() << std::endl;
 
 	for(auto &v : threadVector)
 		v = std::thread(run);
