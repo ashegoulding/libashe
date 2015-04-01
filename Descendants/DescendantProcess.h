@@ -35,11 +35,13 @@ class DescendantProcess : public Icebank
 * @NOTE
 *  - Term 'join' is actually wait() function in posix.
 *  - This class is reusable after join() or detach() or
+*  - Not thread-safe. One thread for creation and one thread for join__(). Behaviour on more threads than those is undefined.
 * @Start and join (wait)
-*  - By signal(recommended): include <signal.h> and set handler for SIGCHLD. In the handler, join a process by join__().
+*  - By signal(recommended in a single threaded program): include <signal.h> and set handler for SIGCHLD. In the handler, join a process by join__().
 *   + The processes should be detached or daemonic.
+*   + Handling signals in multi-threaded program is a bit strange (Googld for signal handling and pthread signal masks and handler)
+*  - By handling thread(recommended in a multi-threaded program): Start a process and detach or unset daemonic. loop join__() in a thread that handles for process join.
 *  - By mother thread: Start a process and join it in a single thread.
-*  - By handling thread: Start a process and detach or unset daemonic. loop join__() in a thread that handles for process join.
 */
 public:
 	typedef Icebank motherClass;
