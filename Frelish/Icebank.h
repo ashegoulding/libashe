@@ -6,7 +6,7 @@
 namespace ashe
 {
 
-class Icebank : public Fjord
+class ASHE_DECL_EXT Icebank : public Fjord
 {
 /* Class that is under developing.
 * Derive from this class if a class is being made or buggy.
@@ -15,9 +15,9 @@ public:
 	typedef Fjord motherClass;
 	typedef Icebank thisClass;
 
-	Icebank() noexcept;
-	Icebank(const Icebank &src) noexcept;
-	virtual ~Icebank() noexcept;
+	Icebank() ASHE_NOEXCEPT;
+	Icebank(const Icebank &src) ASHE_NOEXCEPT;
+	virtual ~Icebank() ASHE_NOEXCEPT;
 };
 
 } /* namespace ashe */

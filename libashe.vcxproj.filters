@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="__MFCComponents">
+      <UniqueIdentifier>{4755a390-f511-4ea3-8618-faf503b528e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="__MFCComponents\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ColourSpace">
+      <UniqueIdentifier>{84d7f661-d8db-462f-9cfe-d3e3b07912e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Descendants">
+      <UniqueIdentifier>{4f4fe990-eace-47a8-8b42-eeff644d0f57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Frelish">
+      <UniqueIdentifier>{02973fd7-4cf7-45de-b9f1-67d953a65dd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{11380907-43b3-4ba3-8adb-080de87ab876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Semaphore">
+      <UniqueIdentifier>{baac61ad-75a7-42eb-891d-8c222cc1a14e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Siblings">
+      <UniqueIdentifier>{69355a13-ef45-41d6-8808-1e2ae1ecdb67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThreadPool">
+      <UniqueIdentifier>{55da74e5-2c8d-4724-a7ff-897ed35fe68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TransitiveInterface">
+      <UniqueIdentifier>{ba100e4d-9240-47f9-af13-13b2b97aeb5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UUID">
+      <UniqueIdentifier>{9f8fd11c-be74-4194-9141-0b780e7dea42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WebSocket">
+      <UniqueIdentifier>{1225c881-02dd-4d45-a4d6-9c54916b738b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Semaphore\examples">
+      <UniqueIdentifier>{ce958f5b-d9ff-48a1-bfa3-22ee61f81c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WebSocket\examples">
+      <UniqueIdentifier>{4f1a957d-aabe-45dc-9cf1-83b279c9f6a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Descendants\examples">
+      <UniqueIdentifier>{077015dd-39c2-4ff8-9dc3-1138b4718f94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UUID\examples">
+      <UniqueIdentifier>{347971db-de33-498b-a8c0-351a1ffd8cf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThreadPool\examples">
+      <UniqueIdentifier>{b8a602c0-9aea-4637-a0a4-11c59b0a241b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="__MFCComponents\libashe.rc">
+      <Filter>__MFCComponents\리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="__MFCComponents\dllmain.cpp">
+      <Filter>__MFCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="__MFCComponents\libashe.cpp">
+      <Filter>__MFCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="__MFCComponents\stdafx.cpp">
+      <Filter>__MFCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ColourSpace\ColourSpace.cpp">
+      <Filter>ColourSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="Descendants\DescendantPipe.cpp">
+      <Filter>Descendants</Filter>
+    </ClCompile>
+    <ClCompile Include="Descendants\DescendantProcess.cpp">
+      <Filter>Descendants</Filter>
+    </ClCompile>
+    <ClCompile Include="Frelish\Fjord.cpp">
+      <Filter>Frelish</Filter>
+    </ClCompile>
+    <ClCompile Include="Frelish\Frelish.cpp">
+      <Filter>Frelish</Filter>
+    </ClCompile>
+    <ClCompile Include="Frelish\Icebank.cpp">
+      <Filter>Frelish</Filter>
+    </ClCompile>
+    <ClCompile Include="Frelish\StrongRune.cpp">
+      <Filter>Frelish</Filter>
+    </ClCompile>
+    <ClCompile Include="Frelish\WeakRune.cpp">
+      <Filter>Frelish</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger\Logger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Semaphore\examples\concurrent_file_open_limit.cpp">
+      <Filter>Semaphore\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="WebSocket\WebSocket.cpp">
+      <Filter>WebSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="WebSocket\examples\echowsserver.cpp">
+      <Filter>WebSocket\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="WebSocket\examples\nonblock_wsechoserver.cpp">
+      <Filter>WebSocket\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="Descendants\examples\descendant_tester.cpp">
+      <Filter>Descendants\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="Descendants\examples\join_by_mother.cpp">
+      <Filter>Descendants\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="Descendants\examples\join_handler_thread.cpp">
+      <Filter>Descendants\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="UUID\UUID.cpp">
+      <Filter>UUID</Filter>
+    </ClCompile>
+    <ClCompile Include="UUID\examples\collision_test.cpp">
+      <Filter>UUID\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="UUID\examples\comparison_with_libuuid.cpp">
+      <Filter>UUID\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="TransitiveInterface\TransitiveInterface.cpp">
+      <Filter>TransitiveInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool\ThreadPool.cpp">
+      <Filter>ThreadPool</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool\examples\juggling.cpp">
+      <Filter>ThreadPool\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool\examples\workunit_assignment_delays.cpp">
+      <Filter>ThreadPool\examples</Filter>
+    </ClCompile>
+    <ClCompile Include="Siblings\IPEndpoint.cpp">
+      <Filter>Siblings</Filter>
+    </ClCompile>
+    <ClCompile Include="Siblings\TCPSocket.cpp">
+      <Filter>Siblings</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="__MFCComponents\libashe.aps">
+      <Filter>__MFCComponents</Filter>
+    </None>
+    <None Include="__MFCComponents\libashe.def">
+      <Filter>__MFCComponents</Filter>
+    </None>
+    <None Include="__MFCComponents\res\libashe.rc2">
+      <Filter>__MFCComponents\리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__MFCComponents\Resource.h">
+      <Filter>__MFCComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="__MFCComponents\stdafx.h">
+      <Filter>__MFCComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="__MFCComponents\targetver.h">
+      <Filter>__MFCComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ColourSpace\ColourSpace.h">
+      <Filter>ColourSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="Descendants\DescendantPipe.h">
+      <Filter>Descendants</Filter>
+    </ClInclude>
+    <ClInclude Include="Descendants\DescendantProcess.h">
+      <Filter>Descendants</Filter>
+    </ClInclude>
+    <ClInclude Include="Frelish\Fjord.h">
+      <Filter>Frelish</Filter>
+    </ClInclude>
+    <ClInclude Include="Frelish\Frelish.h">
+      <Filter>Frelish</Filter>
+    </ClInclude>
+    <ClInclude Include="Frelish\Icebank.h">
+      <Filter>Frelish</Filter>
+    </ClInclude>
+    <ClInclude Include="Frelish\StrongRune.h">
+      <Filter>Frelish</Filter>
+    </ClInclude>
+    <ClInclude Include="Frelish\WeakRune.h">
+      <Filter>Frelish</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger\Logger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Semaphore\Semaphore.h">
+      <Filter>Semaphore</Filter>
+    </ClInclude>
+    <ClInclude Include="WebSocket\WebSocket.h">
+      <Filter>WebSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="UUID\UUID.h">
+      <Filter>UUID</Filter>
+    </ClInclude>
+    <ClInclude Include="TransitiveInterface\TransitiveInterface.h">
+      <Filter>TransitiveInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool\ThreadPool.h">
+      <Filter>ThreadPool</Filter>
+    </ClInclude>
+    <ClInclude Include="Siblings\IPEndpoint.h">
+      <Filter>Siblings</Filter>
+    </ClInclude>
+    <ClInclude Include="Siblings\TCPSocket.h">
+      <Filter>Siblings</Filter>
+    </ClInclude>
+    <ClInclude Include="Frelish\MFCLinkage.h">
+      <Filter>Frelish</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

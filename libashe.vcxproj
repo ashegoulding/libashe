@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{530E81DF-5A32-45E6-8281-EFA7E3D45CB8}</ProjectGuid>
+    <RootNamespace>libashe</RootNamespace>
+    <Keyword>MFCDLLProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_AFXEXT;
+
+
+
+
+
+_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>__MFCComponents;Frelish;.</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>.\libashe.def</ModuleDefinitionFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_AFXEXT;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>__MFCComponents;Frelish;.</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>.\libashe.def</ModuleDefinitionFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ResourceCompile Include="__MFCComponents\libashe.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ColourSpace\ColourSpace.cpp" />
+    <ClCompile Include="Descendants\DescendantPipe.cpp" />
+    <ClCompile Include="Descendants\DescendantProcess.cpp" />
+    <ClCompile Include="Descendants\examples\descendant_tester.cpp" />
+    <ClCompile Include="Descendants\examples\join_by_mother.cpp" />
+    <ClCompile Include="Descendants\examples\join_handler_thread.cpp" />
+    <ClCompile Include="Frelish\Fjord.cpp" />
+    <ClCompile Include="Frelish\Frelish.cpp" />
+    <ClCompile Include="Frelish\Icebank.cpp" />
+    <ClCompile Include="Frelish\StrongRune.cpp" />
+    <ClCompile Include="Frelish\WeakRune.cpp" />
+    <ClCompile Include="Logger\Logger.cpp" />
+    <ClCompile Include="Semaphore\examples\concurrent_file_open_limit.cpp" />
+    <ClCompile Include="Siblings\IPEndpoint.cpp" />
+    <ClCompile Include="Siblings\TCPSocket.cpp" />
+    <ClCompile Include="ThreadPool\examples\juggling.cpp" />
+    <ClCompile Include="ThreadPool\examples\workunit_assignment_delays.cpp" />
+    <ClCompile Include="ThreadPool\ThreadPool.cpp" />
+    <ClCompile Include="TransitiveInterface\TransitiveInterface.cpp" />
+    <ClCompile Include="UUID\examples\collision_test.cpp" />
+    <ClCompile Include="UUID\examples\comparison_with_libuuid.cpp" />
+    <ClCompile Include="UUID\UUID.cpp" />
+    <ClCompile Include="WebSocket\examples\echowsserver.cpp" />
+    <ClCompile Include="WebSocket\examples\nonblock_wsechoserver.cpp" />
+    <ClCompile Include="WebSocket\WebSocket.cpp" />
+    <ClCompile Include="__MFCComponents\dllmain.cpp" />
+    <ClCompile Include="__MFCComponents\libashe.cpp" />
+    <ClCompile Include="__MFCComponents\stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="__MFCComponents\libashe.aps" />
+    <None Include="__MFCComponents\libashe.def" />
+    <None Include="__MFCComponents\res\libashe.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ColourSpace\ColourSpace.h" />
+    <ClInclude Include="Descendants\DescendantPipe.h" />
+    <ClInclude Include="Descendants\DescendantProcess.h" />
+    <ClInclude Include="Frelish\Fjord.h" />
+    <ClInclude Include="Frelish\Frelish.h" />
+    <ClInclude Include="Frelish\Icebank.h" />
+    <ClInclude Include="Frelish\MFCLinkage.h" />
+    <ClInclude Include="Frelish\StrongRune.h" />
+    <ClInclude Include="Frelish\WeakRune.h" />
+    <ClInclude Include="Logger\Logger.h" />
+    <ClInclude Include="Semaphore\Semaphore.h" />
+    <ClInclude Include="Siblings\IPEndpoint.h" />
+    <ClInclude Include="Siblings\TCPSocket.h" />
+    <ClInclude Include="ThreadPool\ThreadPool.h" />
+    <ClInclude Include="TransitiveInterface\TransitiveInterface.h" />
+    <ClInclude Include="UUID\UUID.h" />
+    <ClInclude Include="WebSocket\WebSocket.h" />
+    <ClInclude Include="__MFCComponents\Resource.h" />
+    <ClInclude Include="__MFCComponents\stdafx.h" />
+    <ClInclude Include="__MFCComponents\targetver.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

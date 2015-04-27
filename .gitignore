@@ -2,3 +2,10 @@
 
 /Debug
 /Release
+
+ipch/*
+
+*.sdf
+*.aps
+*.suo
+

@@ -9,7 +9,7 @@
 namespace ashe
 {
 
-class WeakRune : public Fjord, public std::exception
+class ASHE_DECL_EXT WeakRune : public Fjord, public std::exception
 {
 /* WeakRune: Exception that is likely expected and recoverable
 */
@@ -21,22 +21,22 @@ protected:
 	int errorNumber = 0;
 	std::string whatString;
 
-	void __construct(const thisClass &src) noexcept;
+	void __construct(const thisClass &src) ASHE_NOEXCEPT;
 
 public:
-	WeakRune(std::string msg = "") noexcept;
-	WeakRune(const thisClass &src) noexcept;
-	virtual ~WeakRune() noexcept;
+	WeakRune(std::string msg = "") ASHE_NOEXCEPT;
+	WeakRune(const thisClass &src) ASHE_NOEXCEPT;
+	virtual ~WeakRune() ASHE_NOEXCEPT;
 
-	thisClass &operator =(const thisClass &src) noexcept;
+	thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
-	virtual std::string toString() const noexcept;
-	virtual const char *what() const noexcept; //@Override, alias of getMsg
+	virtual std::string toString() const ASHE_NOEXCEPT;
+	virtual const char *what() const ASHE_NOEXCEPT; //@Override, alias of getMsg
 
-	virtual bool hasError() const noexcept;
-	virtual thisClass &setError() noexcept;
-	virtual int getErrorNumber() const noexcept;
-	virtual std::string getErrorString() const noexcept;
+	virtual bool hasError() const ASHE_NOEXCEPT;
+	virtual thisClass &setError() ASHE_NOEXCEPT;
+	virtual int getErrorNumber() const ASHE_NOEXCEPT;
+	virtual std::string getErrorString() const ASHE_NOEXCEPT;
 }; // class 'WeakRune'
 
 } // namespace 'ashe'

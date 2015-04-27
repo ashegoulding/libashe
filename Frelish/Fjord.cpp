@@ -8,19 +8,19 @@
 namespace ashe
 {
 
-Fjord::Fjord() noexcept
+Fjord::Fjord() ASHE_NOEXCEPT
 	: className("ashe::Fjord")
 {
 }
 
-Fjord::Fjord(const Fjord &src) noexcept
+Fjord::Fjord(const Fjord &src) ASHE_NOEXCEPT
 	: className(src.className)
 {
 }
 
-Fjord::~Fjord() noexcept{}
+Fjord::~Fjord() ASHE_NOEXCEPT {}
 
-std::string Fjord::toString() const noexcept
+std::string Fjord::toString() const ASHE_NOEXCEPT
 {
 	std::stringstream sb;
 	sb << this->className << " @" << this;
@@ -28,12 +28,12 @@ std::string Fjord::toString() const noexcept
 	return sb.str();
 }
 
-std::string Fjord::getClassName() const noexcept
+std::string Fjord::getClassName() const ASHE_NOEXCEPT
 {
 	return this->className;
 }
 
-void Fjord::__construct(const thisClass& src) noexcept
+void Fjord::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->className = src.className;
 }

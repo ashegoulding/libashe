@@ -6,63 +6,63 @@
 namespace ashe
 {
 
-WeakRune::WeakRune(std::string msg) noexcept
+WeakRune::WeakRune(std::string msg) ASHE_NOEXCEPT
 		: whatString(msg)
 {
 	this->className = "WeakRune";
 }
 
-WeakRune::WeakRune(const thisClass& src) noexcept
+WeakRune::WeakRune(const thisClass& src) ASHE_NOEXCEPT
 		: motherClass(src)
 {
 	this->className = "WeakRune";
 	thisClass::__construct(src);
 }
 
-WeakRune::~WeakRune() noexcept
+WeakRune::~WeakRune() ASHE_NOEXCEPT
 {
 }
 
-WeakRune::thisClass& WeakRune::operator =(const thisClass& src) noexcept
+WeakRune::thisClass& WeakRune::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	thisClass::__construct(src);
 	return *this;
 }
 
-std::string WeakRune::toString() const noexcept
+std::string WeakRune::toString() const ASHE_NOEXCEPT
 {
 	return this->whatString;
 }
 
-const char* WeakRune::what() const noexcept
+const char* WeakRune::what() const ASHE_NOEXCEPT
 {
 	return this->whatString.c_str();
 }
 
-void WeakRune::__construct(const thisClass& src) noexcept
+void WeakRune::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->whatString = src.whatString;
 	this->errorNumber = src.errorNumber;
 }
 
-bool WeakRune::hasError() const noexcept
+bool WeakRune::hasError() const ASHE_NOEXCEPT
 {
 	return this->errorNumber != 0;
 }
 
-WeakRune::thisClass& WeakRune::setError() noexcept
+WeakRune::thisClass& WeakRune::setError() ASHE_NOEXCEPT
 {
 	this->errorNumber = errno;
 	return *this;
 }
 
-int WeakRune::getErrorNumber() const noexcept
+int WeakRune::getErrorNumber() const ASHE_NOEXCEPT
 {
 	return this->errorNumber;
 }
 
-std::string WeakRune::getErrorString() const noexcept
+std::string WeakRune::getErrorString() const ASHE_NOEXCEPT
 {
 	std::stringstream sb;
 	const auto str = ::strerror(this->errorNumber);
@@ -77,4 +77,3 @@ std::string WeakRune::getErrorString() const noexcept
 }
 
 }
-
