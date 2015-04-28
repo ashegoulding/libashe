@@ -3,6 +3,14 @@
 *
 * C++11, POSIX WebSocket implementation by Ashe
 *
+* @NOTE
+*  - This implementation considered Intel CPUs only.
+*  - This will definitely not work on big-endian CPUs like ARM, SPARC, PowerPC and many more.
+*  - There will be a huge change on this implementation that covers the CPUs mentioned above
+*  - ... If I get to have some spare time in my workplace.
+*  - Mostly, endianess problem are implanted in WebSocket::Frame class.
+*  - It was huge mistake that I coded to handle 'first bytes' as a 16bit integer.
+*
 * @Refer
 *  - https://tools.ietf.org/html/rfc6455
 *  - https://developer.mozilla.org/en-US/docs/WebSockets/Writing_WebSocket_servers
