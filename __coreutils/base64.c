@@ -57,7 +57,7 @@
 #include <string.h>
 
 /* C89 compliant way to cast 'char' to 'unsigned char'. */
-static inline unsigned char
+static unsigned char
 to_uchar (char ch)
 {
   return ch;
@@ -318,7 +318,7 @@ base64_decode_ctx_init (struct base64_decode_context *ctx)
    and return CTX->buf.  In either case, advance *IN to point to the byte
    after the last one processed, and set *N_NON_NEWLINE to the number of
    verified non-newline bytes accessible through the returned pointer.  */
-static inline char *
+static char *
 get_4 (struct base64_decode_context *ctx,
        char const **in, char const *in_end,
        size_t *n_non_newline)
@@ -372,7 +372,7 @@ get_4 (struct base64_decode_context *ctx,
    as many bytes as possible are written to *OUT.  On return, advance
    *OUT to point to the byte after the last one written, and decrement
    *OUTLEN to reflect the number of bytes remaining in *OUT.  */
-static inline bool
+static bool
 decode_4 (char const *in, size_t inlen,
           char **outp, size_t *outleft)
 {

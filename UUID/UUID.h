@@ -26,10 +26,12 @@
 #include <random>
 #include <cstdint>
 
+#include <array>
+
 namespace ashe
 {
 
-class UUID : public Icebank
+class ASHE_DECL_EXT UUID : public Icebank
 {
 /* - Handling capability: All versions to 5
 * - Generating capability: 1, 4, 5
@@ -43,10 +45,10 @@ public:
 	typedef UUID thisClass;
 
 	// One can make one's own namespace in any version, not invading none of existing namespaces as follows:
-	static const UUID NS_DNS/* = "6ba7b810-9dad-11d1-80b4-00c04fd430c8"*/;
-	static const UUID NS_URL/* = "6ba7b811-9dad-11d1-80b4-00c04fd430c8"*/;
-	static const UUID NS_ISO_OID/* = "6ba7b812-9dad-11d1-80b4-00c04fd430c8"*/;
-	static const UUID NS_X500/* = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"*/;
+	static const UUID UUID_NS_DNS/* = "6ba7b810-9dad-11d1-80b4-00c04fd430c8"*/;
+	static const UUID UUID_NS_URL/* = "6ba7b811-9dad-11d1-80b4-00c04fd430c8"*/;
+	static const UUID UUID_NS_ISO_OID/* = "6ba7b812-9dad-11d1-80b4-00c04fd430c8"*/;
+	static const UUID UUID_NS_X500/* = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"*/;
 
 	/* A regular expression for searching an UUID string within a text or a string
 	* It is case sensitive. To search case insensitive, make your own std::regex instance based on this instance.
@@ -70,7 +72,7 @@ public:
 		VER_SHA1_AND_NAMESPACE = 5 // Supported
 	};
 
-	class Rune : public WeakRune
+	class ASHE_DECL_EXT Rune : public WeakRune
 	{
 	public:
 		typedef WeakRune motherClass;
@@ -86,24 +88,24 @@ public:
 			C_EMPTY_CONTENT // Merging a data with a namespace, the given data is empty
 		};
 
-		static std::string codeToString__(const Code x) noexcept;
+		static std::string codeToString__(const Code x) ASHE_NOEXCEPT;
 
 	protected:
 		Code code = C_NONE;
 
-		void __construct(const thisClass &src) noexcept;
+		void __construct(const thisClass &src) ASHE_NOEXCEPT;
 
 	public:
-		Rune(const Code code = C_NONE, const std::string msg = "") noexcept;
-		Rune(const thisClass &src) noexcept;
-		virtual ~Rune() noexcept;
+		Rune(const Code code = C_NONE, const std::string msg = "") ASHE_NOEXCEPT;
+		Rune(const thisClass &src) ASHE_NOEXCEPT;
+		virtual ~Rune() ASHE_NOEXCEPT;
 
-		virtual thisClass &operator =(const thisClass &src) noexcept;
+		virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
-		virtual Code getCode() const noexcept;
+		virtual Code getCode() const ASHE_NOEXCEPT;
 	};
 
-	class RandomEngine : public Icebank
+	class ASHE_DECL_EXT RandomEngine : public Icebank
 	{
 	/* Version 4 UUID generator engine interface
 	*
@@ -124,31 +126,31 @@ public:
 		*/
 		size_t poolSize = 32;
 
-		void __construct(const thisClass &src) noexcept;
+		void __construct(const thisClass &src) ASHE_NOEXCEPT;
 
 	public:
-		virtual ~RandomEngine() noexcept;
+		virtual ~RandomEngine() ASHE_NOEXCEPT;
 
 		// Copies only 'poolSize' member
-		virtual thisClass &operator =(const thisClass &src) noexcept;
+		virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
 		// Alias of generate()
-		virtual UUID operator()() noexcept;
+		virtual UUID operator()() ASHE_NOEXCEPT;
 
-		virtual size_t getPoolSize() const noexcept;
-		virtual thisClass &setPoolSize(const size_t size) noexcept;
+		virtual size_t getPoolSize() const ASHE_NOEXCEPT;
+		virtual thisClass &setPoolSize(const size_t size) ASHE_NOEXCEPT;
 
 		/* Generates a version 4, randomly generated UUID.
 		* Invokes random() method for randomness.
 		*/
-		virtual UUID generate() noexcept;
+		virtual UUID generate() ASHE_NOEXCEPT;
 		// Randomise the instance's random engine here like: srand(time(NULL)), std::seed() ...
-		virtual thisClass &randomise() noexcept = 0; //@Pure virtual
+		virtual thisClass &randomise() ASHE_NOEXCEPT = 0; //@Pure virtual
 		// Generate and return a random number
-		virtual uint64_t random() noexcept = 0; //@Pure virtual
+		virtual uint64_t random() ASHE_NOEXCEPT = 0; //@Pure virtual
 	};
 
-	class MersenneTwisterEngine : public RandomEngine
+	class ASHE_DECL_EXT MersenneTwisterEngine : public RandomEngine
 	{
 	// Random UUID generating engine implementation using std::mt19937_64
 	public:
@@ -159,19 +161,19 @@ public:
 		std::mt19937_64 __engine;
 
 	public:
-		MersenneTwisterEngine() noexcept;
-		MersenneTwisterEngine(const thisClass &src) noexcept;
-		virtual ~MersenneTwisterEngine() noexcept;
+		MersenneTwisterEngine() ASHE_NOEXCEPT;
+		MersenneTwisterEngine(const thisClass &src) ASHE_NOEXCEPT;
+		virtual ~MersenneTwisterEngine() ASHE_NOEXCEPT;
 
-		virtual thisClass &operator =(const thisClass &src) noexcept;
+		virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
-		virtual thisClass &randomise() noexcept; //@Implement
-		virtual uint64_t random() noexcept; //@Implement
+		virtual thisClass &randomise() ASHE_NOEXCEPT; //@Implement
+		virtual uint64_t random() ASHE_NOEXCEPT; //@Implement
 	};
 
 	static const unsigned int IMPL_VERSION = (unsigned int)VER_SHA1_AND_NAMESPACE;
 
-	static std::string versionToString__(const Version v) noexcept;
+	static std::string versionToString__(const Version v) ASHE_NOEXCEPT;
 	// Validates given 16bytes octet array: Version and magic digit
 	static void validate__(const void *x) throw(Rune);
 	/* Returns a randomly generated version 4 UUID by using default engine of the library.
@@ -183,7 +185,7 @@ public:
 	* @RETURN
 	*  - A randomly generated version 4 UUID instance from library's default random engine.
 	*/
-	static UUID generate__() noexcept;
+	static UUID generate__() ASHE_NOEXCEPT;
 
 protected:
 	uint8_t data[UUID_BYTE_SIZE]; // It's 16bytes / 128bits.
@@ -221,8 +223,8 @@ protected:
 	static void __putGlamour__(void *x, const Version ver) throw(StrongRune);
 
 	// Empty instance is not allowed to outside
-	UUID() noexcept;
-	virtual void __construct(const thisClass &src) noexcept;
+	UUID() ASHE_NOEXCEPT;
+	virtual void __construct(const thisClass &src) ASHE_NOEXCEPT;
 
 public:
 	/* Version 1
@@ -235,7 +237,7 @@ public:
 	*  - Wish to give 0 as 'seed'? Just 0 is ambiguous with NULL. Use UUID((unsigned long long)0)
 	*  - It is not RFC standard, recommended version 1! Intended for simple, short scalable use.
 	*/
-	UUID(const uint64_t seed) noexcept;
+	UUID(const uint64_t seed) ASHE_NOEXCEPT;
 	// Alias of UUID(const char *x, const size_t len = thisClass::UUID_STRING_LENGTH) throw(Rune)
 	UUID(const std::string &x) throw(Rune);
 	/* Constructs an instance from given string.
@@ -247,11 +249,11 @@ public:
 	 */
 	UUID(const void *buffer, const size_t len = thisClass::UUID_BYTE_SIZE) throw(Rune);
 	// Copy-constructs from given existing instance.
-	UUID(const thisClass &src) noexcept;
-	virtual ~UUID() noexcept;
+	UUID(const thisClass &src) ASHE_NOEXCEPT;
+	virtual ~UUID() ASHE_NOEXCEPT;
 
 	// Copy-constructs from given existing instance.
-	virtual thisClass &operator =(const thisClass &src) noexcept;
+	virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 	// Alias of UUID(const char *x, const size_t len = thisClass::UUID_STRING_LENGTH)
 	virtual thisClass &operator =(const std::string &x) throw(Rune);
 	// Alias of UUID(const char *x, const size_t len = thisClass::UUID_STRING_LENGTH)
@@ -264,40 +266,40 @@ public:
 	*  - For strings, these methods instantiate an UUID out of the given string and then compares to that.
 	*  - So for strings, they can throw Rune when invalid format of UUID string is given.
 	*/
-	virtual bool operator ==(const thisClass &x) const noexcept;
+	virtual bool operator ==(const thisClass &x) const ASHE_NOEXCEPT;
 	virtual bool operator ==(const std::string &x) const throw(Rune);
 	virtual bool operator ==(const char *x) const throw(Rune);
-	virtual bool operator <=(const thisClass &x) const noexcept;
+	virtual bool operator <=(const thisClass &x) const ASHE_NOEXCEPT;
 	virtual bool operator <=(const std::string &x) const throw(Rune);
 	virtual bool operator <=(const char *x) const throw(Rune);
-	virtual bool operator >=(const thisClass &x) const noexcept;
+	virtual bool operator >=(const thisClass &x) const ASHE_NOEXCEPT;
 	virtual bool operator >=(const std::string &x) const throw(Rune);
 	virtual bool operator >=(const char *x) const throw(Rune);
-	virtual bool operator <(const thisClass &x) const noexcept;
+	virtual bool operator <(const thisClass &x) const ASHE_NOEXCEPT;
 	virtual bool operator <(const std::string &x) const throw(Rune);
 	virtual bool operator <(const char *x) const throw(Rune);
-	virtual bool operator >(const thisClass &x) const noexcept;
+	virtual bool operator >(const thisClass &x) const ASHE_NOEXCEPT;
 	virtual bool operator >(const std::string &x) const throw(Rune);
 	virtual bool operator >(const char *x) const throw(Rune);
 
 	// Alias of merge()
-	virtual UUID operator +(const thisClass &x) const noexcept;
+	virtual UUID operator +(const thisClass &x) const ASHE_NOEXCEPT;
 	// Alias of merge()
 	virtual UUID operator +(const std::string &x) const throw(Rune);
 	// Alias of merge()
 	virtual UUID operator +(const char *x) const throw(Rune);
 
 	// Returns raw array of the instance's UUID data
-	virtual std::array<uint8_t, thisClass::UUID_BYTE_SIZE> toBinary() const noexcept;
+	virtual std::array<uint8_t, thisClass::UUID_BYTE_SIZE> toBinary() const ASHE_NOEXCEPT;
 	/* Returns a string representing the instance's UUID data with dashes, numbers and hexadecimal characters.
 	*
 	* @NOTE
 	*  - Give 'upper' true, wish to take a string in upper cases, though it is not standard according to RFC4112
 	*  - Maybe it overrides motherClass::toString() ? Not sure. It depends on what compiler says!
 	*/
-	virtual std::string toString(const bool upper = false) const noexcept; //@Override ?
+	virtual std::string toString(const bool upper = false) const ASHE_NOEXCEPT; //@Override ?
 	// Returns version of the instance's UUID data
-	virtual Version version() const noexcept;
+	virtual Version version() const ASHE_NOEXCEPT;
 
 	/* Namespace(merge) operations for version 5 UUID generation
 	*
@@ -308,7 +310,7 @@ public:
 	*  - One can make one's own namespace in any version.
 	*/
 	virtual UUID merge(const void *x, const size_t len) const throw(Rune);
-	virtual UUID merge(const thisClass &x) const noexcept;
+	virtual UUID merge(const thisClass &x) const ASHE_NOEXCEPT;
 	virtual UUID merge(const std::string &x) const throw(Rune);
 };
 

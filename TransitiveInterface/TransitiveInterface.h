@@ -25,12 +25,12 @@
 namespace ashe
 {
 
-class TransitiveInterface
+class ASHE_DECL_EXT TransitiveInterface
 {
 public:
 	typedef TransitiveInterface thisClass;
 
-	class TransitiveRune : public WeakRune
+	class ASHE_DECL_EXT TransitiveRune : public WeakRune
 	{
 	/* Inheritable Rune class.
 	* Inherit this class to specify exceptions on: socket
@@ -50,22 +50,22 @@ public:
 			C_EMPTY_BUFFER // The buffer of descriptor(s) is empty, no data to read
 		};
 
-		static std::string codeToString__(const Code x) noexcept;
+		static std::string codeToString__(const Code x) ASHE_NOEXCEPT;
 
 	protected:
 		// This is uint32_t for a reason
 		uint32_t code = (uint32_t)C_UNKNOWN;
 
-		void __construct(const thisClass &src) noexcept;
+		void __construct(const thisClass &src) ASHE_NOEXCEPT;
 
 	public:
-		TransitiveRune(const Code code, const std::string msg = "") noexcept;
-		TransitiveRune(const thisClass &src) noexcept;
-		virtual ~TransitiveRune() noexcept;
+		TransitiveRune(const Code code, const std::string msg = "") ASHE_NOEXCEPT;
+		TransitiveRune(const thisClass &src) ASHE_NOEXCEPT;
+		virtual ~TransitiveRune() ASHE_NOEXCEPT;
 
-		virtual thisClass &operator =(const thisClass &src) noexcept;
+		virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
-		virtual uint32_t getCode() const noexcept;
+		virtual uint32_t getCode() const ASHE_NOEXCEPT;
 	};
 
 protected:
@@ -90,12 +90,12 @@ protected:
 	// Detached state. Mostly for resource saving.
 	bool __detached = false;
 
-	virtual void __setStateBits(const uint32_t &bit, const bool set) noexcept;
-	virtual void __accumilateSentSize(const uint64_t sent) noexcept;
-	virtual void __accumilateRetrievedSize(const uint64_t sent) noexcept;
+	virtual void __setStateBits(const uint32_t &bit, const bool set) ASHE_NOEXCEPT;
+	virtual void __accumilateSentSize(const uint64_t sent) ASHE_NOEXCEPT;
+	virtual void __accumilateRetrievedSize(const uint64_t sent) ASHE_NOEXCEPT;
 
 public:
-	virtual ~TransitiveInterface() noexcept;
+	virtual ~TransitiveInterface() ASHE_NOEXCEPT;
 
 	virtual thisClass &post(const void *data, const size_t len) = 0; //@Pure virtual
 	virtual thisClass &post(const std::vector<uint8_t> &data) = 0; //@Pure virtual
@@ -121,37 +121,37 @@ public:
 	// For resource saving: Inserting instances into std containers like std::list
 	virtual thisClass &detach() = 0; //@Pure virtual
 	// Tests if the instance has detached.
-	virtual bool detached() const noexcept;
+	virtual bool detached() const ASHE_NOEXCEPT;
 
 	// Tests if any bad bits are NOT set.
-	virtual bool good() const noexcept;
+	virtual bool good() const ASHE_NOEXCEPT;
 	// Tests if the fail bit set.
-	virtual bool failed() const noexcept;
+	virtual bool failed() const ASHE_NOEXCEPT;
 	// Tests if the delayed bit set.
-	virtual bool delayed() const noexcept;
+	virtual bool delayed() const ASHE_NOEXCEPT;
 	// Tests if EOT bit set.
-	virtual bool ended() const noexcept;
+	virtual bool ended() const ASHE_NOEXCEPT;
 	// Tests if EOF bit set.
-	virtual bool closed() const noexcept;
+	virtual bool closed() const ASHE_NOEXCEPT;
 
 	// Returns actual descriptors that the instance is using.
 	// For poll(), select() or overlapped IO wrapping class support.
 	virtual thisClass &descriptors(std::set<int>& y) = 0;
 
 	// Returns retrieved data length in bytes.
-	virtual uint64_t retrieved(const bool overall = false) const noexcept;
+	virtual uint64_t retrieved(const bool overall = false) const ASHE_NOEXCEPT;
 	// Returns sent data length in bytes.
-	virtual uint64_t sent(const bool overall = false) const noexcept;
+	virtual uint64_t sent(const bool overall = false) const ASHE_NOEXCEPT;
 	// Sets overall statistic members to zero.
 	// NOTE: This does not set 'last' members also to zero. They shall be left intact.
-	virtual thisClass &resetStatistics(const bool sent = true, const bool retrieved = true) noexcept;
+	virtual thisClass &resetStatistics(const bool sent = true, const bool retrieved = true) ASHE_NOEXCEPT;
 
 	// Event handler for 'sentSize' member overflow.
 	// NOTE: It is about 16,384PB
-	virtual void onSentSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) noexcept;
+	virtual void onSentSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) ASHE_NOEXCEPT;
 	// Event handler for 'retrievedSize' member overflow.
 	// NOTE: It is about 16,384PB
-	virtual void onRetrievedSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) noexcept;
+	virtual void onRetrievedSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) ASHE_NOEXCEPT;
 };
 
 } /* namespace ashe */

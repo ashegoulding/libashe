@@ -1,6 +1,8 @@
 #ifndef ASHE_COLOURSPACE_H_
 #define ASHE_COLOURSPACE_H_
 
+#include "MFCLinkage.h"
+
 #include <string>
 #include <sstream>
 
@@ -9,23 +11,10 @@
 #include "ManagedBinary.h"
 #include <cstdint>
 
-#ifdef _MSC_BUILD
-
-#include "stdafx.h"
-#pragma warning(disable:4819) // �ҽ� ���ڵ� (cp949���� utf-8 ���ڿ�)
-#pragma warning(disable:4290) // throw() or noexpt
-#define _CRT_SECURE_NO_WARNINGS // c std lib
-
-#else
-
-#define AFX_EXT_API
-
-#endif
-
 namespace ashe
 {
 
-class AFX_EXT_API ColourSpace
+class ASHE_DECL_EXT ColourSpace
 {
 public:
 	typedef ColourSpace thisClass;
@@ -39,7 +28,7 @@ public:
 		CF_YUV422P
 	};
 
-	class AFX_EXT_API Exception : public std::exception
+	class ASHE_DECL_EXT Exception : public std::exception
 	{
 	public:
 		typedef std::exception motherClass;

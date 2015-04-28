@@ -14,10 +14,10 @@ namespace ashe
 {
 
 // One can make one's own namespace, in any version
-const UUID UUID::NS_DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
-const UUID UUID::NS_URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
-const UUID UUID::NS_ISO_OID = "6ba7b812-9dad-11d1-80b4-00c04fd430c8";
-const UUID UUID::NS_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
+const UUID UUID::UUID_NS_DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+const UUID UUID::UUID_NS_URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
+const UUID UUID::UUID_NS_ISO_OID = "6ba7b812-9dad-11d1-80b4-00c04fd430c8";
+const UUID UUID::UUID_NS_X500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 
 // For version (1 to 5, version digit) + (89ab magic digit)
 const std::regex UUID::REGEX("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}");
@@ -25,12 +25,12 @@ const std::regex UUID::REGEX("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[8-9a-b][
 static std::mutex __mtx__;
 static UUID::MersenneTwisterEngine __defaultEngine__;
 
-UUID::UUID() noexcept
+UUID::UUID() ASHE_NOEXCEPT
 {
 	this->className = "ashe::UUID";
 }
 
-UUID::UUID(const uint64_t seed) noexcept
+UUID::UUID(const uint64_t seed) ASHE_NOEXCEPT
 {
 	std::array<uint64_t, 2> buffer;
 	buffer[0] = seed;
@@ -60,14 +60,14 @@ UUID::UUID(const void* buffer, const size_t len) throw (Rune)
 	this->className = "ashe::UUID";
 }
 
-UUID::UUID(const thisClass& src) noexcept
+UUID::UUID(const thisClass& src) ASHE_NOEXCEPT
 	: motherClass(src)
 {
 	this->__construct(src);
 	this->className = "ashe::UUID";
 }
 
-UUID::~UUID()noexcept{}
+UUID::~UUID() ASHE_NOEXCEPT {}
 
 void UUID::__build(const void* x, const size_t len, const Version ver/* = VER_NONE*/) throw(Rune)
 {
@@ -153,12 +153,12 @@ void UUID::__parse(const char* x, const size_t len) throw (Rune)
 	}
 }
 
-void UUID::__construct(const thisClass& src) noexcept
+void UUID::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	::memcpy(this->data, src.data, thisClass::UUID_BYTE_SIZE);
 }
 
-UUID::thisClass& UUID::operator =(const thisClass& src) noexcept
+UUID::thisClass& UUID::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->__construct(src);
@@ -177,7 +177,7 @@ UUID::thisClass& UUID::operator =(const char* x) throw (Rune)
 	return *this;
 }
 
-bool UUID::operator ==(const thisClass& x) const noexcept
+bool UUID::operator ==(const thisClass& x) const ASHE_NOEXCEPT
 {
 	return ::memcmp(x.data, this->data, thisClass::UUID_BYTE_SIZE) == 0;
 }
@@ -194,7 +194,7 @@ bool UUID::operator ==(const char* x) const throw (Rune)
 	return ::memcmp(y.data, this->data, thisClass::UUID_BYTE_SIZE) == 0;
 }
 
-bool UUID::operator <=(const thisClass& x) const noexcept
+bool UUID::operator <=(const thisClass& x) const ASHE_NOEXCEPT
 {
 	return ::memcmp(x.data, this->data, thisClass::UUID_BYTE_SIZE) <= 0;
 }
@@ -211,7 +211,7 @@ bool UUID::operator <=(const char* x) const throw (Rune)
 	return ::memcmp(y.data, this->data, thisClass::UUID_BYTE_SIZE) <= 0;
 }
 
-bool UUID::operator >=(const thisClass& x) const noexcept
+bool UUID::operator >=(const thisClass& x) const ASHE_NOEXCEPT
 {
 	return ::memcmp(x.data, this->data, thisClass::UUID_BYTE_SIZE) >= 0;
 }
@@ -228,7 +228,7 @@ bool UUID::operator >=(const char* x) const throw (Rune)
 	return ::memcmp(y.data, this->data, thisClass::UUID_BYTE_SIZE) >= 0;
 }
 
-bool UUID::operator <(const thisClass& x) const noexcept
+bool UUID::operator <(const thisClass& x) const ASHE_NOEXCEPT
 {
 	return ::memcmp(x.data, this->data, thisClass::UUID_BYTE_SIZE) < 0;
 }
@@ -245,7 +245,7 @@ bool UUID::operator <(const char* x) const throw (Rune)
 	return ::memcmp(y.data, this->data, thisClass::UUID_BYTE_SIZE) < 0;
 }
 
-bool UUID::operator >(const thisClass& x) const noexcept
+bool UUID::operator >(const thisClass& x) const ASHE_NOEXCEPT
 {
 	return ::memcmp(x.data, this->data, thisClass::UUID_BYTE_SIZE) > 0;
 }
@@ -262,7 +262,7 @@ bool UUID::operator >(const char* x) const throw (Rune)
 	return ::memcmp(y.data, this->data, thisClass::UUID_BYTE_SIZE) > 0;
 }
 
-UUID UUID::operator +(const thisClass& x) const noexcept
+UUID UUID::operator +(const thisClass& x) const ASHE_NOEXCEPT
 {
 	return this->merge(x);
 }
@@ -277,14 +277,14 @@ UUID UUID::operator +(const char* x) const throw (Rune)
 	return this->merge(x, strlen(x)); // Throws Rune
 }
 
-std::array<uint8_t, UUID::UUID_BYTE_SIZE> UUID::toBinary() const noexcept
+std::array<uint8_t, UUID::UUID_BYTE_SIZE> UUID::toBinary() const ASHE_NOEXCEPT
 {
 	std::array<uint8_t, UUID::UUID_BYTE_SIZE> y;
 	::memcpy(y.data(), this->data, thisClass::UUID_BYTE_SIZE);
 	return y;
 }
 
-std::string UUID::toString(const bool upper/* = false*/) const noexcept
+std::string UUID::toString(const bool upper/* = false*/) const ASHE_NOEXCEPT
 {
 	std::stringstream sb;
 	std::string y;
@@ -307,7 +307,7 @@ std::string UUID::toString(const bool upper/* = false*/) const noexcept
 	return y;
 }
 
-UUID::Version UUID::version() const noexcept
+UUID::Version UUID::version() const ASHE_NOEXCEPT
 {
 	return (Version)(this->data[6] >> 4);
 }
@@ -328,7 +328,7 @@ UUID UUID::merge(const void* x, const size_t len) const throw(Rune)
 	return y;
 }
 
-UUID UUID::merge(const thisClass& x) const noexcept
+UUID UUID::merge(const thisClass& x) const ASHE_NOEXCEPT
 {
 	UUID y;
 	std::array<uint8_t, SHA1_DIGEST_SIZE> hashed;
@@ -347,7 +347,7 @@ UUID UUID::merge(const std::string& x) const throw(Rune)
 	return this->merge(x.data(), x.length());
 }
 
-UUID UUID::generate__() noexcept
+UUID UUID::generate__() ASHE_NOEXCEPT
 {
 	std::lock_guard<std::mutex> lg(__mtx__);
 	return __defaultEngine__.generate();
@@ -402,7 +402,7 @@ void UUID::validate__(const void* x) throw (Rune)
 	}
 }
 
-std::string UUID::versionToString__(const Version v) noexcept
+std::string UUID::versionToString__(const Version v) ASHE_NOEXCEPT
 {
 	switch(v)
 	{
@@ -420,36 +420,36 @@ std::string UUID::versionToString__(const Version v) noexcept
 namespace ashe
 {
 
-UUID::RandomEngine::~RandomEngine()noexcept{}
+UUID::RandomEngine::~RandomEngine() ASHE_NOEXCEPT {}
 
-void UUID::RandomEngine::__construct(const thisClass &src) noexcept
+void UUID::RandomEngine::__construct(const thisClass &src) ASHE_NOEXCEPT
 {
 	this->poolSize = src.poolSize;
 }
 
-UUID::RandomEngine::thisClass& UUID::RandomEngine::operator =(const thisClass& src) noexcept
+UUID::RandomEngine::thisClass& UUID::RandomEngine::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->__construct(src);
 	return *this;
 }
 
-UUID UUID::RandomEngine::operator ()() noexcept
+UUID UUID::RandomEngine::operator ()() ASHE_NOEXCEPT
 {
 	return this->generate();
 }
 
-UUID::RandomEngine::thisClass& UUID::RandomEngine::setPoolSize(const size_t poolSize) noexcept
+UUID::RandomEngine::thisClass& UUID::RandomEngine::setPoolSize(const size_t poolSize) ASHE_NOEXCEPT
 {
 	this->poolSize = poolSize;
 	return *this;
 }
 
-size_t UUID::RandomEngine::getPoolSize() const noexcept
+size_t UUID::RandomEngine::getPoolSize() const ASHE_NOEXCEPT
 {
 	return this->poolSize;
 }
 
-UUID UUID::RandomEngine::generate() noexcept
+UUID UUID::RandomEngine::generate() ASHE_NOEXCEPT
 {
 	UUID y;
 	std::vector<uint64_t> content(this->poolSize);
@@ -468,31 +468,31 @@ UUID UUID::RandomEngine::generate() noexcept
 namespace ashe
 {
 
-UUID::MersenneTwisterEngine::MersenneTwisterEngine() noexcept
+UUID::MersenneTwisterEngine::MersenneTwisterEngine() ASHE_NOEXCEPT
 {
 	this->className = "ashe::UUID::MersenneTwisterEngine";
 	this->randomise();
 }
 
-UUID::MersenneTwisterEngine::MersenneTwisterEngine(const thisClass& src) noexcept
+UUID::MersenneTwisterEngine::MersenneTwisterEngine(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->className = "ashe::UUID::MersenneTwisterEngine";
 	motherClass::__construct(src);
 	this->randomise();
 }
 
-UUID::MersenneTwisterEngine::~MersenneTwisterEngine() noexcept
+UUID::MersenneTwisterEngine::~MersenneTwisterEngine() ASHE_NOEXCEPT
 {
 }
 
-UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::operator =(const thisClass& src) noexcept
+UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->randomise();
 	return *this;
 }
 
-UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::randomise() noexcept
+UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::randomise() ASHE_NOEXCEPT
 {
 	std::lock_guard<std::mutex> lg(__mtx__);
 	std::seed_seq sq = {__defaultEngine__.random(), (uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count()};
@@ -500,7 +500,7 @@ UUID::MersenneTwisterEngine::thisClass& UUID::MersenneTwisterEngine::randomise()
 	return *this;
 }
 
-uint64_t UUID::MersenneTwisterEngine::random() noexcept
+uint64_t UUID::MersenneTwisterEngine::random() ASHE_NOEXCEPT
 {
 	return this->__engine();
 }
@@ -510,7 +510,7 @@ uint64_t UUID::MersenneTwisterEngine::random() noexcept
 namespace ashe
 {
 
-UUID::Rune::Rune(const Code code/* = C_NONE*/, const std::string msg/* = ""*/) noexcept
+UUID::Rune::Rune(const Code code/* = C_NONE*/, const std::string msg/* = ""*/) ASHE_NOEXCEPT
 		: code(code)
 {
 	std::stringstream sb;
@@ -518,32 +518,32 @@ UUID::Rune::Rune(const Code code/* = C_NONE*/, const std::string msg/* = ""*/) n
 	this->whatString = sb.str();
 }
 
-UUID::Rune::Rune(const thisClass& src) noexcept
+UUID::Rune::Rune(const thisClass& src) ASHE_NOEXCEPT
 		: motherClass(src)
 {
 	this->__construct(src);
 }
 
-UUID::Rune::~Rune()noexcept{}
+UUID::Rune::~Rune() ASHE_NOEXCEPT {}
 
-UUID::Rune::thisClass& UUID::Rune::operator =(const thisClass& src) noexcept
+UUID::Rune::thisClass& UUID::Rune::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->__construct(src);
 	return *this;
 }
 
-void UUID::Rune::__construct(const thisClass& src) noexcept
+void UUID::Rune::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->code = src.code;
 }
 
-UUID::Rune::Code UUID::Rune::getCode() const noexcept
+UUID::Rune::Code UUID::Rune::getCode() const ASHE_NOEXCEPT
 {
 	return this->code;
 }
 
-std::string UUID::Rune::codeToString__(const Code x) noexcept
+std::string UUID::Rune::codeToString__(const Code x) ASHE_NOEXCEPT
 {
 	switch(x)
 	{

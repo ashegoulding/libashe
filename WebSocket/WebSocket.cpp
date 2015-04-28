@@ -22,26 +22,26 @@ namespace ashe
 /* WebSocket implementation
  *
  */
-WebSocket::WebSocket() noexcept
+WebSocket::WebSocket() ASHE_NOEXCEPT
 {
 	this->className = "ashe::WebSocket";
 }
 
-WebSocket::WebSocket(const WebSocket& src) noexcept
+WebSocket::WebSocket(const WebSocket& src) ASHE_NOEXCEPT
 		: motherClass(src)
 {
 	this->__construct(src);
 	this->className = "ashe::WebSocket";
 }
 
-WebSocket::~WebSocket() noexcept
+WebSocket::~WebSocket() ASHE_NOEXCEPT
 {
 	if(this->closeOnDelete)
 		this->close(true);
 }
 
 
-WebSocket& WebSocket::operator =(const WebSocket& src) noexcept
+WebSocket& WebSocket::operator =(const WebSocket& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->__construct(src);
@@ -49,13 +49,13 @@ WebSocket& WebSocket::operator =(const WebSocket& src) noexcept
 	return *this;
 }
 
-void WebSocket::__construct(const thisClass& src) noexcept
+void WebSocket::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->fd = src.fd;
 	this->__clearStash();
 }
 
-void WebSocket::__clearStash() noexcept
+void WebSocket::__clearStash() ASHE_NOEXCEPT
 {
 	for(auto&v : this->stash)
 		v.clear();
@@ -65,7 +65,7 @@ void WebSocket::__clearStash() noexcept
 	this->wasHandshaking = false;
 }
 
-void WebSocket::__clearRequest() noexcept
+void WebSocket::__clearRequest() ASHE_NOEXCEPT
 {
 	this->handshook = false;
 	this->requestedUrl.clear();
@@ -107,7 +107,7 @@ WebSocket WebSocket::accept() throw (int)
 	return ny;
 }
 
-WebSocket& WebSocket::close(const bool urgently) noexcept
+WebSocket& WebSocket::close(const bool urgently) ASHE_NOEXCEPT
 {
 	if(urgently)
 	{
@@ -210,12 +210,12 @@ WebSocket &WebSocket::post() throw (int, ssize_t)
 	return *this;
 }
 
-std::string WebSocket::getPeerAddressString() const noexcept
+std::string WebSocket::getPeerAddressString() const ASHE_NOEXCEPT
 {
 	return ::inet_ntoa(*(in_addr*)this->getPeerAddress().data());
 }
 
-std::vector<unsigned char> WebSocket::getPeerAddress() const noexcept
+std::vector<unsigned char> WebSocket::getPeerAddress() const ASHE_NOEXCEPT
 {
 	socklen_t len;
 	struct sockaddr_storage addr;
@@ -225,7 +225,7 @@ std::vector<unsigned char> WebSocket::getPeerAddress() const noexcept
 	return std::vector<unsigned char>(p, p + 4);
 }
 
-unsigned short WebSocket::getBindPort() const noexcept
+unsigned short WebSocket::getBindPort() const ASHE_NOEXCEPT
 {
 	struct sockaddr_in sin;
 	socklen_t len = sizeof(struct sockaddr_in);
@@ -402,7 +402,7 @@ WebSocket& WebSocket::handshake() throw (std::string, int, ssize_t)
 	return *this;
 }
 
-unsigned short WebSocket::getPeerPort() const noexcept
+unsigned short WebSocket::getPeerPort() const ASHE_NOEXCEPT
 {
 	socklen_t len;
 	struct sockaddr_storage addr;
@@ -411,34 +411,34 @@ unsigned short WebSocket::getPeerPort() const noexcept
 	return ntohs(v4->sin_port);
 }
 
-size_t WebSocket::getHeaderLimit() const noexcept
+size_t WebSocket::getHeaderLimit() const ASHE_NOEXCEPT
 {
 	return this->headerLimit;
 }
 
-WebSocket& WebSocket::setHeaderLimit(const size_t limit) noexcept
+WebSocket& WebSocket::setHeaderLimit(const size_t limit) ASHE_NOEXCEPT
 {
 	this->headerLimit = limit;
 	return *this;
 }
 
-size_t WebSocket::getHeaderLineLimit() const noexcept
+size_t WebSocket::getHeaderLineLimit() const ASHE_NOEXCEPT
 {
 	return this->headerLineLimit;
 }
 
-WebSocket& WebSocket::setHeaderLineLimit(const size_t limit) noexcept
+WebSocket& WebSocket::setHeaderLineLimit(const size_t limit) ASHE_NOEXCEPT
 {
 	this->headerLineLimit = limit;
 	return *this;
 }
 
-size_t WebSocket::getBufferSize() const noexcept
+size_t WebSocket::getBufferSize() const ASHE_NOEXCEPT
 {
 	return this->bufferSize;
 }
 
-WebSocket& WebSocket::setBufferSize(const size_t size) noexcept
+WebSocket& WebSocket::setBufferSize(const size_t size) ASHE_NOEXCEPT
 {
 	int tmp = (int)size;
 	socklen_t tmp1 = sizeof(int);
@@ -473,13 +473,13 @@ bool WebSocket::isNonBlock() const throw (int)
 	return (flags & O_NONBLOCK) != 0;
 }
 
-WebSocket& WebSocket::setFrameSizeLimit(const size_t size) noexcept
+WebSocket& WebSocket::setFrameSizeLimit(const size_t size) ASHE_NOEXCEPT
 {
 	this->frameSizeLimit = size;
 	return *this;
 }
 
-size_t WebSocket::getFrameSizeLimit() const noexcept
+size_t WebSocket::getFrameSizeLimit() const ASHE_NOEXCEPT
 {
 	return this->frameSizeLimit;
 }
@@ -524,12 +524,12 @@ WebSocket& WebSocket::shutdownBoth() throw (int)
 	return *this;
 }
 
-std::map<std::string, std::string> WebSocket::getRequestedValues() noexcept
+std::map<std::string, std::string> WebSocket::getRequestedValues() ASHE_NOEXCEPT
 {
 	return this->values;
 }
 
-std::string WebSocket::getRequestedUrl() noexcept
+std::string WebSocket::getRequestedUrl() ASHE_NOEXCEPT
 {
 	return this->requestedUrl;
 }
@@ -541,7 +541,7 @@ namespace ashe
 /* WebSocket::Frame implementation
  *
  */
-WebSocket::Frame::Frame() noexcept
+WebSocket::Frame::Frame() ASHE_NOEXCEPT
 {
 	this->className = "ashe::WebSocket::Frame";
 }
@@ -627,18 +627,18 @@ WebSocket::Frame::Frame(std::vector<unsigned char>& v, const size_t frameSizeLim
 	v.erase(v.begin(), v.begin() + pos);
 }
 
-WebSocket::Frame::Frame(const thisClass& src) noexcept
+WebSocket::Frame::Frame(const thisClass& src) ASHE_NOEXCEPT
 		: motherClass(src)
 {
 	this->__construct(src);
 	this->className = "ashe::WebSocket::Frame";
 }
 
-WebSocket::Frame::~Frame() noexcept
+WebSocket::Frame::~Frame() ASHE_NOEXCEPT
 {
 }
 
-WebSocket::Frame& WebSocket::Frame::operator =(const thisClass& src) noexcept
+WebSocket::Frame& WebSocket::Frame::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->__construct(src);
@@ -646,7 +646,7 @@ WebSocket::Frame& WebSocket::Frame::operator =(const thisClass& src) noexcept
 	return *this;
 }
 
-void WebSocket::Frame::__construct(const thisClass& src) noexcept
+void WebSocket::Frame::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	::memcpy(&this->firstBytes, &src.firstBytes, sizeof(unsigned short));
 	if(src.hasMask())
@@ -657,7 +657,7 @@ void WebSocket::Frame::__construct(const thisClass& src) noexcept
 	this->__updatePayloadSize();
 }
 
-std::vector<unsigned char> WebSocket::Frame::__maskPayload() const noexcept
+std::vector<unsigned char> WebSocket::Frame::__maskPayload() const ASHE_NOEXCEPT
 {
 	std::vector<unsigned char> y(this->payload);
 	std::vector<unsigned char>::size_type i = 0;
@@ -666,7 +666,7 @@ std::vector<unsigned char> WebSocket::Frame::__maskPayload() const noexcept
 	return y;
 }
 
-void WebSocket::Frame::__updatePayloadSize() noexcept
+void WebSocket::Frame::__updatePayloadSize() ASHE_NOEXCEPT
 {
 	const auto size = this->payload.size();
 	if(size > 65535)
@@ -677,12 +677,12 @@ void WebSocket::Frame::__updatePayloadSize() noexcept
 		this->firstBytes |= (unsigned short)size;
 }
 
-bool WebSocket::Frame::fin() const noexcept
+bool WebSocket::Frame::fin() const ASHE_NOEXCEPT
 {
 	return (this->firstBytes & 0b1000000000000000) != 0;
 }
 
-WebSocket::Frame& WebSocket::Frame::setFin(const bool fin) noexcept
+WebSocket::Frame& WebSocket::Frame::setFin(const bool fin) ASHE_NOEXCEPT
 {
 	if(fin)
 		this->firstBytes |= 0b1000000000000000;
@@ -691,30 +691,30 @@ WebSocket::Frame& WebSocket::Frame::setFin(const bool fin) noexcept
 	return *this;
 }
 
-bool WebSocket::Frame::rsv(const unsigned char idx) const noexcept
+bool WebSocket::Frame::rsv(const unsigned char idx) const ASHE_NOEXCEPT
 {
 	assert(idx < 3);
 	return (this->firstBytes & (0b0001000000000000 << idx)) != 0;
 }
 
-WebSocket::Frame::OPCode WebSocket::Frame::opcode() const noexcept
+WebSocket::Frame::OPCode WebSocket::Frame::opcode() const ASHE_NOEXCEPT
 {
 	return (OPCode)((this->firstBytes & 0b0000111100000000) >> 8);
 }
 
-WebSocket::Frame& WebSocket::Frame::setOpcode(const OPCode opcode) noexcept
+WebSocket::Frame& WebSocket::Frame::setOpcode(const OPCode opcode) ASHE_NOEXCEPT
 {
 	this->firstBytes &= 0b1111000011111111;
 	this->firstBytes |= (unsigned short)opcode << 8;
 	return *this;
 }
 
-bool WebSocket::Frame::hasMask() const noexcept
+bool WebSocket::Frame::hasMask() const ASHE_NOEXCEPT
 {
 	return (this->firstBytes & 0b0000000010000000) != 0;
 }
 
-WebSocket::Frame& WebSocket::Frame::setMask(const unsigned int mask) noexcept
+WebSocket::Frame& WebSocket::Frame::setMask(const unsigned int mask) ASHE_NOEXCEPT
 {
 	this->mask.clear();
 	this->mask.push_back((unsigned char)(mask & 0xFF000000) >> 24);
@@ -725,45 +725,45 @@ WebSocket::Frame& WebSocket::Frame::setMask(const unsigned int mask) noexcept
 	return *this;
 }
 
-WebSocket::Frame& WebSocket::Frame::clearMask() noexcept
+WebSocket::Frame& WebSocket::Frame::clearMask() ASHE_NOEXCEPT
 {
 	this->mask.clear();
 	this->firstBytes &= 0b1111111101111111;
 	return *this;
 }
 
-std::vector<unsigned char> WebSocket::Frame::getPayload() const noexcept
+std::vector<unsigned char> WebSocket::Frame::getPayload() const ASHE_NOEXCEPT
 {
 	return this->payload;
 }
 
-size_t WebSocket::Frame::getPayloadSize() const noexcept
+size_t WebSocket::Frame::getPayloadSize() const ASHE_NOEXCEPT
 {
 	return (size_t)this->payload.size();
 }
 
-WebSocket::Frame& WebSocket::Frame::setPayload(const std::vector<unsigned char>& x) noexcept
+WebSocket::Frame& WebSocket::Frame::setPayload(const std::vector<unsigned char>& x) ASHE_NOEXCEPT
 {
 	this->payload = x;
 	this->__updatePayloadSize();
 	return *this;
 }
 
-WebSocket::Frame& WebSocket::Frame::setPayload(const std::string& x) noexcept
+WebSocket::Frame& WebSocket::Frame::setPayload(const std::string& x) ASHE_NOEXCEPT
 {
 	std::vector<unsigned char> xx((unsigned char*)x.data(), (unsigned char*)x.data() + x.length());
 	this->swapPayload(xx);
 	return *this;
 }
 
-WebSocket::Frame& WebSocket::Frame::swapPayload(std::vector<unsigned char>& x) noexcept
+WebSocket::Frame& WebSocket::Frame::swapPayload(std::vector<unsigned char>& x) ASHE_NOEXCEPT
 {
 	this->payload.swap(x);
 	this->__updatePayloadSize();
 	return *this;
 }
 
-size_t WebSocket::Frame::getFrameSize() const noexcept
+size_t WebSocket::Frame::getFrameSize() const ASHE_NOEXCEPT
 {
 	size_t extSize;
 	switch(this->firstBytes & 0b0000000001111111)
@@ -778,7 +778,7 @@ size_t WebSocket::Frame::getFrameSize() const noexcept
 	return 2 + extSize + this->getPayloadSize();
 }
 
-std::vector<unsigned char> WebSocket::Frame::toBinary() const noexcept
+std::vector<unsigned char> WebSocket::Frame::toBinary() const ASHE_NOEXCEPT
 {
 	std::vector<unsigned char> y;
 	unsigned char *p;
@@ -823,7 +823,7 @@ std::vector<unsigned char> WebSocket::Frame::toBinary() const noexcept
 	return y;
 }
 
-WebSocket::Frame& WebSocket::Frame::clearPayload() noexcept
+WebSocket::Frame& WebSocket::Frame::clearPayload() ASHE_NOEXCEPT
 {
 	std::vector<unsigned char> ny;
 	this->payload.swap(ny);
@@ -831,7 +831,7 @@ WebSocket::Frame& WebSocket::Frame::clearPayload() noexcept
 	return *this;
 }
 
-WebSocket::Frame& WebSocket::Frame::setMask(const std::vector<unsigned char>& mask) noexcept
+WebSocket::Frame& WebSocket::Frame::setMask(const std::vector<unsigned char>& mask) ASHE_NOEXCEPT
 {
 	this->mask = mask;
 	this->mask.resize(4);

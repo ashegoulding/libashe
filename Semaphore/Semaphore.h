@@ -28,7 +28,7 @@ namespace ashe
 {
 
 template<class ArithType>
-class Semaphore : public Icebank
+class ASHE_DECL_EXT Semaphore : public Icebank
 {
 /* Semaphore implementation, using C++11 features
 *
@@ -40,7 +40,7 @@ public:
 	typedef Icebank motherClass;
 	typedef Semaphore<ArithType> thisClass;
 
-	class Ticket : public Icebank
+	class ASHE_DECL_EXT Ticket : public Icebank
 	{
 	/* C++11 RAII compliant
 	*
@@ -63,13 +63,13 @@ public:
 		/* @Behaviour
 		 *  - Enters the section with 'mother' and 'crement'
 		 */
-		Ticket(Semaphore<ArithType> &mother, const ArithType crement = (ArithType)1) noexcept;
+		Ticket(Semaphore<ArithType> &mother, const ArithType crement = (ArithType)1) ASHE_NOEXCEPT;
 		// Unintended code, makes the program killed when invoked, reminds the programmer of his or her fault.
 		Ticket(const thisClass &src) throw(StrongRune);
 		/* @Behaviour
 		 *  - Invokes 'dispose()' methods, making the instance's 'mother' to leave the seciton.
 		 */
-		virtual ~Ticket() noexcept;
+		virtual ~Ticket() ASHE_NOEXCEPT;
 
 		// Unintended code, makes the program killed when invoked, reminds the programmer of his or her fault.
 		virtual thisClass &operator =(const thisClass &src) throw(StrongRune);
@@ -79,7 +79,7 @@ public:
 		 *  - Disposes the instance itself ('dispose()' method)
 		 *  - Then reconstructs itself with given Semaphore instance.
 		 */
-		virtual thisClass &operator =(Semaphore<ArithType> &src) noexcept;
+		virtual thisClass &operator =(Semaphore<ArithType> &src) ASHE_NOEXCEPT;
 
 		/* Leaves the section ('leave()' method of 'mother')
 		 *
@@ -88,7 +88,7 @@ public:
 		 *  - Sets 'mother' member to NULL, hence the instance shall have no linkage with no 'mother'
 		 *  - This method does nothing when it is already disposed.
 		 */
-		virtual thisClass &dispose() noexcept;
+		virtual thisClass &dispose() ASHE_NOEXCEPT;
 	};
 
 protected:
@@ -97,7 +97,7 @@ protected:
 	ArithType traffic, // Increasing value
 		concurrency; // Limit value
 
-	void __construct(const thisClass &src) noexcept;
+	void __construct(const thisClass &src) ASHE_NOEXCEPT;
 
 public:
 	/* Constructor
@@ -107,7 +107,7 @@ public:
 	 *  - works as plane mutex which this class wasn't meant to do.
 	 *  - Don't be a piss-taker. Give concurrency larger than 1
 	 */
-	Semaphore(const ArithType concurrency = (ArithType)1) noexcept;
+	Semaphore(const ArithType concurrency = (ArithType)1) ASHE_NOEXCEPT;
 	/* Copy-constructor
 	 *
 	 * @NOTE
@@ -115,24 +115,24 @@ public:
 	 *  - This constructor does not copy anything other than its attribute
 	 *  - (Holding threads, the state of mutex, 'traffic' member)
 	 */
-	Semaphore(const thisClass &src) noexcept;
+	Semaphore(const thisClass &src) ASHE_NOEXCEPT;
 	/* Destructor
 	 *
 	 * @NOTE
 	 *  - Deleting the instance with other threads running with it causes segfault.
 	 *  - Join them before the destruction.
 	 */
-	virtual ~Semaphore() noexcept;
+	virtual ~Semaphore() ASHE_NOEXCEPT;
 
 	// Reconstructor. Refer to the copy-constructor
-	virtual thisClass &operator =(const thisClass &src) noexcept;
+	virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
-	virtual thisClass &enter(const ArithType increment = (ArithType)1) noexcept;
-	virtual thisClass &leave(const ArithType decrement = (ArithType)1) noexcept;
+	virtual thisClass &enter(const ArithType increment = (ArithType)1) ASHE_NOEXCEPT;
+	virtual thisClass &leave(const ArithType decrement = (ArithType)1) ASHE_NOEXCEPT;
 	// Updates the concurrency run-time, making more blocked thread to be released.
-	virtual thisClass &setConcurrency(const ArithType x) noexcept;
-	virtual ArithType getConcurrency() const noexcept; // Not thread-safe
-	virtual ArithType getTraffic() const noexcept; // Not thread-safe
+	virtual thisClass &setConcurrency(const ArithType x) ASHE_NOEXCEPT;
+	virtual ArithType getConcurrency() const ASHE_NOEXCEPT; // Not thread-safe
+	virtual ArithType getTraffic() const ASHE_NOEXCEPT; // Not thread-safe
 };
 
 } /* namespace ashe */
@@ -141,7 +141,7 @@ namespace ashe
 {
 
 template<class ArithType>
-Semaphore<ArithType>::Semaphore(const ArithType concurrency/* = (ArithType)1*/) noexcept
+Semaphore<ArithType>::Semaphore(const ArithType concurrency/* = (ArithType)1*/) ASHE_NOEXCEPT
 	: concurrency(concurrency)
 {
 	std::stringstream sb;
@@ -152,7 +152,7 @@ Semaphore<ArithType>::Semaphore(const ArithType concurrency/* = (ArithType)1*/) 
 }
 
 template<class ArithType>
-Semaphore<ArithType>::Semaphore(const thisClass &src) noexcept
+Semaphore<ArithType>::Semaphore(const thisClass &src) ASHE_NOEXCEPT
 	: motherClass(src)
 {
 	this->__construct(src);
@@ -163,12 +163,12 @@ Semaphore<ArithType>::Semaphore(const thisClass &src) noexcept
 }
 
 template<class ArithType>
-Semaphore<ArithType>::~Semaphore() noexcept
+Semaphore<ArithType>::~Semaphore() ASHE_NOEXCEPT
 {
 }
 
 template<class ArithType>
-Semaphore<ArithType> &Semaphore<ArithType>::operator =(const thisClass &src) noexcept
+Semaphore<ArithType> &Semaphore<ArithType>::operator =(const thisClass &src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->__construct(src);
@@ -182,13 +182,13 @@ Semaphore<ArithType> &Semaphore<ArithType>::operator =(const thisClass &src) noe
 }
 
 template<class ArithType>
-void Semaphore<ArithType>::__construct(const thisClass& src) noexcept
+void Semaphore<ArithType>::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->concurrency = src.concurrency;
 }
 
 template<class ArithType>
-Semaphore<ArithType> &Semaphore<ArithType>::enter(const ArithType increment/* = (ArithType)1*/) noexcept
+Semaphore<ArithType> &Semaphore<ArithType>::enter(const ArithType increment/* = (ArithType)1*/) ASHE_NOEXCEPT
 {
 	std::unique_lock<std::mutex> l(this->__concurrencyMtx);
 	while(this->concurrency <= this->traffic)
@@ -199,7 +199,7 @@ Semaphore<ArithType> &Semaphore<ArithType>::enter(const ArithType increment/* = 
 }
 
 template<class ArithType>
-Semaphore<ArithType>& Semaphore<ArithType>::leave(const ArithType decrement/* = (ArithType)1*/) noexcept
+Semaphore<ArithType>& Semaphore<ArithType>::leave(const ArithType decrement/* = (ArithType)1*/) ASHE_NOEXCEPT
 {
 	std::unique_lock<std::mutex> l(this->__concurrencyMtx);
 	this->traffic -= decrement;
@@ -209,7 +209,7 @@ Semaphore<ArithType>& Semaphore<ArithType>::leave(const ArithType decrement/* = 
 }
 
 template<class ArithType>
-Semaphore<ArithType> &Semaphore<ArithType>::setConcurrency(const ArithType x) noexcept
+Semaphore<ArithType> &Semaphore<ArithType>::setConcurrency(const ArithType x) ASHE_NOEXCEPT
 {
 	std::unique_lock<std::mutex> l(this->__concurrencyMtx);
 	this->concurrency = x;
@@ -219,13 +219,13 @@ Semaphore<ArithType> &Semaphore<ArithType>::setConcurrency(const ArithType x) no
 }
 
 template<class ArithType>
-ArithType Semaphore<ArithType>::getConcurrency() const noexcept
+ArithType Semaphore<ArithType>::getConcurrency() const ASHE_NOEXCEPT
 {
 	return this->concurrency;
 }
 
 template<class ArithType>
-ArithType Semaphore<ArithType>::getTraffic() const noexcept
+ArithType Semaphore<ArithType>::getTraffic() const ASHE_NOEXCEPT
 {
 	return this->traffic;
 }
@@ -236,7 +236,7 @@ namespace ashe
 {
 
 template<class ArithType>
-Semaphore<ArithType>::Ticket::Ticket(Semaphore<ArithType>& mother, const ArithType crement/* = (ArithType)1*/) noexcept
+Semaphore<ArithType>::Ticket::Ticket(Semaphore<ArithType>& mother, const ArithType crement/* = (ArithType)1*/) ASHE_NOEXCEPT
 	: mother(&mother)
 	, crement(crement)
 {
@@ -254,7 +254,7 @@ Semaphore<ArithType>::Ticket::Ticket(const thisClass& src) throw(StrongRune)
 }
 
 template<class ArithType>
-Semaphore<ArithType>::Ticket::~Ticket() noexcept
+Semaphore<ArithType>::Ticket::~Ticket() ASHE_NOEXCEPT
 {
 	this->dispose();
 }
@@ -267,7 +267,7 @@ typename Semaphore<ArithType>::Ticket &Semaphore<ArithType>::Ticket::operator =(
 }
 
 template<class ArithType>
-typename Semaphore<ArithType>::Ticket &Semaphore<ArithType>::Ticket::operator =(Semaphore<ArithType>& src) noexcept
+typename Semaphore<ArithType>::Ticket &Semaphore<ArithType>::Ticket::operator =(Semaphore<ArithType>& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->dispose().mother = &src;
@@ -282,7 +282,7 @@ typename Semaphore<ArithType>::Ticket &Semaphore<ArithType>::Ticket::operator =(
 }
 
 template<class ArithType>
-typename Semaphore<ArithType>::Ticket &Semaphore<ArithType>::Ticket::dispose() noexcept
+typename Semaphore<ArithType>::Ticket &Semaphore<ArithType>::Ticket::dispose() ASHE_NOEXCEPT
 {
 	if(this->mother)
 	{

@@ -73,7 +73,7 @@ sha1_init_ctx (struct sha1_ctx *ctx)
 /* Copy the 4 byte value from v into the memory location pointed to by *cp,
    If your architecture allows unaligned access this is equivalent to
    * (uint32_t *) cp = v  */
-static inline void
+static void
 set_uint32 (char *cp, uint32_t v)
 {
   memcpy (cp, &v, sizeof v);
@@ -223,7 +223,7 @@ sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
       size_t add = 128 - left_over > len ? len : 128 - left_over;
 
       memcpy (&((char *) ctx->buffer)[left_over], buffer, add);
-      ctx->buflen += add;
+      ctx->buflen += (uint32_t)add;
 
       if (ctx->buflen > 64)
         {
@@ -275,7 +275,7 @@ sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
           left_over -= 64;
           memcpy (ctx->buffer, &ctx->buffer[16], left_over);
         }
-      ctx->buflen = left_over;
+	  ctx->buflen = (uint32_t)left_over;
     }
 }
 
@@ -313,7 +313,7 @@ sha1_process_block (const void *buffer, size_t len, struct sha1_ctx *ctx)
   /* First increment the byte count.  RFC 1321 specifies the possible
      length of the file up to 2^64 bits.  Here we only compute the
      number of bytes.  Do a double word increment.  */
-  ctx->total[0] += len;
+  ctx->total[0] += (uint32_t)len;
   if (ctx->total[0] < len)
     ++ctx->total[1];
 

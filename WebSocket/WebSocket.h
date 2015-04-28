@@ -41,14 +41,14 @@
 namespace ashe
 {
 
-class WebSocket : public Icebank
+class ASHE_DECL_EXT WebSocket : public Icebank
 {
 public:
 	typedef Icebank motherClass;
 	typedef WebSocket thisClass;
 	const static int implementedVersion__ = 13;
 
-	class Frame : public Icebank
+	class ASHE_DECL_EXT Frame : public Icebank
 	{
 	public:
 		typedef Icebank motherClass;
@@ -68,36 +68,36 @@ public:
 		std::vector<unsigned char> mask;
 		std::vector<unsigned char> payload;
 
-		void __construct(const thisClass &src) noexcept;
-		void __updatePayloadSize() noexcept;
-		virtual std::vector<unsigned char> __maskPayload() const noexcept;
+		void __construct(const thisClass &src) ASHE_NOEXCEPT;
+		void __updatePayloadSize() ASHE_NOEXCEPT;
+		virtual std::vector<unsigned char> __maskPayload() const ASHE_NOEXCEPT;
 
 	public:
-		Frame() noexcept;
-		Frame(const thisClass &src) noexcept;
+		Frame() ASHE_NOEXCEPT;
+		Frame(const thisClass &src) ASHE_NOEXCEPT;
 		Frame(std::vector<unsigned char> &v, const size_t frameSizeLimit) throw(ssize_t, std::string);
-		virtual ~Frame() noexcept;
+		virtual ~Frame() ASHE_NOEXCEPT;
 
-		Frame &operator =(const thisClass &src) noexcept;
+		Frame &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
-		virtual bool fin() const noexcept;
-		virtual Frame &setFin(const bool fin) noexcept;
-		virtual bool rsv(const unsigned char idx) const noexcept;
-		virtual OPCode opcode() const noexcept;
-		virtual Frame &setOpcode(const OPCode opcode) noexcept;
-		virtual bool hasMask() const noexcept;
-		virtual Frame &setMask(const unsigned int mask) noexcept;
-		virtual Frame &setMask(const std::vector<unsigned char> &mask) noexcept;
-		virtual Frame &clearMask() noexcept;
-		virtual std::vector<unsigned char> getPayload() const noexcept;
-		virtual size_t getPayloadSize() const noexcept;
-		virtual Frame &setPayload(const std::vector<unsigned char> &x) noexcept;
-		virtual Frame &setPayload(const std::string &x) noexcept;
-		virtual Frame &swapPayload(std::vector<unsigned char> &x) noexcept;
-		virtual Frame &clearPayload() noexcept;
-		virtual size_t getFrameSize() const noexcept;
+		virtual bool fin() const ASHE_NOEXCEPT;
+		virtual Frame &setFin(const bool fin) ASHE_NOEXCEPT;
+		virtual bool rsv(const unsigned char idx) const ASHE_NOEXCEPT;
+		virtual OPCode opcode() const ASHE_NOEXCEPT;
+		virtual Frame &setOpcode(const OPCode opcode) ASHE_NOEXCEPT;
+		virtual bool hasMask() const ASHE_NOEXCEPT;
+		virtual Frame &setMask(const unsigned int mask) ASHE_NOEXCEPT;
+		virtual Frame &setMask(const std::vector<unsigned char> &mask) ASHE_NOEXCEPT;
+		virtual Frame &clearMask() ASHE_NOEXCEPT;
+		virtual std::vector<unsigned char> getPayload() const ASHE_NOEXCEPT;
+		virtual size_t getPayloadSize() const ASHE_NOEXCEPT;
+		virtual Frame &setPayload(const std::vector<unsigned char> &x) ASHE_NOEXCEPT;
+		virtual Frame &setPayload(const std::string &x) ASHE_NOEXCEPT;
+		virtual Frame &swapPayload(std::vector<unsigned char> &x) ASHE_NOEXCEPT;
+		virtual Frame &clearPayload() ASHE_NOEXCEPT;
+		virtual size_t getFrameSize() const ASHE_NOEXCEPT;
 
-		virtual std::vector<unsigned char> toBinary() const noexcept;
+		virtual std::vector<unsigned char> toBinary() const ASHE_NOEXCEPT;
 	};
 
 protected:
@@ -120,30 +120,30 @@ protected:
 
 	bool reuseAddr = false, closeOnDelete = true;
 
-	void __construct(const thisClass &src) noexcept;
-	void __clearStash() noexcept;
-	void __clearRequest() noexcept;
+	void __construct(const thisClass &src) ASHE_NOEXCEPT;
+	void __clearStash() ASHE_NOEXCEPT;
+	void __clearRequest() ASHE_NOEXCEPT;
 
 public:
 	int fd = -1;
 
-	WebSocket() noexcept;
-	WebSocket(const WebSocket &src) noexcept;
-	virtual ~WebSocket() noexcept;
+	WebSocket() ASHE_NOEXCEPT;
+	WebSocket(const WebSocket &src) ASHE_NOEXCEPT;
+	virtual ~WebSocket() ASHE_NOEXCEPT;
 
-	virtual WebSocket &operator =(const WebSocket &src) noexcept;
+	virtual WebSocket &operator =(const WebSocket &src) ASHE_NOEXCEPT;
 
 	virtual WebSocket &bind(const unsigned short port, const std::string address = "0.0.0.0") throw(int);
 	virtual WebSocket &listen(const int backlog = 10) throw(int);
 	virtual WebSocket accept() throw(int);
 	virtual WebSocket &handshake() throw(std::string, int, ssize_t);
-	virtual WebSocket &close(const bool urgently = false) noexcept;
+	virtual WebSocket &close(const bool urgently = false) ASHE_NOEXCEPT;
 	virtual WebSocket &shutdown(const bool input, const bool output) throw(int);
 	virtual WebSocket &shutdownBoth() throw(int);
 
 	virtual std::map<std::string, std::string> getHeader() throw(std::string);
-	virtual std::map<std::string, std::string> getRequestedValues() noexcept;
-	virtual std::string getRequestedUrl() noexcept;
+	virtual std::map<std::string, std::string> getRequestedValues() ASHE_NOEXCEPT;
+	virtual std::string getRequestedUrl() ASHE_NOEXCEPT;
 
 	virtual Frame receive() throw(ssize_t, int, std::string);
 	virtual WebSocket &post(const Frame &frame) throw(int, ssize_t);
@@ -153,19 +153,19 @@ public:
 	virtual bool isNonBlock() const throw(int);
 	virtual WebSocket &setReuseAddress(const bool reuse) throw(int);
 	virtual bool isReuseAddress() throw(int);
-	virtual std::string getPeerAddressString() const noexcept;
-	virtual std::vector<unsigned char> getPeerAddress() const noexcept;
-	virtual unsigned short getBindPort() const noexcept;
-	virtual unsigned short getPeerPort() const noexcept;
+	virtual std::string getPeerAddressString() const ASHE_NOEXCEPT;
+	virtual std::vector<unsigned char> getPeerAddress() const ASHE_NOEXCEPT;
+	virtual unsigned short getBindPort() const ASHE_NOEXCEPT;
+	virtual unsigned short getPeerPort() const ASHE_NOEXCEPT;
 
-	virtual size_t getHeaderLimit() const noexcept;
-	virtual WebSocket &setHeaderLimit(const size_t limit) noexcept;
-	virtual size_t getHeaderLineLimit() const noexcept;
-	virtual WebSocket &setHeaderLineLimit(const size_t limit) noexcept;
-	virtual size_t getBufferSize() const noexcept;
-	virtual WebSocket &setBufferSize(const size_t size) noexcept;
-	virtual WebSocket &setFrameSizeLimit(const size_t size) noexcept;
-	virtual size_t getFrameSizeLimit() const noexcept;
+	virtual size_t getHeaderLimit() const ASHE_NOEXCEPT;
+	virtual WebSocket &setHeaderLimit(const size_t limit) ASHE_NOEXCEPT;
+	virtual size_t getHeaderLineLimit() const ASHE_NOEXCEPT;
+	virtual WebSocket &setHeaderLineLimit(const size_t limit) ASHE_NOEXCEPT;
+	virtual size_t getBufferSize() const ASHE_NOEXCEPT;
+	virtual WebSocket &setBufferSize(const size_t size) ASHE_NOEXCEPT;
+	virtual WebSocket &setFrameSizeLimit(const size_t size) ASHE_NOEXCEPT;
+	virtual size_t getFrameSizeLimit() const ASHE_NOEXCEPT;
 };
 
 } /* namespace ashe */

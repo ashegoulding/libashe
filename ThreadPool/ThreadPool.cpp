@@ -20,14 +20,14 @@
 namespace ashe
 {
 
-ThreadPool::ThreadPool(const uint16_t spawn/* = std::thread::hardware_concurrency()*/) noexcept
+ThreadPool::ThreadPool(const uint16_t spawn/* = std::thread::hardware_concurrency()*/) ASHE_NOEXCEPT
 		: __initialSize(spawn)
 {
 	this->className = "ashe::ThreadPool";
 	this->__spawnPoolThreads(spawn);
 }
 
-ThreadPool::ThreadPool(const thisClass &src) noexcept
+ThreadPool::ThreadPool(const thisClass &src) ASHE_NOEXCEPT
 		: motherClass(src)
 		, __initialSize(0)
 {
@@ -35,12 +35,12 @@ ThreadPool::ThreadPool(const thisClass &src) noexcept
 	this->__construct(src);
 }
 
-ThreadPool::~ThreadPool() noexcept
+ThreadPool::~ThreadPool() ASHE_NOEXCEPT
 {
 	this->recall();
 }
 
-ThreadPool::thisClass& ThreadPool::operator =(const thisClass& src) noexcept
+ThreadPool::thisClass& ThreadPool::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->__construct(src);
@@ -48,7 +48,7 @@ ThreadPool::thisClass& ThreadPool::operator =(const thisClass& src) noexcept
 	return *this;
 }
 
-void ThreadPool::__construct(const thisClass& src) noexcept
+void ThreadPool::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->recall();
 	this->__initialSize = src.__initialSize;
@@ -56,7 +56,7 @@ void ThreadPool::__construct(const thisClass& src) noexcept
 	this->__spawnPoolThreads(src.__initialSize);
 }
 
-void ThreadPool::recall() noexcept
+void ThreadPool::recall() ASHE_NOEXCEPT
 {
 	PoolThread *th;
 
@@ -88,7 +88,7 @@ void ThreadPool::recall() noexcept
 	}
 }
 
-void ThreadPool::__spawnPoolThreads(const uint16_t x) noexcept
+void ThreadPool::__spawnPoolThreads(const uint16_t x) ASHE_NOEXCEPT
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
 	uint16_t i;
@@ -97,7 +97,7 @@ void ThreadPool::__spawnPoolThreads(const uint16_t x) noexcept
 		this->__resting.push(new PoolThread(this));
 }
 
-void ThreadPool::__onTickEnd(PoolThread* th) noexcept
+void ThreadPool::__onTickEnd(PoolThread* th) ASHE_NOEXCEPT
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
 	std::set<PoolThread*>::iterator pos = this->__working.find(th);
@@ -162,24 +162,24 @@ ThreadPool::thisClass& ThreadPool::labour(WorkUnit* wu) throw(Rune)
 	return *this;
 }
 
-uint16_t ThreadPool::size() const noexcept
+uint16_t ThreadPool::size() const ASHE_NOEXCEPT
 {
 	return this->__initialSize;
 }
 
-uint16_t ThreadPool::countResting() noexcept
+uint16_t ThreadPool::countResting() ASHE_NOEXCEPT
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
 	return (uint16_t)this->__resting.size();
 }
 
-uint16_t ThreadPool::countWorking() noexcept
+uint16_t ThreadPool::countWorking() ASHE_NOEXCEPT
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
 	return (uint16_t)this->__working.size();
 }
 
-ThreadPool::thisClass& ThreadPool::count(uint16_t * resting, uint16_t * working) noexcept
+ThreadPool::thisClass& ThreadPool::count(uint16_t * resting, uint16_t * working) ASHE_NOEXCEPT
 {
 	std::lock_guard<std::mutex> l(this->__methodMtx);
 	if(resting)
@@ -190,13 +190,13 @@ ThreadPool::thisClass& ThreadPool::count(uint16_t * resting, uint16_t * working)
 	return *this;
 }
 
-ThreadPool::thisClass& ThreadPool::setNonBlockingLabour(const bool nonBlocking) noexcept
+ThreadPool::thisClass& ThreadPool::setNonBlockingLabour(const bool nonBlocking) ASHE_NOEXCEPT
 {
 	this->labourBlocking = !nonBlocking;
 	return *this;
 }
 
-bool ThreadPool::blockingLabour() const noexcept
+bool ThreadPool::blockingLabour() const ASHE_NOEXCEPT
 {
 	return this->labourBlocking;
 }
@@ -206,7 +206,7 @@ bool ThreadPool::blockingLabour() const noexcept
 namespace ashe
 {
 
-ThreadPool::Rune::Rune(const Code code, const std::string msg/* = ""*/) noexcept
+ThreadPool::Rune::Rune(const Code code, const std::string msg/* = ""*/) ASHE_NOEXCEPT
 		: code(code)
 {
 	this->className = "ashe::ThreadPool::Rune";
@@ -217,7 +217,7 @@ ThreadPool::Rune::Rune(const Code code, const std::string msg/* = ""*/) noexcept
 	this->whatString = sb.str();
 }
 
-ThreadPool::Rune::Rune(const thisClass& src) noexcept
+ThreadPool::Rune::Rune(const thisClass& src) ASHE_NOEXCEPT
 		: motherClass(src)
 		, code(src.code)
 {
@@ -225,11 +225,11 @@ ThreadPool::Rune::Rune(const thisClass& src) noexcept
 	this->className = "ashe::ThreadPool::Rune";
 }
 
-ThreadPool::Rune::~Rune() noexcept
+ThreadPool::Rune::~Rune() ASHE_NOEXCEPT
 {
 }
 
-ThreadPool::Rune::thisClass& ThreadPool::Rune::operator =(const thisClass& src) noexcept
+ThreadPool::Rune::thisClass& ThreadPool::Rune::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->__construct(src);
@@ -237,12 +237,12 @@ ThreadPool::Rune::thisClass& ThreadPool::Rune::operator =(const thisClass& src) 
 	return *this;
 }
 
-ThreadPool::Rune::Code ThreadPool::Rune::getCode() const noexcept
+ThreadPool::Rune::Code ThreadPool::Rune::getCode() const ASHE_NOEXCEPT
 {
 	return this->code;
 }
 
-std::string ThreadPool::Rune::codeToString__(const Code x) noexcept
+std::string ThreadPool::Rune::codeToString__(const Code x) ASHE_NOEXCEPT
 {
 	switch(x)
 	{
@@ -253,7 +253,7 @@ std::string ThreadPool::Rune::codeToString__(const Code x) noexcept
 	return "C_NONE";
 }
 
-void ThreadPool::Rune::__construct(const thisClass& src) noexcept
+void ThreadPool::Rune::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->code = src.code;
 }
@@ -263,20 +263,20 @@ void ThreadPool::Rune::__construct(const thisClass& src) noexcept
 namespace ashe
 {
 
-ThreadPool::WorkUnit::WorkUnit() noexcept
+ThreadPool::WorkUnit::WorkUnit() ASHE_NOEXCEPT
 {
 	this->className = "ashe::ThreadPool::WorkUnit";
 }
 
-ThreadPool::WorkUnit::WorkUnit(const thisClass& src) noexcept
+ThreadPool::WorkUnit::WorkUnit(const thisClass& src) ASHE_NOEXCEPT
 		: motherClass(src)
 {
 	this->className = "ashe::ThreadPool::WorkUnit";
 }
 
-ThreadPool::WorkUnit::~WorkUnit() noexcept{}
+ThreadPool::WorkUnit::~WorkUnit() ASHE_NOEXCEPT {}
 
-ThreadPool::WorkUnit::thisClass& ThreadPool::WorkUnit::operator =(const thisClass& src) noexcept
+ThreadPool::WorkUnit::thisClass& ThreadPool::WorkUnit::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	return *this;
 }
@@ -288,7 +288,7 @@ void ThreadPool::WorkUnit::onTick(){}
 namespace ashe
 {
 
-ThreadPool::PoolThread::PoolThread(ThreadPool *mother) noexcept
+ThreadPool::PoolThread::PoolThread(ThreadPool *mother) ASHE_NOEXCEPT
 		: mother(mother)
 {
 	assert(mother);
@@ -302,7 +302,7 @@ ThreadPool::PoolThread::PoolThread(const thisClass& src) throw (StrongRune)
 	throw StrongRune("Nothing can copy a thread!");
 }
 
-ThreadPool::PoolThread::~PoolThread() noexcept
+ThreadPool::PoolThread::~PoolThread() ASHE_NOEXCEPT
 {
 	this->die();
 }
@@ -313,7 +313,7 @@ ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::operator =(const this
 	return *this;
 }
 
-void ThreadPool::PoolThread::__run() noexcept
+void ThreadPool::PoolThread::__run() ASHE_NOEXCEPT
 {
 	std::future<WorkUnit*> fulfillment = this->omen.get_future();
 	WorkUnit *wu;
@@ -332,7 +332,7 @@ PROC_START:
 	goto PROC_START;
 }
 
-ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::labour(WorkUnit *wu) noexcept
+ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::labour(WorkUnit *wu) ASHE_NOEXCEPT
 {
 	std::lock_guard<std::mutex> l(this->omenMtx);
 	this->omen.set_value(wu);
@@ -340,7 +340,7 @@ ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::labour(WorkUnit *wu) 
 	return *this;
 }
 
-ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::die() noexcept
+ThreadPool::PoolThread::thisClass& ThreadPool::PoolThread::die() ASHE_NOEXCEPT
 {
 	if(this->joinable())
 	{

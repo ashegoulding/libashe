@@ -53,6 +53,9 @@
     <Filter Include="ThreadPool\examples">
       <UniqueIdentifier>{b8a602c0-9aea-4637-a0a4-11c59b0a241b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="__coreutils">
+      <UniqueIdentifier>{3610c9e2-968d-49af-9279-f53ebd736aac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="__MFCComponents\libashe.rc">
@@ -92,9 +95,6 @@
     </ClCompile>
     <ClCompile Include="Frelish\WeakRune.cpp">
       <Filter>Frelish</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger\Logger.cpp">
-      <Filter>Logger</Filter>
     </ClCompile>
     <ClCompile Include="Semaphore\examples\concurrent_file_open_limit.cpp">
       <Filter>Semaphore\examples</Filter>
@@ -144,6 +144,15 @@
     <ClCompile Include="Siblings\TCPSocket.cpp">
       <Filter>Siblings</Filter>
     </ClCompile>
+    <ClCompile Include="Logger\Logger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="__coreutils\base64.c">
+      <Filter>__coreutils</Filter>
+    </ClCompile>
+    <ClCompile Include="__coreutils\sha1.c">
+      <Filter>__coreutils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="__MFCComponents\libashe.aps">
@@ -190,9 +199,6 @@
     <ClInclude Include="Frelish\WeakRune.h">
       <Filter>Frelish</Filter>
     </ClInclude>
-    <ClInclude Include="Logger\Logger.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
     <ClInclude Include="Semaphore\Semaphore.h">
       <Filter>Semaphore</Filter>
     </ClInclude>
@@ -216,6 +222,18 @@
     </ClInclude>
     <ClInclude Include="Frelish\MFCLinkage.h">
       <Filter>Frelish</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger\Logger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="__coreutils\base64.h">
+      <Filter>__coreutils</Filter>
+    </ClInclude>
+    <ClInclude Include="__coreutils\sha1.h">
+      <Filter>__coreutils</Filter>
+    </ClInclude>
+    <ClInclude Include="__coreutils\u64.h">
+      <Filter>__coreutils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,14 +6,14 @@ namespace ashe
 {
 
 const uint32_t TransitiveInterface::SB_GOOD =			0;
-const uint32_t TransitiveInterface::SB_FAILED = 	0b00000000000000000000000000000001;
-const uint32_t TransitiveInterface::SB_DELAYED = 	0b00000000000000000000000000000010;
-const uint32_t TransitiveInterface::SB_ENDED = 		0b00000000000000000000000000000100;
-const uint32_t TransitiveInterface::SB_CLOSED = 	0b00000000000000000000000000001000;
+const uint32_t TransitiveInterface::SB_FAILED = 	1;
+const uint32_t TransitiveInterface::SB_DELAYED = 	2;
+const uint32_t TransitiveInterface::SB_ENDED = 		4;
+const uint32_t TransitiveInterface::SB_CLOSED = 	8;
 
-TransitiveInterface::~TransitiveInterface() noexcept {}
+TransitiveInterface::~TransitiveInterface() ASHE_NOEXCEPT {}
 
-void TransitiveInterface::__setStateBits(const uint32_t& bit, const bool set) noexcept
+void TransitiveInterface::__setStateBits(const uint32_t& bit, const bool set) ASHE_NOEXCEPT
 {
 	if(set)
 	{
@@ -26,67 +26,67 @@ void TransitiveInterface::__setStateBits(const uint32_t& bit, const bool set) no
 		this->stateBits &= ~bit;
 }
 
-bool TransitiveInterface::detached() const noexcept
+bool TransitiveInterface::detached() const ASHE_NOEXCEPT
 {
 	return this->__detached;
 }
 
-bool TransitiveInterface::good() const noexcept
+bool TransitiveInterface::good() const ASHE_NOEXCEPT
 {
 	return this->stateBits == 0;
 }
 
-bool TransitiveInterface::failed() const noexcept
+bool TransitiveInterface::failed() const ASHE_NOEXCEPT
 {
 	return (this->stateBits & SB_FAILED) != 0;
 }
 
-bool TransitiveInterface::delayed() const noexcept
+bool TransitiveInterface::delayed() const ASHE_NOEXCEPT
 {
 	return (this->stateBits & SB_DELAYED) != 0;
 }
 
-bool TransitiveInterface::ended() const noexcept
+bool TransitiveInterface::ended() const ASHE_NOEXCEPT
 {
 	return (this->stateBits & SB_ENDED) != 0;
 }
 
-bool TransitiveInterface::closed() const noexcept
+bool TransitiveInterface::closed() const ASHE_NOEXCEPT
 {
 	return (this->stateBits & SB_CLOSED) != 0;
 }
 
-uint64_t TransitiveInterface::retrieved(const bool overall/* = false*/) const noexcept
+uint64_t TransitiveInterface::retrieved(const bool overall/* = false*/) const ASHE_NOEXCEPT
 {
 	return overall? this->retrievedSize : this->lastRetrievedSize;
 }
 
-uint64_t TransitiveInterface::sent(const bool overall/* = false*/) const noexcept
+uint64_t TransitiveInterface::sent(const bool overall/* = false*/) const ASHE_NOEXCEPT
 {
 	return overall? this->sentSize :  this->lastSentSize;
 }
 
-void TransitiveInterface::__accumilateSentSize(const uint64_t sent) noexcept
+void TransitiveInterface::__accumilateSentSize(const uint64_t sent) ASHE_NOEXCEPT
 {
-	const size_t prev = this->sentSize;
+	const uint64_t prev = this->sentSize;
 	this->sentSize += sent;
 	if(this->sentSize < prev)
 		this->onSentSizeOverflow(sent, prev);
 }
 
-void TransitiveInterface::__accumilateRetrievedSize(const uint64_t sent) noexcept
+void TransitiveInterface::__accumilateRetrievedSize(const uint64_t sent) ASHE_NOEXCEPT
 {
-	const size_t prev = this->retrievedSize;
+	const uint64_t prev = this->retrievedSize;
 	this->retrievedSize += sent;
 	if(this->retrievedSize < prev)
 		this->onRetrievedSizeOverflow(sent, prev);
 }
 
-void TransitiveInterface::onRetrievedSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) noexcept{}
+void TransitiveInterface::onRetrievedSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) ASHE_NOEXCEPT {}
 
-void TransitiveInterface::onSentSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) noexcept{}
+void TransitiveInterface::onSentSizeOverflow(const uint64_t sizeToAdd, const uint64_t previousSize) ASHE_NOEXCEPT {}
 
-TransitiveInterface::thisClass& TransitiveInterface::resetStatistics(const bool sent/* = true*/, const bool retrieved/* = true*/) noexcept
+TransitiveInterface::thisClass& TransitiveInterface::resetStatistics(const bool sent/* = true*/, const bool retrieved/* = true*/) ASHE_NOEXCEPT
 {
 	if(sent)
 		this->sentSize = 0;
@@ -101,7 +101,7 @@ TransitiveInterface::thisClass& TransitiveInterface::resetStatistics(const bool 
 namespace ashe
 {
 
-TransitiveInterface::TransitiveRune::TransitiveRune(const Code code, const std::string msg) noexcept
+TransitiveInterface::TransitiveRune::TransitiveRune(const Code code, const std::string msg) ASHE_NOEXCEPT
 		: code(code)
 {
 	std::stringstream sb;
@@ -112,33 +112,33 @@ TransitiveInterface::TransitiveRune::TransitiveRune(const Code code, const std::
 	this->whatString = sb.str();
 }
 
-TransitiveInterface::TransitiveRune::TransitiveRune(const thisClass& src) noexcept
+TransitiveInterface::TransitiveRune::TransitiveRune(const thisClass& src) ASHE_NOEXCEPT
 		: motherClass(src)
 {
 	this->className = "ashe::TransitiveInterface::TransitiveRune";
 	this->__construct(src);
 }
 
-TransitiveInterface::TransitiveRune::~TransitiveRune() noexcept{}
+TransitiveInterface::TransitiveRune::~TransitiveRune() ASHE_NOEXCEPT {}
 
-TransitiveInterface::TransitiveRune::thisClass& TransitiveInterface::TransitiveRune::operator =(const thisClass& src) noexcept
+TransitiveInterface::TransitiveRune::thisClass& TransitiveInterface::TransitiveRune::operator =(const thisClass& src) ASHE_NOEXCEPT
 {
 	motherClass::__construct(src);
 	this->__construct(src);
 	return *this;
 }
 
-void TransitiveInterface::TransitiveRune::__construct(const thisClass& src) noexcept
+void TransitiveInterface::TransitiveRune::__construct(const thisClass& src) ASHE_NOEXCEPT
 {
 	this->code = src.code;
 }
 
-uint32_t TransitiveInterface::TransitiveRune::getCode() const noexcept
+uint32_t TransitiveInterface::TransitiveRune::getCode() const ASHE_NOEXCEPT
 {
 	return this->code;
 }
 
-std::string TransitiveInterface::TransitiveRune::codeToString__(const Code x) noexcept
+std::string TransitiveInterface::TransitiveRune::codeToString__(const Code x) ASHE_NOEXCEPT
 {
 	switch(x)
 	{

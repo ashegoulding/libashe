@@ -29,7 +29,7 @@
 namespace ashe
 {
 
-class ThreadPool : public Fjord
+class ASHE_DECL_EXT ThreadPool : public Fjord
 {
 /* Implement WorkUnit first for PoolThread to run.
 *
@@ -46,7 +46,7 @@ public:
 	typedef Fjord motherClass;
 	typedef ThreadPool thisClass;
 
-	class Rune : public WeakRune
+	class ASHE_DECL_EXT Rune : public WeakRune
 	{
 	public:
 		typedef WeakRune motherClass;
@@ -61,24 +61,24 @@ public:
 		};
 
 		// Converts Code enumeration to literal string
-		static std::string codeToString__(const Code x) noexcept;
+		static std::string codeToString__(const Code x) ASHE_NOEXCEPT;
 
 	protected:
 		Code code;
 
-		void __construct(const thisClass &src) noexcept;
+		void __construct(const thisClass &src) ASHE_NOEXCEPT;
 
 	public:
-		Rune(const Code code, const std::string msg = "") noexcept;
-		Rune(const thisClass &src) noexcept;
-		virtual ~Rune() noexcept;
+		Rune(const Code code, const std::string msg = "") ASHE_NOEXCEPT;
+		Rune(const thisClass &src) ASHE_NOEXCEPT;
+		virtual ~Rune() ASHE_NOEXCEPT;
 
-		virtual thisClass &operator =(const thisClass &src) noexcept;
+		virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
-		virtual Code getCode() const noexcept;
+		virtual Code getCode() const ASHE_NOEXCEPT;
 	};
 
-	class WorkUnit : public Fjord
+	class ASHE_DECL_EXT WorkUnit : public Fjord
 	{
 	// WorkUnit that PoolThread runs when it's given by labour() method
 	public:
@@ -87,11 +87,11 @@ public:
 
 		/* Constructors do nothing special
 		 */
-		WorkUnit() noexcept;
-		WorkUnit(const thisClass &src) noexcept;
-		virtual ~WorkUnit() noexcept;
+		WorkUnit() ASHE_NOEXCEPT;
+		WorkUnit(const thisClass &src) ASHE_NOEXCEPT;
+		virtual ~WorkUnit() ASHE_NOEXCEPT;
 
-		virtual thisClass &operator =(const thisClass &src) noexcept;
+		virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
 		/* A method that arbitrary PoolThread runs.
 		 * Override this method to make the thread to do something.
@@ -105,7 +105,7 @@ public:
 	};
 
 protected:
-	class PoolThread : protected std::thread
+	class ASHE_DECL_EXT PoolThread : protected std::thread
 	{
 	/* Thread class that would be nurtured by superior class.
 	* I don't think you will ever get to derive this class.
@@ -132,14 +132,14 @@ protected:
 		 *  - Waits to be awaken by ThreadPool::labour() method.
 		 *  - Returns if its mother(ThreadPool) calls itself in, or runs given WorkUnit
 		 */
-		virtual void __run() noexcept;
+		virtual void __run() ASHE_NOEXCEPT;
 
 	public:
 		// Assertion fails if 'mother' is NULL
-		PoolThread(ThreadPool *mother) noexcept;
+		PoolThread(ThreadPool *mother) ASHE_NOEXCEPT;
 		// Do not invoke this
 		PoolThread(const thisClass &src) throw(StrongRune);
-		virtual ~PoolThread() noexcept;
+		virtual ~PoolThread() ASHE_NOEXCEPT;
 
 		// Do not invoke this
 		virtual thisClass &operator =(const thisClass &src) throw(StrongRune);
@@ -149,8 +149,8 @@ protected:
 		 * @Behaviour
 		 *  - If the given WorkUnit is NULL, __run() method shall return
 		 */
-		virtual thisClass &labour(WorkUnit *wu) noexcept;
-		virtual thisClass &die() noexcept;
+		virtual thisClass &labour(WorkUnit *wu) ASHE_NOEXCEPT;
+		virtual thisClass &die() ASHE_NOEXCEPT;
 	};
 
 	uint16_t __initialSize; // The constructed number of threads
@@ -164,11 +164,11 @@ protected:
 	 */
 	std::promise<unsigned short> __restingEvent;
 
-	void __construct(const thisClass &src) noexcept;
-	virtual void __spawnPoolThreads(const uint16_t x) noexcept;
+	void __construct(const thisClass &src) ASHE_NOEXCEPT;
+	virtual void __spawnPoolThreads(const uint16_t x) ASHE_NOEXCEPT;
 
 	// PoolThreads reports to this method when their work is done.
-	virtual void __onTickEnd(PoolThread *th) noexcept;
+	virtual void __onTickEnd(PoolThread *th) ASHE_NOEXCEPT;
 
 public:
 	/* Default value of 'spawn' is the number of the system's threads
@@ -178,10 +178,10 @@ public:
 	 *  - Be sure to instantiate with non-zero number of spawn threads
 	 *  - Empty ThreadPool's labour() method shall only throw Rune
 	 */
-	ThreadPool(const uint16_t spawn = (uint16_t)std::thread::hardware_concurrency()) noexcept;
+	ThreadPool(const uint16_t spawn = (uint16_t)std::thread::hardware_concurrency()) ASHE_NOEXCEPT;
 	// Refer to operator =()
-	ThreadPool(const thisClass &src) noexcept;
-	virtual ~ThreadPool() noexcept;
+	ThreadPool(const thisClass &src) ASHE_NOEXCEPT;
+	virtual ~ThreadPool() ASHE_NOEXCEPT;
 
 	/* This profound copy-constructor assigns given instance's attribute -- __initialSize, labourBlocking
 	 *
@@ -190,26 +190,26 @@ public:
 	 *  - Assigns its attributes the given instance
 	 *  - Respawns the number of threads that of the given instance
 	 */
-	virtual thisClass &operator =(const thisClass &src) noexcept;
+	virtual thisClass &operator =(const thisClass &src) ASHE_NOEXCEPT;
 
 	/* Returns the __initialSize
 	 *
 	 * @Note
 	 *  - The return value is not the number of the PoolThreads currently active
 	 */
-	virtual uint16_t size() const noexcept;
+	virtual uint16_t size() const ASHE_NOEXCEPT;
 	/* Counts currently sleeping, resting PoolThreads
 	 *
 	 * @Note
 	 *  - Uses mutex. Calling this often may cause bottleneck
 	 */
-	virtual uint16_t countResting() noexcept;
+	virtual uint16_t countResting() ASHE_NOEXCEPT;
 	/* Counts currently working, deployed PoolThreads
 	 *
 	 * @Note
 	 *  - Uses mutex internally. Calling this often may cause bottleneck
 	 */
-	virtual uint16_t countWorking() noexcept;
+	virtual uint16_t countWorking() ASHE_NOEXCEPT;
 	/* Combination of countResting(), countWorking() methods.
 	 * With previous methods, there was no way to know both resting and working PoolThread
 	 * at a certain time point, calling those two methods separately couldn't get exact readings due to data race.
@@ -217,7 +217,7 @@ public:
 	 * @Note
 	 *  - Uses mutex internally. Calling this often may cause bottleneck
 	 */
-	virtual thisClass &count(uint16_t *resting, uint16_t *working) noexcept;
+	virtual thisClass &count(uint16_t *resting, uint16_t *working) ASHE_NOEXCEPT;
 
 	/* Sets whether labour() method should block calling thread when all the PoolThreads are busy
 	 *
@@ -225,9 +225,9 @@ public:
 	 *  - This is not thread-safe
 	 *  - Invoke this method before being accessed by multiple threads
 	 */
-	virtual thisClass &setNonBlockingLabour(const bool nonBlocking = true) noexcept;
+	virtual thisClass &setNonBlockingLabour(const bool nonBlocking = true) ASHE_NOEXCEPT;
 	// Tests if labour() blocks. Returns opposite value of labourBlocking
-	virtual bool blockingLabour() const noexcept;
+	virtual bool blockingLabour() const ASHE_NOEXCEPT;
 	/* Assigns a PoolThread given WorkUnit
 	 *
 	 * @Throws - Rune instance
@@ -245,7 +245,7 @@ public:
 	* @NOTE
 	*  - Call this method before fork()
 	*/
-	virtual void recall() noexcept;
+	virtual void recall() ASHE_NOEXCEPT;
 };
 
 } /* namespace ashe */
