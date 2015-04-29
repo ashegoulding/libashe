@@ -124,7 +124,7 @@ void UUID::__parse(const char* x, const size_t len) throw (Rune)
 			case 20: // Magic digit
 				switch(v)
 				{
-				case '8':case '9':case 'A':case 'B': // Magic characters
+				case '8':case '9':case 'a':case 'b': // Magic characters
 					break;
 				default:
 					throwParseError(i, v, Rune::C_INVALID_MAGIC_DIGIT);
