@@ -194,6 +194,24 @@ bool UUID::operator ==(const char* x) const throw (Rune)
 	return ::memcmp(y.data, this->data, thisClass::UUID_BYTE_SIZE) == 0;
 }
 
+
+bool UUID::operator!=(const thisClass &x) const ASHE_NOEXCEPT
+{
+	return !this->operator==(x);
+}
+
+
+bool UUID::operator!=(const std::string &x) const throw(Rune)
+{
+	return !this->operator==(x);
+}
+
+
+bool UUID::operator!=(const char *x) const throw(Rune)
+{
+	return !this->operator==(x);
+}
+
 bool UUID::operator <=(const thisClass& x) const ASHE_NOEXCEPT
 {
 	return ::memcmp(x.data, this->data, thisClass::UUID_BYTE_SIZE) <= 0;

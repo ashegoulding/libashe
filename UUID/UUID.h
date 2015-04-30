@@ -269,6 +269,9 @@ public:
 	virtual bool operator ==(const thisClass &x) const ASHE_NOEXCEPT;
 	virtual bool operator ==(const std::string &x) const throw(Rune);
 	virtual bool operator ==(const char *x) const throw(Rune);
+	virtual bool operator !=(const thisClass &x) const ASHE_NOEXCEPT;
+	virtual bool operator !=(const std::string &x) const throw(Rune);
+	virtual bool operator !=(const char *x) const throw(Rune);
 	virtual bool operator <=(const thisClass &x) const ASHE_NOEXCEPT;
 	virtual bool operator <=(const std::string &x) const throw(Rune);
 	virtual bool operator <=(const char *x) const throw(Rune);
