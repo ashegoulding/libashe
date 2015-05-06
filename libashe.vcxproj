@@ -352,6 +352,7 @@ _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="Elasticity\Elasticity.h" />
     <ClInclude Include="Frelish\Fjord.h" />
     <ClInclude Include="Frelish\Frelish.h" />
     <ClInclude Include="Frelish\Icebank.h" />
@@ -364,6 +365,9 @@ _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="ManagedBinary.h" />
+    <ClInclude Include="Number.h" />
+    <ClInclude Include="SectionBlock2D.h" />
     <ClInclude Include="Semaphore\Semaphore.h" />
     <ClInclude Include="Siblings\IPEndpoint.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

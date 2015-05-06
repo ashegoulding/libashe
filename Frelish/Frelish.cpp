@@ -121,7 +121,7 @@ std::string toUpper__(const std::string& x) ASHE_NOEXCEPT
 	return y;
 }
 
-extern std::string::size_type findStarting__(const std::string& x) ASHE_NOEXCEPT
+std::string::size_type findStarting__(const std::string& x) ASHE_NOEXCEPT
 {
 	std::string::size_type y = 0;
 	std::locale loc;
