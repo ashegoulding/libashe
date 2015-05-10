@@ -30,15 +30,19 @@ UUID::UUID() ASHE_NOEXCEPT
 	this->className = "ashe::UUID";
 }
 
-UUID::UUID(const uint64_t seed) ASHE_NOEXCEPT
+UUID::UUID(const std::array<uint8_t, 8> trailing) ASHE_NOEXCEPT
 {
-	std::array<uint64_t, 2> buffer;
-	buffer[0] = seed;
-	buffer[1] = (uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	std::array<uint8_t, SHA1_DIGEST_SIZE> hashed;
-	::sha1_buffer((const char*)buffer.data(), buffer.size()*sizeof(uint64_t), hashed.data());
-	::memcpy(this->data, hashed.data(), thisClass::UUID_BYTE_SIZE);
-
+	const uint64_t now = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	std::array<uint8_t, sizeof(uint64_t)> nowBuffer;
+	std::array<uint8_t, thisClass::UUID_BYTE_SIZE> buffer;
+	memcpy(nowBuffer.data(), &now, sizeof(uint8_t));
+#if ASHE_IS_LITTLE_ENDIAN
+	// TODO: Into BIG-ENDIAN!
+	std::reverse(nowBuffer.begin(), nowBuffer.end());
+#endif
+	::memcpy(buffer.data(), nowBuffer.data(), nowBuffer.size());
+	::memcpy(buffer.data() + sizeof(uint64_t), trailing.data(), trailing.size());
+	this->__build(buffer.data(), buffer.size(), thisClass::VER_MAC_AND_DATETIME);
 	this->className = "ashe::UUID";
 }
 

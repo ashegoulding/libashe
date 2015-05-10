@@ -21,6 +21,11 @@
 #define ASHE_UUID_H_
 
 #include "Frelish.h"
+#include "HostEndian.h"
+
+#if ASHE_IS_PDP_ENDIAN
+#error "Unsupported endian: PDP, middle endian"
+#endif
 
 #include <regex>
 #include <random>
@@ -236,8 +241,10 @@ public:
 	* @NOTE
 	*  - Wish to give 0 as 'seed'? Just 0 is ambiguous with NULL. Use UUID((unsigned long long)0)
 	*  - It is not RFC standard, recommended version 1! Intended for simple, short scalable use.
+	*  - Follows big-endian. Reverse the argument manually to represent little-endian
+	*  - For security reasons, this version is prone to be avoided
 	*/
-	UUID(const uint64_t seed) ASHE_NOEXCEPT;
+	UUID(const std::array<uint8_t, 8> trailing) ASHE_NOEXCEPT;
 	// Alias of UUID(const char *x, const size_t len = thisClass::UUID_STRING_LENGTH) throw(Rune)
 	UUID(const std::string &x) throw(Rune);
 	/* Constructs an instance from given string.

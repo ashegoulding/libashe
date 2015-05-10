@@ -235,11 +235,11 @@
     <ClInclude Include="__coreutils\u64.h">
       <Filter>__coreutils</Filter>
     </ClInclude>
-    <ClInclude Include="Elasticity\Elasticity.h">
-      <Filter>Frelish</Filter>
-    </ClInclude>
     <ClInclude Include="ManagedBinary.h" />
     <ClInclude Include="Number.h" />
     <ClInclude Include="SectionBlock2D.h" />
+    <ClInclude Include="Frelish\HostEndian.h">
+      <Filter>Frelish</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

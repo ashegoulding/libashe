@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <locale>
+#include <cassert>
 
 namespace ashe
 {
@@ -27,6 +28,14 @@ std::string trim__(const std::string& x) ASHE_NOEXCEPT
 	}
 
 	return y;
+}
+
+
+void ASHE_DECL_EXT_NOEXCEPT trim__(std::string *y) ASHE_NOEXCEPT
+{
+	assert(y);
+	std::string x = *y;
+	*y = trim__(x);
 }
 
 std::vector<std::string> explodeSpace__(const std::string& x) ASHE_NOEXCEPT
@@ -113,12 +122,26 @@ std::string toLower__(const std::string& x) ASHE_NOEXCEPT
 	return y;
 }
 
+
+void ASHE_DECL_EXT_NOEXCEPT toLower__(std::string *y) ASHE_NOEXCEPT
+{
+	assert(y);
+	std::transform(y->begin(), y->end(), y->begin(), ::tolower);
+}
+
 std::string toUpper__(const std::string& x) ASHE_NOEXCEPT
 {
 	std::string y = x;
 	std::transform(y.begin(), y.end(), y.begin(), ::toupper);
 
 	return y;
+}
+
+
+void ASHE_DECL_EXT_NOEXCEPT toUpper__(std::string *y) ASHE_NOEXCEPT
+{
+	assert(y);
+	std::transform(y->begin(), y->end(), y->begin(), ::toupper);
 }
 
 std::string::size_type findStarting__(const std::string& x) ASHE_NOEXCEPT

@@ -24,15 +24,27 @@ namespace ashe
 {
 
 // Returns a white spaces trimmed string in both start and end of the given string
+// For unicode, see locale header
 extern std::string ASHE_DECL_EXT_NOEXCEPT trim__(const std::string &x) ASHE_NOEXCEPT;
+// Trims given string
+// For unicode, see locale header
+extern void ASHE_DECL_EXT_NOEXCEPT trim__(std::string *y) ASHE_NOEXCEPT;
 // Returns a vector contains strings exploded by white space delimiters
 extern std::vector<std::string> ASHE_DECL_EXT_NOEXCEPT explodeSpace__(const std::string &x) ASHE_NOEXCEPT;
 // Returns a vector contains strings exploded by the given delimiter set
 extern std::vector<std::string> ASHE_DECL_EXT_NOEXCEPT explode__(const std::string &x, const std::set<std::string> &delimiters) ASHE_NOEXCEPT;
-// Returns a string converted into upper case letters
-extern std::string ASHE_DECL_EXT_NOEXCEPT toLower__(const std::string &x) ASHE_NOEXCEPT;
 // Returns a string converted into lower case letters
+// For unicode, see locale header
+extern std::string ASHE_DECL_EXT_NOEXCEPT toLower__(const std::string &x) ASHE_NOEXCEPT;
+// Converts characters lower case in the given string
+// For unicode, see locale header
+extern void ASHE_DECL_EXT_NOEXCEPT toLower__(std::string *y) ASHE_NOEXCEPT;
+// Returns a string converted into upper case letters
+// For unicode, see locale header
 extern std::string ASHE_DECL_EXT_NOEXCEPT toUpper__(const std::string &x) ASHE_NOEXCEPT;
+// Converts characters upper case in the given string
+// For unicode, see locale header
+extern void ASHE_DECL_EXT_NOEXCEPT toUpper__(std::string *y) ASHE_NOEXCEPT;
 /* Returns "first_not_of" white space's position.
 * The return value will be always zero or positive.
 *
