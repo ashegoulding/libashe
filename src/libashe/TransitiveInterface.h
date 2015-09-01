@@ -15,7 +15,7 @@
 #ifndef ASHE_TRANSITIVEINTERFACE_H_
 #define ASHE_TRANSITIVEINTERFACE_H_
 
-#include <src/libashe/Frelish.h>
+#include "Frelish.h"
 #include <cstdlib>
 #include <cstdint>
 #include <vector>

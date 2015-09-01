@@ -15,7 +15,7 @@
  * @COLOPHON
  *  This file is part of libashe, Ashe's C++11/98 utility stuff
  */
-#include <src/libashe/WebSocket.h>
+#include "libashe/WebSocket.h"
 
 namespace ashe
 {

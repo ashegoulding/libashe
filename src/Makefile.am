@@ -11,13 +11,13 @@ DEBUG_FLAGS += -g
 OPTI_FLAGS += -O3
 endif
 
-AM_CXXFLAGS = $(WARNINGCFLAGS) $(DEBUG_FLAGS) $(OPTI_FLAGS) -std=c++11 -I..
+AM_CXXFLAGS = $(WARNINGCFLAGS) $(DEBUG_FLAGS) $(OPTI_FLAGS) -std=c++11
 
-lib_LTLIBRARIES = libdanu.la
+lib_LTLIBRARIES = libashe.la
 # so 파일 버전. 순서는 거꾸로. 0.0.1이면, 1:0:0 으로 써야 함.
-libdanu_la_LDFLAGS = -version-info 1:0:0
+libashe_la_LDFLAGS = -version-info 1:0:0
 # 컴파일할 소스.
-libdanu_la_SOURCES =\
+libashe_la_SOURCES =\
 	__coreutils/base64.c\
 	__coreutils/sha1.c\
 	ColourSpace.cpp\
@@ -25,11 +25,8 @@ libdanu_la_SOURCES =\
 	DescendantProcess.cpp\
 	Fjord.cpp\
 	Frelish.cpp\
-	IPEndpoint.cpp\
 	Icebank.cpp\
-	Logger.cpp\
 	StrongRune.cpp\
-	TCPSocket.cpp\
 	ThreadPool.cpp\
 	TransitiveInterface.cpp\
 	UUID.cpp\
@@ -44,16 +41,13 @@ nobase_include_HEADERS =\
 	libashe/Fjord.h\
 	libashe/Frelish.h\
 	libashe/HostEndian.h\
-	libashe/IPEndpoint.h\
 	libashe/Icebank.h\
-	libashe/Logger.h\
 	libashe/MFCLinkage.h\
 	libashe/ManagedBinary.h\
 	libashe/Number.h\
 	libashe/SectionBlock2D.h\
 	libashe/Semaphore.h\
 	libashe/StrongRune.h\
-	libashe/TCPSocket.h\
 	libashe/ThreadPool.h\
 	libashe/TransitiveInterface.h\
 	libashe/UUID.h\

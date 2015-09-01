@@ -1,8 +1,8 @@
 #ifndef ASHE_COLOURSPACE_H_
 #define ASHE_COLOURSPACE_H_
 
-#include <src/libashe/ManagedBinary.h>
-#include <src/libashe/MFCLinkage.h>
+#include "ManagedBinary.h"
+#include "MFCLinkage.h"
 #include <string>
 #include <sstream>
 

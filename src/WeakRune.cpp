@@ -1,4 +1,4 @@
-#include <src/libashe/WeakRune.h>
+#include "libashe/WeakRune.h"
 #include <cstring> // For strerror()
 #include <sstream>
 

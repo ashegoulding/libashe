@@ -1,7 +1,7 @@
 #ifndef ASHE_STRONGRUNE_H_
 #define ASHE_STRONGRUNE_H_
 
-#include <src/libashe/MFCLinkage.h>
+#include "MFCLinkage.h"
 #include <string>
 #include <exception>
 

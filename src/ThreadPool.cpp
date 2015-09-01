@@ -1,20 +1,6 @@
-/*
- * ThreadPool.cpp
- *
- * Ashe's thread pool with C++11
- * On UNIX, link with lpthread
- *
- * @Maintained
- *  2015 Q1
- * @Author
- *  Ashe David Sterkhus
- *  Blame to: ashe.goulding+blame@gmail.com
- * @COLOPHON
- *  This file is part of libashe, Ashe's C++11/98 utility stuff
- */
 #include <sstream>
 #include <assert.h>
-#include <src/libashe/ThreadPool.h>
+#include "libashe/ThreadPool.h"
 
 namespace ashe
 {

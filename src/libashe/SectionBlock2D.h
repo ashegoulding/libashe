@@ -15,7 +15,7 @@
 #ifndef ASHE_SECTIONBLOCK2D_H_
 #define ASHE_SECTIONBLOCK2D_H_
 
-#include <src/libashe/ManagedBinary.h>
+#include "ManagedBinary.h"
 
 namespace ashe
 {

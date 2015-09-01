@@ -25,4 +25,5 @@ ipch/*
 *.log
 *.[oa]
 *.so
+*.la
 

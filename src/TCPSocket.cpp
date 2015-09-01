@@ -1,11 +1,4 @@
-/*
- * TCPSocket.cpp
- *
- *  Created on: 2015. 3. 31.
- *      Author: david
- */
-
-#include <Siblings/TCPSocket.h>
+#include "libashe/TCPSocket.h"
 
 namespace ashe
 {

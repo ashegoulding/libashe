@@ -14,7 +14,7 @@
 #ifndef ASHE_MANAGEDBINARY_H_
 #define ASHE_MANAGEDBINARY_H_
 
-#include <src/libashe/Frelish.h>
+#include "Frelish.h"
 #include <cstring>
 #include <string>
 #include <sstream>

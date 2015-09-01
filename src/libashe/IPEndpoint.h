@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <arpa/inet.h>
-#include <src/libashe/Frelish.h>
+#include "Frelish.h"
 #include <cstdint>
 
 namespace ashe

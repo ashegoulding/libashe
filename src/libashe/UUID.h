@@ -20,8 +20,8 @@
 #ifndef ASHE_UUID_H_
 #define ASHE_UUID_H_
 
-#include <src/libashe/Frelish.h>
-#include <src/libashe/HostEndian.h>
+#include "Frelish.h"
+#include "HostEndian.h"
 
 #if ASHE_IS_PDP_ENDIAN
 #error "Unsupported endian: PDP, middle endian"

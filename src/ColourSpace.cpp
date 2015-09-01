@@ -1,4 +1,4 @@
-#include <src/libashe/ColourSpace.h>
+#include "libashe/ColourSpace.h"
 
 namespace ashe
 {

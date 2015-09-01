@@ -2,7 +2,7 @@
 #include <sstream>
 #include <unistd.h>
 #include <fcntl.h>
-#include <src/libashe/DescendantPipe.h>
+#include "libashe/DescendantPipe.h"
 
 namespace ashe
 {

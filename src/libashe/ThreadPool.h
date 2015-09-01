@@ -15,7 +15,7 @@
 #ifndef ASHE_THREADPOOL_H_
 #define ASHE_THREADPOOL_H_
 
-#include <src/libashe/Frelish.h>
+#include "Frelish.h"
 #include <thread>
 #include <mutex>
 #include <future>

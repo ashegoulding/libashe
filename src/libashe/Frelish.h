@@ -12,10 +12,10 @@
 #ifndef ASHE_FRELISH_H_
 #define ASHE_FRELISH_H_
 
-#include <src/libashe/Fjord.h>
-#include <src/libashe/Icebank.h>
-#include <src/libashe/StrongRune.h>
-#include <src/libashe/WeakRune.h>
+#include "Fjord.h"
+#include "Icebank.h"
+#include "StrongRune.h"
+#include "WeakRune.h"
 #include <vector>
 #include <set>
 

@@ -40,7 +40,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <src/libashe/Frelish.h>
+#include "Frelish.h"
 
 #include "__coreutils/base64.h"
 #include "__coreutils/sha1.h"

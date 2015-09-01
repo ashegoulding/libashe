@@ -15,7 +15,7 @@
 #ifndef ASHE_DESCENDANTPROCESS_H_
 #define ASHE_DESCENDANTPROCESS_H_
 
-#include <src/libashe/Frelish.h>
+#include "Frelish.h"
 #include <unistd.h>
 #include <wait.h>
 

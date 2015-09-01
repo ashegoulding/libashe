@@ -1,7 +1,7 @@
 #ifndef ASHE_FJORD_H_
 #define ASHE_FJORD_H_
 
-#include <src/libashe/MFCLinkage.h>
+#include "MFCLinkage.h"
 #include <string>
 
 namespace ashe

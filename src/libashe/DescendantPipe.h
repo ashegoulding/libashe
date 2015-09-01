@@ -15,9 +15,9 @@
 #ifndef ASHE_DESCENDANTPIPE_H_
 #define ASHE_DESCENDANTPIPE_H_
 
-#include <src/libashe/Frelish.h>
+#include "Frelish.h"
 
-#include "TransitiveInterface/TransitiveInterface.h"
+#include "TransitiveInterface.h"
 
 namespace ashe
 {

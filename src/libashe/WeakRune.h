@@ -1,7 +1,7 @@
 #ifndef ASHE_WEAKRUNE_H_
 #define ASHE_WEAKRUNE_H_
 
-#include <src/libashe/Fjord.h>
+#include "Fjord.h"
 #include <string>
 #include <exception>
 

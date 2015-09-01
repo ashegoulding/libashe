@@ -15,7 +15,7 @@
 #ifndef ASHE_SEMAPHORE_H_
 #define ASHE_SEMAPHORE_H_
 
-#include <src/libashe/Frelish.h>
+#include "Frelish.h"
 #include <typeinfo>
 #include <mutex>
 #include <condition_variable>

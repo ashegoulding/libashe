@@ -1,4 +1,4 @@
-#include <src/libashe/TransitiveInterface.h>
+#include "libashe/TransitiveInterface.h"
 #include <sstream>
 
 namespace ashe

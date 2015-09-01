@@ -1,7 +1,7 @@
 #ifndef ASHE_ICEBANK_H_
 #define ASHE_ICEBANK_H_
 
-#include <src/libashe/Fjord.h>
+#include "Fjord.h"
 
 namespace ashe
 {
