@@ -1,4 +1,17 @@
 .directory
+Makefile
+Makefile.in
+/configure
+/config.guess
+/config.sub
+/aclocal.m4
+/autom4te.cache
+/m4
+/compile
+/depcomp
+/install-sh
+/ltmain.sh
+/missing
 
 /Debug
 /Release
@@ -9,4 +22,7 @@ ipch/*
 *.sdf
 *.aps
 *.suo
+*.log
+*.[oa]
+*.so
 

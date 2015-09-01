@@ -61,18 +61,8 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.so.debug.369640419.1804074142" name="/" resourcePath="Siblings">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.so.debug.2089957594" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.debug" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.archiver.base.12522321" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.969265487"/>
-							<tool command="g++" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.2121929900" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.1377074289"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.debug.354919900" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1685532633"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.425379306" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug.1184483222"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.419715579" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.904646880"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.so.debug.871413975" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.debug.871811682"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Siblings|Descendants/example|ThreadPool/examples|WebSocket/examples|Semaphore/examples|UUID/examples|Logger" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Siblings|ThreadPool/examples|WebSocket/examples|doc|examples|Descendants/example|Semaphore/examples|UUID/examples|Logger" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -157,18 +147,8 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.so.release.1706740653.2133962677" name="/" resourcePath="Siblings">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.so.release.971550011" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.release" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.archiver.base.356036024" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.1780315652"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.979588349" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.release.1009650888"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.release.1132624034" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.release.1626980310"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.release.1711076987" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.release.1563105560"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.release.266172716" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.release.1257366046"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.so.release.810050755" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.release.1419378065"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Siblings|Descendants/example|ThreadPool/examples|WebSocket/examples|Semaphore/examples|UUID/examples|Logger" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Siblings|ThreadPool/examples|WebSocket/examples|doc|examples|Descendants/example|Semaphore/examples|UUID/examples|Logger" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
