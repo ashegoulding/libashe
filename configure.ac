@@ -38,5 +38,5 @@ esac],
 AM_CONDITIONAL(PROFILING, test x"$profile" = x"true")
 AM_COND_IF(PROFILING, [AM_CONDITIONAL(DEBUG, true)])
 
-AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile doc/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile doc/Makefile src/libashe.pc])
 AC_OUTPUT

@@ -53,3 +53,7 @@ nobase_include_HEADERS =\
 	libashe/UUID.h\
 	libashe/WeakRune.h\
 	libashe/WebSocket.h
+
+# pkg-config
+pkgconfigdir = @libdir@/pkgconfig
+pkgconfig_DATA = libashe.pc
