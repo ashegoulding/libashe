@@ -8,4 +8,4 @@ Description: Ashe's C++11/98 utility stuff
 URL: https://github.com/ashegoulding/libashe
 Version: @PACKAGE_VERSION@
 Cflags: -I${includedir}
-Libs: -L${libdir} -lashe
+Libs: -L${libdir} -lashe -lpthread
