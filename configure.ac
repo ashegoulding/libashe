@@ -1,10 +1,11 @@
-AC_INIT([libashe], [0.0.1], [ashe@ashe.kr])
+AC_INIT([libashe], [0.0.0], [ashe.goulding@gmail.com])
 
-# 기본 컴파일러 옵션 (-O2 -g) 제거
+# Remove default compiler options to use -O3.
 : ${CFLAGS=""}
 : ${CXXFLAGS=""}
 
-AM_INIT_AUTOMAKE([1.0 subdir-objects])
+# AM_INIT_AUTOMAKE([1.0 subdir-objects])
+AM_INIT_AUTOMAKE([1.0])
 LT_INIT
 
 AC_CANONICAL_HOST
@@ -26,17 +27,8 @@ AS_HELP_STRING([--enable-debug],
 esac],
 [debug=false])
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
-AC_ARG_ENABLE(profile,
-AS_HELP_STRING([--enable-profile],
-               [enable profile (and also debug), default: no]),
-[case "${enableval}" in
-             yes) profile=true ;;
-             no)  profile=false ;;
-             *)   AC_MSG_ERROR([bad value ${enableval} for --enable-profile]) ;;
-esac],
-[profile=false])
-AM_CONDITIONAL(PROFILING, test x"$profile" = x"true")
-AM_COND_IF(PROFILING, [AM_CONDITIONAL(DEBUG, true)])
+
+PKG_CHECK_MODULES([DEP_OPENSSL], [openssl])
 
 AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile doc/Makefile src/libashe.pc])
 AC_OUTPUT

@@ -1,25 +1,18 @@
 DEBUG_FLAGS =
 OPTI_FLAGS =
-if PROFILING
-DEBUG_FLAGS += -p
-endif
 if DEBUG
-DEBUG_FLAGS += -g3
+DEBUG_FLAGS += -g
 OPTI_FLAGS += -O0
 else
 DEBUG_FLAGS += -g
 OPTI_FLAGS += -O3
 endif
 
-AM_CXXFLAGS = $(WARNINGCFLAGS) $(DEBUG_FLAGS) $(OPTI_FLAGS) -std=c++11
-
 lib_LTLIBRARIES = libashe.la
-# so 파일 버전. 순서는 거꾸로. 0.0.1이면, 1:0:0 으로 써야 함.
-libashe_la_LDFLAGS = -version-info 1:0:0
+libashe_la_LDFLAGS = -version-info 0:0:0
+libashe_la_CXXFLAGS = -Wall -Wextra $(DEBUG_FLAGS) $(OPTI_FLAGS) -std=c++11
 # 컴파일할 소스.
 libashe_la_SOURCES =\
-	__coreutils/base64.c\
-	__coreutils/sha1.c\
 	ColourSpace.cpp\
 	DescendantPipe.cpp\
 	DescendantProcess.cpp\
