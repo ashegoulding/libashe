@@ -37,6 +37,10 @@
 								</option>
 								<option id="gnu.cpp.compiler.option.warnings.extrawarn.1468971205" name="Extra warnings (-Wextra)" superClass="gnu.cpp.compiler.option.warnings.extrawarn" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.cpp.compiler.option.other.other.446757653" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Wno-reorder -Wno-switch" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1350988732" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="LASHE_HOST_OSCODE=0x01"/>
+									<listOptionValue builtIn="false" value="PACKAGE_VERSION=&quot;&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.820548828" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1685532633" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.debug">
@@ -44,6 +48,10 @@
 								<option id="gnu.c.compiler.so.debug.option.debugging.level.1226365363" name="Debug Level" superClass="gnu.c.compiler.so.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.dialect.std.1111912783" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.c11" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.misc.pic.1791306947" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1135584539" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="LASHE_HOST_OSCODE=0x01"/>
+									<listOptionValue builtIn="false" value="PACKAGE_VERSION=&quot;&quot;"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.612707748" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.1184483222" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug">
@@ -59,16 +67,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.assembler.so.debug.871811682" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.debug">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.2029041040" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.so.debug.369640419.1287320959" name="/" resourcePath="examples">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.so.debug.488709431" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.so.debug" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1570958705" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.969265487"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.261326749" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.so.debug.1377074289"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1382592415" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.so.debug.1685532633"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.1516793905" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug.1184483222"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.2135183637" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.so.debug.904646880"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.so.debug.317080897" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.so.debug.871811682"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

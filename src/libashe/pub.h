@@ -1,5 +1,4 @@
 /* LibAshe Public Definitions
-*
 */
 #ifndef LASHE_PUB_H_
 #define LASHE_PUB_H_
@@ -39,7 +38,7 @@
 
 // Endian check.
 #if !(LASHE_IS_ENDIAN_LITTLE() || LASHE_IS_ENDIAN_BIG() || LASHE_IS_ENDIAN_PDP())
-#error "Unknown endian host. Refuse to compile."
+#error "Unknown endian host."
 #endif
 
 /* Macros for Windows portability.
@@ -77,5 +76,50 @@
 #define LASHE_DECL_EXT_NOEXCEPT
 
 #endif
+
+/* OS Codes.
+* 'LASHE_HOST_OSCODE' must be defined as one of the value below:
+*	- 'LASHE_OSCODE_POSIX'	0x01
+*	- 'LASHE_OSCODE_WIN7'	0x20
+*	- 'LASHE_OSCODE_WIN10'	0x21
+*/
+#ifndef LASHE_HOST_OSCODE
+#error "'LASHE_HOST_OSCODE' undefined."
+#endif
+
+#define LASHE_ISOS_POSIX() (LASHE_HOST_OSCODE == 0x01)
+#define LASHE_ISOS_WIN() (LASHE_HOST_OSCODE == 0x20)
+
+// OS check.
+#if !(LASHE_ISOS_POSIX() || LASHE_ISOS_WIN())
+#error "Unrecognised 'LASHE_HOST_OSCODE'"
+#endif
+
+
+enum /* uint32_t */ LibAsheAbilityNamespace
+{
+	LAANS_NONE,
+	LAANS_DESCENDANT,
+	LAANS_NET_SOCKET,
+	LAANS_WEBSOCKET,
+	LAANS_HUMAN_LANG
+};
+
+enum /* uint32_t */ LibAsheComparisonOperation
+{
+	LACO_NONE,
+	// Equals to
+	LACO_EQ,
+	// Not equals to
+	LACO_NE,
+	// Greater than
+	LACO_GT,
+	// Greater than or equals to
+	LACO_GE,
+	// Less than
+	LACO_LT,
+	// Less than or equals to
+	LACO_LE
+};
 
 #endif

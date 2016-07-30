@@ -75,7 +75,9 @@ const char* AsheException::what() const LASHE_NOEXCEPT
 	{
 		std::stringstream sb;
 
-		sb << '[' << this->__code2str(this->__code) << "] " << __ctx.msg;
+		sb << '[' << this->code2str(this->__code) << ']';
+		if(!__ctx.msg.empty())
+			sb << ' ' << __ctx.msg;
 		__ctx.whatStr = sb.str();
 		__ctx.invalidated = false;
 	}
@@ -171,6 +173,12 @@ AsheException& AsheException::extraData(const void* buf, const size_t size) LASH
 		this->__extraData = nullptr;
 	this->__invalidate();
 	return *this;
+}
+
+const char *AsheException::code2str(const uint32_t x) const LASHE_NOEXCEPT
+{
+	static const char *__str__ = "**unknown";
+	return __str__;
 }
 
 void AsheException::__construct(const thisClass& x) LASHE_NOEXCEPT

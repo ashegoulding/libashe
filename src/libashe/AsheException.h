@@ -8,7 +8,7 @@ namespace ashe
 
 #pragma pack(push, LASHE_PUB_ALIGN)
 
-class AsheException : public AsheClass
+class LASHE_DECL_EXT AsheException : public AsheClass
 {
 public:
 	typedef AsheClass motherClass;
@@ -23,8 +23,6 @@ protected:
 	 * Memory allocated/deallocatable with ::malloc()/::free()
 	 */
 	uint32_t __code;
-
-	virtual const char *__code2str(const uint32_t x) const LASHE_NOEXCEPT = 0;
 
 	void __construct(const thisClass &x) LASHE_NOEXCEPT;
 	void __invalidate() LASHE_NOEXCEPT;
@@ -54,6 +52,9 @@ public:
 	virtual size_t extraDataSize() const LASHE_NOEXCEPT;
 	virtual const thisClass &extraData(void *buf) const LASHE_NOEXCEPT;
 	virtual thisClass &extraData(const void *buf, const size_t size) LASHE_NOEXCEPT;
+
+	// Always returns "**unknown".
+	virtual const char *code2str(const uint32_t x) const LASHE_NOEXCEPT;
 };
 
 #pragma pack(pop)
