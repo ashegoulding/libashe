@@ -57,7 +57,6 @@ IPEndpoint::IPEndpoint(const thisClass& src)
 
 IPEndpoint::~IPEndpoint()
 {
-	// TODO Auto-generated destructor stub
 }
 
 thisClass& IPEndpoint::operator =(const thisClass& src)
