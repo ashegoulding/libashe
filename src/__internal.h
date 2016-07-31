@@ -9,6 +9,8 @@
 
 #if LASHE_ISOS_WIN()
 #include <Windows.h>
+#elif LASHE_ISOS_POSIX()
+#include <dlfcn.h>
 #endif
 
 
@@ -27,8 +29,6 @@ extern bool __lashe_initialised;
 // malloc()/free()
 extern uint32_t *__lashe_initialisedAbilities;
 extern std::regex *__lashe_re_version;
-
-extern __ModuleType __lashe_mod_openssl;
 
 
 template<class E>
