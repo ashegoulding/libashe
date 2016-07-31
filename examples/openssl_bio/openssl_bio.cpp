@@ -72,13 +72,13 @@ void decode()
 	BIO_push(b64, bio);
 	BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL); // Required.
 
-	/* TODO: Validate the encoded string format
+	/* TODO: Validate format.
 	 * RFC 4648
 	 *	ex) "^[A-Za-z0-9\\+\\/\\s]+(={0,2})?(\\s+)?$"
 	 *	ex) "^[A-Za-z0-9\\-_\\s]+(={0,2})?(\\s+)?$"
 	 *		(URL and filename. Replace '-' and '_' to '+' and '/' before decoding.)
 	 */
-	// TODO: Strip non-base64 characters.
+	// TODO: Pop non-base64 characters.
 
 	pushed = 0;
 	while(true)
