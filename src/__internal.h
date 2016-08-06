@@ -12,9 +12,9 @@
 
 #include <mutex>
 
-#if LASHE_ISOS_WIN()
+#if ASHE_ISOS_WIN()
 #include <Windows.h>
-#elif LASHE_ISOS_POSIX()
+#elif ASHE_ISOS_POSIX()
 #include <dlfcn.h>
 #endif
 
@@ -23,9 +23,9 @@ namespace ashe
 {
 
 typedef
-#if LASHE_ISOS_POSIX()
+#if ASHE_ISOS_POSIX()
 		void*
-#elif LASHE_ISOS_WIN()
+#elif ASHE_ISOS_WIN()
 		HMODULE
 #endif
 		__ModuleType;
@@ -70,10 +70,14 @@ void __drop_unimplemented(const char *msg = "", const bool os = false) LASHE_EXC
 	throw e;
 }
 
+void __die_critical() LASHE_NOEXCEPT;
+
 void __trim__(std::string &str) LASHE_NOEXCEPT;
 std::string __trim__(const char *str) LASHE_NOEXCEPT;
 void __lower__(std::string &str) LASHE_NOEXCEPT;
 std::string __lower__(const char *str) LASHE_NOEXCEPT;
+void __upper__(std::string &str) LASHE_NOEXCEPT;
+std::string __upper__(const char *str) LASHE_NOEXCEPT;
 
 }
 
