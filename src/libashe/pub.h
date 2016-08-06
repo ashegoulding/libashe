@@ -7,6 +7,8 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "OSCode.h"
+
 /* Alignment of public structures and classes.
 * Use)
 *	#pragma pack(push, LASHE_PUB_ALIGN)
@@ -14,32 +16,6 @@
 *	#pragma pack(pop)
 */
 #define LASHE_PUB_ALIGN 8
-
-/* Endian testing macros for endian-independent codes.
-* @COMPILER
-* Ex:
-*	#if LASHE_IS_ENDIAN_LITTLE()
-*	// TODO: Something for little endian host.
-*	#elif LASHE_IS_ENDIAN_BIG()
-*	// TODO: Something for big endian host.
-*	#else
-*	// TODO: Something for pdp endian host.
-*	#endif
-*/
-#ifdef _MSC_BUILD
-#define LASHE_IS_ENDIAN_LITTLE() (0x41424344UL == 'ABCD')
-#define LASHE_IS_ENDIAN_BIG() (0x44434241UL == 'ABCD')
-#define LASHE_IS_ENDIAN_PDP() (0x42414443UL == 'ABCD')
-#else
-#define LASHE_IS_ENDIAN_LITTLE() (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-#define LASHE_IS_ENDIAN_BIG() (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-#define LASHE_IS_ENDIAN_PDP() (__BYTE_ORDER__ == __ORDER_PDP_ENDIAN__)
-#endif
-
-// Endian check.
-#if !(LASHE_IS_ENDIAN_LITTLE() || LASHE_IS_ENDIAN_BIG() || LASHE_IS_ENDIAN_PDP())
-#error "Unknown endian host."
-#endif
 
 /* Macros for Windows portability.
 * __declspec for link.exe and nothrow.
@@ -77,22 +53,9 @@
 
 #endif
 
-/* OS Codes.
-* 'LASHE_HOST_OSCODE' must be defined as one of the value below:
-*	- 'LASHE_OSCODE_POSIX'	0x01
-*	- 'LASHE_OSCODE_WIN7'	0x20
-*	- 'LASHE_OSCODE_WIN10'	0x21
-*/
-#ifndef LASHE_HOST_OSCODE
-#error "'LASHE_HOST_OSCODE' undefined."
-#endif
-
-#define LASHE_ISOS_POSIX() (LASHE_HOST_OSCODE == 0x01)
-#define LASHE_ISOS_WIN() (LASHE_HOST_OSCODE == 0x20)
-
 // OS check.
-#if !(LASHE_ISOS_POSIX() || LASHE_ISOS_WIN())
-#error "Unrecognised 'LASHE_HOST_OSCODE'"
+#if !(ASHE_ISOS_POSIX() || ASHE_ISOS_WIN())
+#error "Unsupported OS."
 #endif
 
 
