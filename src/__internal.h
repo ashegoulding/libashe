@@ -72,6 +72,33 @@ void __drop_unimplemented(const char *msg = "", const bool os = false) LASHE_EXC
 
 void __die_critical() LASHE_NOEXCEPT;
 
+__ModuleType __loadModule__(const char *name) LASHE_EXCEPT(HelperException);
+void __unloadModule__(__ModuleType *mod) LASHE_NOEXCEPT;
+template<class T>
+T __loadFunc__(const __ModuleType mod, const char *name) LASHE_EXCEPT(HelperException)
+{
+	T ret;
+#if ASHE_ISOS_POSIX()
+	ret = (T)::dlsym(mod, name);
+	if(nullptr == ret)
+	{
+		HelperException e;
+		std::stringstream sb;
+
+		sb << "Failed to load function '" << name << "()': " << ::dlerror();
+		e
+			.code(HelperException::C_MODULE_ERROR)
+			.msg(sb.str().c_str())
+			.arg1(HelperException::SC_FUNC_LOAD);
+		throw e;
+	}
+#elif ASHE_ISOS_WIN()
+	// TODO
+#error "FIXME"
+#endif
+	return ret;
+}
+
 void __trim__(std::string &str) LASHE_NOEXCEPT;
 std::string __trim__(const char *str) LASHE_NOEXCEPT;
 void __lower__(std::string &str) LASHE_NOEXCEPT;

@@ -23,7 +23,45 @@ void __die_critical() LASHE_NOEXCEPT
 	::exit(128 + 6);
 }
 
-void __trim__(std::string& str)
+__ModuleType __loadModule__(const char *name) LASHE_EXCEPT(HelperException)
+{
+	__ModuleType ret;
+#if ASHE_ISOS_POSIX()
+	ret = ::dlopen(name, RTLD_LAZY);
+	if(nullptr == ret)
+	{
+		HelperException e;
+		std::stringstream sb;
+
+		sb << "Failed to load module(" << name << "): " << ::dlerror();
+		e
+			.code(HelperException::C_MODULE_ERROR)
+			.msg(sb.str().c_str())
+			.arg1(HelperException::SC_MODULE_OPEN);
+		throw e;
+	}
+#elif ASHE_ISOS_WIN()
+	// TODO
+#error "FIXME"
+#endif
+	return ret;
+}
+
+void __unloadModule__(__ModuleType *mod) LASHE_NOEXCEPT
+{
+#if ASHE_ISOS_POSIX()
+	if(mod && *mod)
+	{
+		::dlclose(*mod);
+		*mod = nullptr;
+	}
+#elif ASHE_ISOS_WIN()
+	// TODO
+#error "FIXME"
+#endif
+}
+
+void __trim__(std::string& str) LASHE_NOEXCEPT
 {
 	std::string::const_iterator start, end, it, beg, itEnd;
 
@@ -57,35 +95,35 @@ void __trim__(std::string& str)
 	__die_critical();
 }
 
-std::string __trim__(const char* str)
+std::string __trim__(const char* str) LASHE_NOEXCEPT
 {
 	std::string ret;
 	__trim__(ret);
 	return ret;
 }
 
-void __lower__(std::string& str)
+void __lower__(std::string& str) LASHE_NOEXCEPT
 {
 	std::locale l;
 	for(auto &v : str)
 		v = std::tolower(v, l);
 }
 
-std::string __lower__(const char* str)
+std::string __lower__(const char* str) LASHE_NOEXCEPT
 {
 	std::string ret;
 	__lower__(ret);
 	return ret;
 }
 
-void __upper__(std::string& str)
+void __upper__(std::string& str) LASHE_NOEXCEPT
 {
 	std::locale l;
 	for(auto &v : str)
 		v = std::toupper(v, l);
 }
 
-std::string __upper__(const char* str)
+std::string __upper__(const char* str) LASHE_NOEXCEPT
 {
 	std::string ret;
 	__upper__(ret);
