@@ -124,6 +124,7 @@ Base64Encoder& Base64Encoder::clear() LASHE_NOEXCEPT
 		__LASHE_BIO_reset(this->__ctx->b64);
 		__LASHE_BIO_reset(this->__ctx->bio);
 	}
+	this->__pushed = 0;
 	return *this;
 }
 

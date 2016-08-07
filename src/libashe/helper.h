@@ -42,6 +42,9 @@ public:
 enum /* uint32_t */ LibAsheInitFlag
 {
 	LAIF_NONE,
+	// Following value being ASHE_HOST_OSCODE of the software.
+	LAIF_OSCODE,
+	// Continue on ability initialisation failure.
 	LAIF_ABILITY_PERMISSIVE
 };
 
