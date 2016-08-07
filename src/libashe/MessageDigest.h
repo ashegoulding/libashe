@@ -1,34 +1,45 @@
-#ifndef LASHE_BASE64ENCODER_H_
-#define LASHE_BASE64ENCODER_H_
+#ifndef LASHE_MESSAGEDIGEST_H_
+#define LASHE_MESSAGEDIGEST_H_
 
 #include "FilterInterface.h"
 
 
 namespace ashe
 {
+
+enum /* uint32_t */ HashAlgorithm
+{
+	LAHA_NONE,
+	LAHA_MD5,
+	LAHA_SHA1,
+	LAHA_SHA224,
+	LAHA_SHA256,
+	LAHA_SHA384,
+	LAHA_SHA512
+};
 #pragma pack(push, LASHE_PUB_ALIGN)
 
-struct __Base64EncoderContext;
+struct __MessageDigestContext;
 
-class Base64Encoder : public FilterInterface
+class MessageDigest : public FilterInterface
 {
 public:
 	typedef FilterInterface motherClass;
-	typedef Base64Encoder thisClass;
+	typedef MessageDigest thisClass;
 
 protected:
-	friend FilterInterface *mkBase64Encoder(const /* Base64EncodeFlags */ uint32_t *flags/* = nullptr*/) LASHE_EXCEPT(FilterException);
+	friend FilterInterface *mkMessageDigest(const /* HashAlgorithm */ uint32_t algo, const uint8_t *rsv/* = nullptr*/) LASHE_EXCEPT(FilterException);
 
-	__Base64EncoderContext *__ctx;
+	__MessageDigestContext *__ctx;
 
-	Base64Encoder() LASHE_NOEXCEPT;
+	MessageDigest() LASHE_NOEXCEPT;
 
 	virtual void __prepParamPool(const char *key = nullptr) const LASHE_NOEXCEPT; //@Override
 	virtual void __prepParamMap() const LASHE_NOEXCEPT; //@Override
 
 public:
-	Base64Encoder(const thisClass&) = delete;
-	virtual ~Base64Encoder() LASHE_NOEXCEPT;
+	MessageDigest(const thisClass &) = delete;
+	virtual ~MessageDigest() LASHE_NOEXCEPT;
 
 	thisClass &operator =(const thisClass&) = delete;
 
@@ -38,15 +49,15 @@ public:
 	virtual thisClass &close() LASHE_NOEXCEPT; //@Implement
 	virtual bool ready() const LASHE_NOEXCEPT; //@Implement
 	/* param()
-	* Key "BIO_FLAGS_BASE64_NO_NL":
-	*	Value format: <boolean>
-	*	Default value: false
-	*	Formats the output string to fixed number of characters per line if set to false.
-	*	Setting the param, an exception will be thrown if the instance is already opened.
-	* Key "URL":
-	*	Value format: <boolean>
-	*	Default value: false
-	*	URL encodes the result string(payload).
+	* Key "string":
+	*	Value: <hash string>
+	*	A string representation of the result hash(payload).
+	*	This kv pair is available when hasPayload() returns true.
+	*
+	* Key "upper":
+	*	Value: <boolean>
+	*	Default: false
+	*	Sets/gets whether to capitalise "string" param value.
 	*/
 	virtual thisClass &param(const char *key, const char *val, const /* ParamFlag */ uint32_t *flags = nullptr) LASHE_EXCEPT(FilterException); //@Override
 	virtual size_t param(const char *key, const ParamEntry **arr, const /* ParamFlag */ uint32_t *flags = nullptr) const LASHE_NOEXCEPT; //@Override
@@ -61,16 +72,17 @@ public:
 
 #pragma pack(pop)
 
-enum /* uint32_t */ Base64EncodeFlags
+enum MessageDigestFlags
 {
-	LAB64EF_NONE,
-	LAB64EF_URL,
-	LAB64EF_NO_NL
+	LAMDF_NONE,
+	// Have digest() return a hash string.
+	LAMDF_STRING,
+	LAMDF_UPPER
 };
 
-LASHE_DECL_EXT FilterInterface *mkBase64Encoder(const /* Base64EncodeFlags */ uint32_t *flags = nullptr) LASHE_EXCEPT(FilterException);
-// In-memory encoding.
-LASHE_DECL_EXT FilterResult base64Encode(const void *buf, const size_t len, const /* Base64EncodeFlags */ uint32_t *flags = nullptr) LASHE_EXCEPT(FilterException);
+LASHE_DECL_EXT FilterInterface *mkMessageDigest(const /* HashAlgorithm */ uint32_t algo, const /* MessageDigestFlags */ uint8_t *flags = nullptr) LASHE_EXCEPT(FilterException);
+// In-memory.
+LASHE_DECL_EXT FilterResult digest(const void *buf, const size_t len, const /* HashAlgorithm */ uint32_t algo, const /* MessageDigestFlags */ uint8_t *flags = nullptr) LASHE_EXCEPT(FilterException);
 
 }
 

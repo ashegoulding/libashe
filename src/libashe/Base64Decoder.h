@@ -58,8 +58,8 @@ public:
 
 enum /* uint32_t */ Base64DecodeFlags
 {
-	LB64DF_NONE,
-	LB64DF_URL
+	LAB64DF_NONE,
+	LAB64DF_URL
 };
 
 LASHE_DECL_EXT FilterInterface *mkBase64Decoder(const /* Base64DecodeFlags */uint32_t *flags = nullptr) LASHE_EXCEPT(FilterException);

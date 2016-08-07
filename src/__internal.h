@@ -5,6 +5,8 @@
 #include "libashe/helper.h"
 #include "libashe/UUID.h"
 
+#include <cstdarg>
+
 #include <string>
 #include <vector>
 
@@ -81,27 +83,51 @@ void __die_critical() LASHE_NOEXCEPT;
 __ModuleType __loadModule__(const char *name) LASHE_EXCEPT(HelperException);
 void __unloadModule__(__ModuleType *mod) LASHE_NOEXCEPT;
 template<class T>
-T __loadFunc__(const __ModuleType mod, const char *name) LASHE_EXCEPT(HelperException)
+T __loadFunc__(const __ModuleType mod, const size_t cnt, ...) LASHE_EXCEPT(HelperException)
 {
-	T ret;
+	T ret = nullptr;
+	std::vector<const char*> tried(cnt);
+	va_list vl;
+	size_t i;
+	const char *arg;
+
+	if(0 == cnt)
+		__die_critical();
+	va_start(vl, cnt);
+
+	for(i=0; i<cnt; ++i)
+	{
 #if ASHE_ISOS_POSIX()
-	ret = (T)::dlsym(mod, name);
-	if(nullptr == ret)
+		arg = va_arg(vl, const char*);
+		ret = (T)::dlsym(mod, arg);
+		if(nullptr != ret)
+			return ret;
+#elif ASHE_ISOS_WIN()
+	// TODO
+#error "FIXME"
+#endif
+		tried.push_back(arg);
+	}
+
 	{
 		HelperException e;
 		std::stringstream sb;
+		const char *last;
+		auto it = tried.end() - 1;
 
-		sb << "Failed to load function '" << name << "()': " << ::dlerror();
+		last = *it;
+		tried.erase(it);
+
+		sb << "Failed to load function: ";
+		for(const auto &v : tried)
+			sb << v << "(), ";
+		sb << last << "()";
 		e
 			.code(HelperException::C_MODULE_ERROR)
 			.msg(sb.str().c_str())
 			.arg1(HelperException::SC_FUNC_LOAD);
 		throw e;
 	}
-#elif ASHE_ISOS_WIN()
-	// TODO
-#error "FIXME"
-#endif
 	return ret;
 }
 

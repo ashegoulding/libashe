@@ -63,9 +63,28 @@ enum /* uint32_t */ LibAsheAbilityNamespace
 {
 	LAANS_NONE,
 	LAANS_DESCENDANT,
+	/* Network Socket
+	* Optional(explicit init):
+	*	- OpenSSL: Enables TLS layer.
+	*/
 	LAANS_NET_SOCKET,
-	LAANS_WEBSOCKET,
-	LAANS_HUMAN_LANG
+	/* Human Language
+	*/
+	LAANS_HUMAN_LANG,
+	/* OpenSSL
+	* Classes:
+	*	- Base64Encoder
+	*	- Base64Decoder
+	*	- TODO: Hash
+	*/
+	LAANS_OPENSSL,
+	/* WebSocket
+	* Requires(implicit init):
+	*	- OpenSSL
+	* Classes:
+	*	- WebSocket
+	*/
+	LAANS_WEBSOCKET
 };
 
 enum /* uint32_t */ LibAsheComparisonOperation

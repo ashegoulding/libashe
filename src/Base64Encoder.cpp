@@ -19,10 +19,10 @@ FilterInterface *mkBase64Encoder(const /* Base64EncodeFlags */ uint32_t *flags/*
 			{
 				switch(*flags)
 				{
-				case LB64EF_NO_NL:
+				case LAB64EF_NO_NL:
 					ret->param("BIO_FLAGS_BASE64_NO_NL", "true");
 					break;
-				case LB64EF_URL:
+				case LAB64EF_URL:
 					ret->param("URL", "true");
 					break;
 				}

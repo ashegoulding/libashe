@@ -19,7 +19,7 @@ FilterInterface* mkBase64Decoder(const /* Base64DecodeFlags */uint32_t *flags/* 
 			{
 				switch(*flags)
 				{
-				case LB64DF_URL:
+				case LAB64DF_URL:
 					ret->param("URL", "true");
 					break;
 				}

@@ -60,6 +60,20 @@ typedef BIO*(*BIO_new_mem_buf)(const void *buf, int len);
 typedef const BIO_METHOD*(*BIO_f_base64)(void);
 typedef void(*BIO_set_flags)(BIO *b, int flags);
 
+typedef EVP_MD_CTX*(*EVP_MD_CTX_new)(void);
+typedef void(*EVP_MD_CTX_free)(EVP_MD_CTX *ctx);
+typedef int(*EVP_DigestInit_ex)(EVP_MD_CTX *ctx, const EVP_MD *type, ENGINE *impl);
+typedef int(*EVP_DigestUpdate)(EVP_MD_CTX *ctx, const void *d, size_t cnt);
+typedef int(*EVP_DigestFinal_ex)(EVP_MD_CTX *ctx, unsigned char *md, unsigned int *s);
+typedef int(*EVP_MD_CTX_copy)(EVP_MD_CTX *out, EVP_MD_CTX *in);
+typedef int(*EVP_MD_size)(const EVP_MD *md);
+typedef const EVP_MD*(*EVP_md5)(void);
+typedef const EVP_MD*(*EVP_sha1)(void);
+typedef const EVP_MD*(*EVP_sha224)(void);
+typedef const EVP_MD*(*EVP_sha256)(void);
+typedef const EVP_MD*(*EVP_sha384)(void);
+typedef const EVP_MD*(*EVP_sha512)(void);
+
 }
 
 struct __OpenSSLModuleBundle
@@ -84,6 +98,19 @@ struct __OpenSSLModuleBundle
 	pfn::BIO_new_mem_buf BIO_new_mem_buf;
 	pfn::BIO_f_base64 BIO_f_base64;
 	pfn::BIO_set_flags BIO_set_flags;
+	pfn::EVP_MD_CTX_new EVP_MD_CTX_new;
+	pfn::EVP_MD_CTX_free EVP_MD_CTX_free;
+	pfn::EVP_DigestInit_ex EVP_DigestInit_ex;
+	pfn::EVP_DigestUpdate EVP_DigestUpdate;
+	pfn::EVP_DigestFinal_ex EVP_DigestFinal_ex;
+	pfn::EVP_MD_CTX_copy EVP_MD_CTX_copy;
+	pfn::EVP_MD_size EVP_MD_size;
+	pfn::EVP_md5 EVP_md5;
+	pfn::EVP_sha1 EVP_sha1;
+	pfn::EVP_sha224 EVP_sha224;
+	pfn::EVP_sha256 EVP_sha256;
+	pfn::EVP_sha384 EVP_sha384;
+	pfn::EVP_sha512 EVP_sha512;
 };
 
 struct __FilterInterfaceContext
@@ -106,6 +133,15 @@ struct __Base64DecoderContext : __FilterInterfaceContext
 	bool isURL = false;
 	std::vector<uint8_t> result;
 	size_t resultSize;
+};
+
+struct __MessageDigestContext : __FilterInterfaceContext
+{
+	EVP_MD_CTX *ctxMD;
+	const EVP_MD *md;
+	std::vector<uint8_t> result;
+	int msgSize;
+	bool upper = false;
 };
 
 extern bool __lashe_inited_openssl;
