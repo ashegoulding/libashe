@@ -93,22 +93,24 @@ T __loadFunc__(const __ModuleType mod, const size_t cnt, ...) LASHE_EXCEPT(Helpe
 
 	if(0 == cnt)
 		__die_critical();
-	va_start(vl, cnt);
 
+	va_start(vl, cnt);
 	for(i=0; i<cnt; ++i)
 	{
 #if ASHE_ISOS_POSIX()
 		arg = va_arg(vl, const char*);
 		ret = (T)::dlsym(mod, arg);
 		if(nullptr != ret)
-			return ret;
+			break;
 #elif ASHE_ISOS_WIN()
 	// TODO
 #error "FIXME"
 #endif
 		tried.push_back(arg);
 	}
+	va_end(vl);
 
+	if(nullptr == ret)
 	{
 		HelperException e;
 		std::stringstream sb;
