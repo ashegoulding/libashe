@@ -7,6 +7,9 @@
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 
+#include <map>
+#include <vector>
+
 
 namespace ashe
 {
@@ -83,9 +86,26 @@ struct __OpenSSLModuleBundle
 	pfn::BIO_set_flags BIO_set_flags;
 };
 
-struct __Base64CodecContext
+struct __FilterInterfaceContext
+{
+	std::multimap<std::string, std::string> paramMap;
+	std::vector<FilterInterface::ParamEntry> entryPool;
+	bool paramChanged = false;
+};
+
+struct __Base64EncoderContext : __FilterInterfaceContext
 {
 	BIO *b64 = nullptr, *bio = nullptr;
+	bool flag_noNL = false;
+	bool isURL = false;
+};
+
+struct __Base64DecoderContext : __FilterInterfaceContext
+{
+	BIO *b64 = nullptr, *bio = nullptr;
+	bool isURL = false;
+	std::vector<uint8_t> result;
+	size_t resultSize;
 };
 
 extern bool __lashe_inited_openssl;

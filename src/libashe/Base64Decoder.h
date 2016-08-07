@@ -1,5 +1,5 @@
-#ifndef LASHE_BASE64ENCODER_H_
-#define LASHE_BASE64ENCODER_H_
+#ifndef LASHE_BASE64DECODER_H_
+#define LASHE_BASE64DECODER_H_
 
 #include "FilterInterface.h"
 
@@ -8,27 +8,27 @@ namespace ashe
 {
 #pragma pack(push, LASHE_PUB_ALIGN)
 
-struct __Base64EncoderContext;
+struct __Base64DecoderContext;
 
-class Base64Encoder : public FilterInterface
+class Base64Decoder : public FilterInterface
 {
 public:
 	typedef FilterInterface motherClass;
-	typedef Base64Encoder thisClass;
+	typedef Base64Decoder thisClass;
 
 protected:
-	friend FilterInterface *mkBase64Encoder() LASHE_EXCEPT(FilterException);
+	friend FilterInterface *mkBase64Decoder() LASHE_EXCEPT(FilterException);
 
-	__Base64EncoderContext *__ctx;
+	__Base64DecoderContext *__ctx;
 
-	Base64Encoder() LASHE_NOEXCEPT;
+	Base64Decoder() LASHE_NOEXCEPT;
 
 	virtual void __prepParamPool(const char *key = nullptr) const LASHE_NOEXCEPT; //@Override
 	virtual void __prepParamMap() const LASHE_NOEXCEPT; //@Override
 
 public:
-	Base64Encoder(const thisClass&) = delete;
-	virtual ~Base64Encoder() LASHE_NOEXCEPT;
+	Base64Decoder(const thisClass&) = delete;
+	virtual ~Base64Decoder() LASHE_NOEXCEPT;
 
 	thisClass &operator =(const thisClass&) = delete;
 
@@ -36,15 +36,10 @@ public:
 	virtual thisClass &close() LASHE_NOEXCEPT; //@Implement
 	virtual bool ready() const LASHE_NOEXCEPT; //@Implement
 	/* param()
-	* Key "BIO_FLAGS_BASE64_NO_NL":
-	*	Value format: <boolean>
-	*	Default value: false
-	*	Formats the output string to fixed number of characters per line if set to false.
-	*	Setting the param, an exception will be thrown if the instance is already opened.
 	* Key "URL":
 	*	Value format: <boolean>
 	*	Default value: false
-	*	URL encodes the result string(payload).
+	*	Treats the fed string value as an URL encoded string.
 	*/
 	virtual thisClass &param(const char *key, const char *val, const /* ParamFlag */ uint32_t *flags = nullptr) LASHE_EXCEPT(FilterException); //@Override
 	virtual size_t param(const char *key, const ParamEntry **arr, const /* ParamFlag */ uint32_t *flags = nullptr) const LASHE_NOEXCEPT; //@Override
@@ -59,7 +54,7 @@ public:
 
 #pragma pack(pop)
 
-LASHE_DECL_EXT FilterInterface *mkBase64Encoder() LASHE_EXCEPT(FilterException);
+LASHE_DECL_EXT FilterInterface *mkBase64Decoder() LASHE_EXCEPT(FilterException);
 
 }
 

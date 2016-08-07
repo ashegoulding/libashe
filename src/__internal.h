@@ -34,6 +34,9 @@ extern bool __lashe_initialised;
 // malloc()/free()
 extern uint32_t *__lashe_initialisedAbilities;
 extern std::regex *__lashe_re_version;
+extern std::regex *__lashe_format_numberal;
+extern std::regex *__lashe_format_booleanTrue;
+extern std::regex *__lashe_format_booleanFalse;
 
 extern std::regex
 	*__lashe_re_uuidHusk,
@@ -41,6 +44,9 @@ extern std::regex
 extern uuid::MersenneTwisterEngine *__lashe_defUUIDEngine;
 extern std::mutex *__lashe_mtx_defUUIDEngine;
 #define __LOCK_DEF_UUID_ENGINE() std::lock_guard<std::mutex> __lg_lashe_defUUIDEngine(*__lashe_mtx_defUUIDEngine)
+
+extern std::regex *__lashe_format_base64;
+extern std::regex *__lashe_format_base64url;
 
 
 template<class E>

@@ -9,12 +9,18 @@ namespace ashe
 bool __lashe_initialised = false;
 uint32_t *__lashe_initialisedAbilities = nullptr;
 std::regex *__lashe_re_version = nullptr;
+std::regex *__lashe_format_numberal = nullptr;
+std::regex *__lashe_format_booleanTrue = nullptr;
+std::regex *__lashe_format_booleanFalse = nullptr;
 
 std::regex
 	*__lashe_re_uuidHusk = nullptr,
 	*__lashe_re_uuidStrict = nullptr;
 uuid::MersenneTwisterEngine *__lashe_defUUIDEngine = nullptr;
 std::mutex *__lashe_mtx_defUUIDEngine = nullptr;
+
+std::regex *__lashe_format_base64 = nullptr;
+std::regex *__lashe_format_base64url = nullptr;
 
 
 void __die_critical() LASHE_NOEXCEPT
@@ -97,7 +103,7 @@ void __trim__(std::string& str) LASHE_NOEXCEPT
 
 std::string __trim__(const char* str) LASHE_NOEXCEPT
 {
-	std::string ret;
+	std::string ret = str;
 	__trim__(ret);
 	return ret;
 }
@@ -111,7 +117,7 @@ void __lower__(std::string& str) LASHE_NOEXCEPT
 
 std::string __lower__(const char* str) LASHE_NOEXCEPT
 {
-	std::string ret;
+	std::string ret = str;
 	__lower__(ret);
 	return ret;
 }
@@ -125,7 +131,7 @@ void __upper__(std::string& str) LASHE_NOEXCEPT
 
 std::string __upper__(const char* str) LASHE_NOEXCEPT
 {
-	std::string ret;
+	std::string ret = str;
 	__upper__(ret);
 	return ret;
 }
