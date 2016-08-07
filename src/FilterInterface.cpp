@@ -1,4 +1,7 @@
 #include "libashe/FilterInterface.h"
+#include "__openssl.h"
+
+#include <algorithm>
 
 
 namespace ashe
@@ -156,6 +159,84 @@ const char *FilterException::code2str(const uint32_t x) const LASHE_NOEXCEPT
 		return __str__[x];
 	}
 	return motherClass::code2str(x);
+}
+/********************
+* FilterResult
+*/
+FilterResult::FilterResult(const size_t size/* = 0*/) LASHE_NOEXCEPT
+	: ptr(size? (char*)::malloc(size) : nullptr)
+	, size(size)
+{
+	if(this->size && nullptr == this->ptr)
+		__die_critical();
+}
+
+FilterResult::FilterResult(thisClass& x) LASHE_NOEXCEPT
+	: ptr(x.ptr)
+	, size(x.size)
+{
+	x.detach();
+}
+
+FilterResult::~FilterResult() LASHE_NOEXCEPT
+{
+	::free(this->ptr);
+}
+
+FilterResult& FilterResult::operator =(thisClass& x) LASHE_NOEXCEPT
+{
+	this->free();
+	this->ptr = x.ptr;
+	this->size = x.size;
+	x.detach();
+	return *this;
+}
+
+FilterResult& FilterResult::detach() LASHE_NOEXCEPT
+{
+	this->ptr = nullptr;
+	this->size = 0;
+	return *this;
+}
+
+FilterResult& FilterResult::alloc(const size_t size) LASHE_NOEXCEPT
+{
+	::free(this->ptr);
+	if(size)
+	{
+		this->ptr = (char*)::malloc(size);
+		if(nullptr == this->ptr)
+			__die_critical();
+	}
+	else
+		this->ptr = nullptr;
+	this->size = size;
+	return *this;
+}
+
+FilterResult& FilterResult::free() LASHE_NOEXCEPT
+{
+	::free(this->ptr);
+	this->detach();
+	return *this;
+}
+
+FilterResult& FilterResult::swap(thisClass& x) LASHE_NOEXCEPT
+{
+	std::swap(x.ptr, this->ptr);
+	std::swap(x.size, this->size);
+	return *this;
+}
+
+FilterResult FilterResult::clone() LASHE_NOEXCEPT
+{
+	FilterResult ret;
+	if(this->size)
+	{
+		ret.alloc(this->size);
+		::memcpy(ret.ptr, this->ptr, this->size);
+	}
+	return ret;
 }
 
 }

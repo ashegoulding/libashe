@@ -5,7 +5,7 @@
 namespace ashe
 {
 
-FilterInterface* mkBase64Decoder() LASHE_EXCEPT(FilterException)
+FilterInterface* mkBase64Decoder(const /* Base64DecodeFlags */uint32_t *flags/* = nullptr*/) LASHE_EXCEPT(FilterException)
 {
 	FilterInterface *ret;
 
@@ -13,6 +13,19 @@ FilterInterface* mkBase64Decoder() LASHE_EXCEPT(FilterException)
 	ret = new Base64Decoder();
 	try
 	{
+		if(flags)
+		{
+			while(*flags)
+			{
+				switch(*flags)
+				{
+				case LB64DF_URL:
+					ret->param("URL", "true");
+					break;
+				}
+				++flags;
+			}
+		}
 		ret->open(0);
 	}
 	catch(FilterException &e)
@@ -21,6 +34,29 @@ FilterInterface* mkBase64Decoder() LASHE_EXCEPT(FilterException)
 		throw e;
 	}
 
+	return ret;
+}
+
+FilterResult base64Decode(const void *buf, const size_t len, const /* Base64EncodeFlags */ uint32_t *flags/* = nullptr*/) LASHE_EXCEPT(FilterException)
+{
+	FilterInterface *dec = mkBase64Decoder(flags);
+	FilterResult ret;
+
+	try
+	{
+		dec->feed(buf, len);
+		if(dec->hasPayload())
+		{
+			ret.alloc(dec->payloadSize());
+			dec->payload(ret.ptr, ret.size);
+		}
+	}
+	catch(FilterException &e)
+	{
+		delete dec;
+		throw e;
+	}
+	delete dec;
 	return ret;
 }
 
@@ -36,6 +72,12 @@ Base64Decoder::~Base64Decoder() LASHE_NOEXCEPT
 {
 	this->close();
 	delete this->__ctx;
+}
+
+const char* Base64Decoder::className() const LASHE_NOEXCEPT
+{
+	static const char *__name__ = "ashe::Base64Decoder";
+	return __name__;
 }
 
 Base64Decoder& Base64Decoder::open(const uint32_t x) LASHE_EXCEPT(FilterException)

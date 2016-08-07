@@ -5,7 +5,7 @@
 namespace ashe
 {
 
-FilterInterface *mkBase64Encoder() LASHE_EXCEPT(FilterException)
+FilterInterface *mkBase64Encoder(const /* Base64EncodeFlags */ uint32_t *flags/* = nullptr*/) LASHE_EXCEPT(FilterException)
 {
 	FilterInterface *ret;
 
@@ -13,6 +13,22 @@ FilterInterface *mkBase64Encoder() LASHE_EXCEPT(FilterException)
 	ret = new Base64Encoder();
 	try
 	{
+		if(flags)
+		{
+			while(*flags)
+			{
+				switch(*flags)
+				{
+				case LB64EF_NO_NL:
+					ret->param("BIO_FLAGS_BASE64_NO_NL", "true");
+					break;
+				case LB64EF_URL:
+					ret->param("URL", "true");
+					break;
+				}
+				++flags;
+			}
+		}
 		ret->open(0);
 	}
 	catch(FilterException &e)
@@ -21,6 +37,40 @@ FilterInterface *mkBase64Encoder() LASHE_EXCEPT(FilterException)
 		throw e;
 	}
 
+	return ret;
+}
+
+FilterResult base64Encode(const void *buf, const size_t len, const /* Base64EncodeFlags */ uint32_t *flags/* = nullptr*/) LASHE_EXCEPT(FilterException)
+{
+	FilterInterface *enc = mkBase64Encoder(flags);
+	FilterResult ret;
+	std::vector<uint8_t> body, tail;
+
+	try
+	{
+		enc->feed(buf, len);
+		if(enc->hasPayload())
+		{
+			body.resize(enc->payloadSize());
+			enc->payload(body.data(), body.size());
+		}
+		enc->finish();
+		if(enc->hasPayload())
+		{
+			tail.resize(enc->payloadSize());
+			enc->payload(tail.data(), tail.size());
+		}
+
+		ret.alloc(body.size() + tail.size());
+		::memcpy(ret.ptr, body.data(), body.size());
+		::memcpy(ret.ptr + body.size(), tail.data(), tail.size());
+	}
+	catch(FilterException &e)
+	{
+		delete enc;
+		throw e;
+	}
+	delete enc;
 	return ret;
 }
 
@@ -36,6 +86,12 @@ Base64Encoder::~Base64Encoder() LASHE_NOEXCEPT
 {
 	this->close();
 	delete this->__ctx;
+}
+
+const char* Base64Encoder::className() const LASHE_NOEXCEPT
+{
+	static const char *__name__ = "ashe::Base64Encoder";
+	return __name__;
 }
 
 Base64Encoder& Base64Encoder::open(const uint32_t x) LASHE_EXCEPT(FilterException)
@@ -172,6 +228,7 @@ Base64Encoder& Base64Encoder::feed(const void* buf, const size_t len) LASHE_EXCE
 Base64Encoder& Base64Encoder::finish() LASHE_EXCEPT(FilterException)
 {
 	this->__dropif_ready(true);
+	__LASHE_BIO_reset(this->__ctx->bio);
 	__LASHE_BIO_flush(this->__ctx->b64);
 	return *this;
 }

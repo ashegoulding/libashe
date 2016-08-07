@@ -17,7 +17,7 @@ public:
 	typedef Base64Encoder thisClass;
 
 protected:
-	friend FilterInterface *mkBase64Encoder() LASHE_EXCEPT(FilterException);
+	friend FilterInterface *mkBase64Encoder(const /* Base64EncodeFlags */ uint32_t *flags/* = nullptr*/) LASHE_EXCEPT(FilterException);
 
 	__Base64EncoderContext *__ctx;
 
@@ -31,6 +31,8 @@ public:
 	virtual ~Base64Encoder() LASHE_NOEXCEPT;
 
 	thisClass &operator =(const thisClass&) = delete;
+
+	virtual const char *className() const LASHE_NOEXCEPT; //@Override
 
 	virtual thisClass &open(const uint32_t x) LASHE_EXCEPT(FilterException); //@Implement
 	virtual thisClass &close() LASHE_NOEXCEPT; //@Implement
@@ -59,7 +61,16 @@ public:
 
 #pragma pack(pop)
 
-LASHE_DECL_EXT FilterInterface *mkBase64Encoder() LASHE_EXCEPT(FilterException);
+enum /* uint32_t */ Base64EncodeFlags
+{
+	LB64EF_NONE,
+	LB64EF_URL,
+	LB64EF_NO_NL
+};
+
+LASHE_DECL_EXT FilterInterface *mkBase64Encoder(const /* Base64EncodeFlags */ uint32_t *flags = nullptr) LASHE_EXCEPT(FilterException);
+// In-memory encoding.
+LASHE_DECL_EXT FilterResult base64Encode(const void *buf, const size_t len, const /* Base64EncodeFlags */ uint32_t *flags = nullptr) LASHE_EXCEPT(FilterException);
 
 }
 

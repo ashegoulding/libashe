@@ -92,6 +92,44 @@ public:
 	virtual thisClass &payload(void *buf, const size_t len) LASHE_EXCEPT(FilterException) = 0; //@Pure
 };
 
+/* FilterResult
+* A class for holding result buffer from helper functions.
+* This class is designed to overcome runtime difference on Windows
+* (eg: Linking LibAshe built with vc++2013 from a software built with vc++2008)
+* DO NOT touch 'ptr' and 'size' member directly.
+* Always use alloc() and free() methods.
+*/
+class FilterResult : public AsheClass
+{
+public:
+	typedef AsheClass motherClass;
+	typedef FilterResult thisClass;
+
+public:
+	// Managed with ::malloc() and ::free().
+	char *ptr;
+	size_t size;
+
+	FilterResult(const size_t size = 0) LASHE_NOEXCEPT;
+	// Move constructor.
+	FilterResult(thisClass &x) LASHE_NOEXCEPT;
+	virtual ~FilterResult() LASHE_NOEXCEPT;
+
+	// Move operator.
+	thisClass &operator =(thisClass &x) LASHE_NOEXCEPT;
+
+	/* Sets 'ptr' and 'size' member to null
+	* so they don't get freed on the instance's destruction.
+	*/
+	virtual thisClass &detach() LASHE_NOEXCEPT;
+	// This will call ::free() first. 0 is an acceptable argument.
+	virtual thisClass &alloc(const size_t size) LASHE_NOEXCEPT;
+	// Frees 'ptr' and calls detach().
+	virtual thisClass &free() LASHE_NOEXCEPT;
+	virtual thisClass &swap(thisClass &x) LASHE_NOEXCEPT;
+	virtual thisClass clone() LASHE_NOEXCEPT;
+};
+
 #pragma pack(pop)
 }
 
