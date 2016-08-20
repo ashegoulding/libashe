@@ -283,14 +283,13 @@ void validateString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
 	__dropif_uninitialised<Exception>();
 	std::string __str(str, len);
 
-	__trim__(__str);
-	__lower__(__str);
 	if(!std::regex_match(__str, *__lashe_re_uuidHusk))
 	{
 		Exception e;
 		e.code(Exception::C_INVALID_FORMAT);
 		throw e;
 	}
+	__trim__(__str);
 
 	switch(__str[18])
 	{
@@ -298,6 +297,8 @@ void validateString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
 	case '9':
 	case 'a':
 	case 'b':
+	case 'A':
+	case 'B':
 		break;
 	default:
 	{
@@ -370,24 +371,48 @@ uint32_t UUID::version() const LASHE_NOEXCEPT
 
 const UUID& UUID::string(char* p, const bool upper) const LASHE_NOEXCEPT
 {
-	std::stringstream sb;
-	std::string y;
-	size_t i;
+	static const char __UPPER__[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+	static const char __LOWER__[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-	sb.unsetf(std::ios::showbase);
-	if(upper)
-		sb.setf(std::ios::uppercase);
-	else
-		sb.unsetf(std::ios::uppercase);
-	for(i=0; i<uuid::RAW_BYTE_SIZE; ++i)
-		sb << std::setw(2) << std::setfill('0') << std::hex << (int)this->data[i];
-	y = sb.str();
-	y.insert(8, "-");
-	y.insert(13, "-");
-	y.insert(18, "-");
-	y.insert(23, "-");
+	const char *t = upper? __UPPER__ : __LOWER__;
 
-	::memcpy(p, y.c_str(), uuid::STRING_SIZE);
+	p[0] = t[this->data[0] >> 4];
+	p[1] = t[this->data[0] & 0x0F];
+	p[2] = t[this->data[1] >> 4];
+	p[3] = t[this->data[1] & 0x0F];
+	p[4] = t[this->data[2] >> 4];
+	p[5] = t[this->data[2] & 0x0F];
+	p[6] = t[this->data[3] >> 4];
+	p[7] = t[this->data[3] & 0x0F];
+	p[8] = '-';
+	p[9] = t[this->data[4] >> 4];
+	p[10] = t[this->data[4] & 0x0F];
+	p[11] = t[this->data[5] >> 4];
+	p[12] = t[this->data[5] & 0x0F];
+	p[13] = '-';
+	p[14] = t[this->data[6] >> 4];
+	p[15] = t[this->data[6] & 0x0F];
+	p[16] = t[this->data[7] >> 4];
+	p[17] = t[this->data[7] & 0x0F];
+	p[18] = '-';
+	p[19] = t[this->data[8] >> 4];
+	p[20] = t[this->data[8] & 0x0F];
+	p[21] = t[this->data[9] >> 4];
+	p[22] = t[this->data[9] & 0x0F];
+	p[23] = '-';
+	p[24] = t[this->data[10] >> 4];
+	p[25] = t[this->data[10] & 0x0F];
+	p[26] = t[this->data[11] >> 4];
+	p[27] = t[this->data[11] & 0x0F];
+	p[28] = t[this->data[12] >> 4];
+	p[29] = t[this->data[12] & 0x0F];
+	p[30] = t[this->data[13] >> 4];
+	p[31] = t[this->data[13] & 0x0F];
+	p[32] = t[this->data[14] >> 4];
+	p[33] = t[this->data[14] & 0x0F];
+	p[34] = t[this->data[15] >> 4];
+	p[35] = t[this->data[15] & 0x0F];
+
 	return *this;
 }
 

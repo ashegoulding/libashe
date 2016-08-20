@@ -140,9 +140,9 @@ public:
 *		Blocks any UUID string that seems legit but isn't because of the magic digits.
 */
 // Does not check version digit.
-#define LASHE_UUID_REGEX_STRICT	"^(\\s+)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}(\\s+)?$"
+#define LASHE_UUID_REGEX_STRICT	"^(\\s+)?[0-9a-f]{8}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[8-9a-b][0-9a-f]{3}\\-[0-9a-f]{12}(\\s+)?$"
 // Does not check magic digit.
-#define LASHE_UUID_REGEX_HUSK	"^(\\s+)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(\\s+)?$"
+#define LASHE_UUID_REGEX_HUSK	"^(\\s+)?[0-9a-f]{8}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{4}\\-[0-9a-f]{12}(\\s+)?$"
 static const size_t RAW_BYTE_SIZE = 16;
 // Including null-terminator.
 static const size_t STRING_SIZE = 36;
