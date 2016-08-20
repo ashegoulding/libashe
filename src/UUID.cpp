@@ -113,10 +113,10 @@ UUID MersenneTwisterEngine::generate() LASHE_NOEXCEPT
 
 	for(auto &v : content)
 		v = this->__privCtx->rndEng();
-	buf.resize(this->__privCtx->md->feed(content.data(), content.size()).finish().payloadSize());
+	buf.resize(this->__privCtx->md->feed(content.data(), content.size()*sizeof(uint64_t)).finish().payloadSize());
 	this->__privCtx->md->payload(buf.data(), buf.size());
-	__putGlamour__(buf.data(), V_RANDOM);
 	::memcpy(y.data, buf.data(), RAW_BYTE_SIZE);
+	__putGlamour__(y.data, V_RANDOM);
 
 	return y;
 }
@@ -315,19 +315,19 @@ void validateString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
 */
 UUID::UUID() LASHE_NOEXCEPT
 {
-	::memset(this->data, 0, sizeof(uuid::RAW_BYTE_SIZE));
+	::memset(this->data, 0, uuid::RAW_BYTE_SIZE);
 }
 
 UUID::UUID(const thisClass& src) LASHE_NOEXCEPT
 {
-	::memcpy(this->data, src.data, sizeof(uuid::RAW_BYTE_SIZE));
+	::memcpy(this->data, src.data, uuid::RAW_BYTE_SIZE);
 }
 
 UUID::~UUID() LASHE_NOEXCEPT{}
 
 UUID& UUID::operator =(const thisClass& src) LASHE_NOEXCEPT
 {
-	::memcpy(this->data, src.data, sizeof(uuid::RAW_BYTE_SIZE));
+	::memcpy(this->data, src.data, uuid::RAW_BYTE_SIZE);
 	return *this;
 }
 

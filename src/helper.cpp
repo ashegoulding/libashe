@@ -131,6 +131,7 @@ LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags
 		if(__hasAbility(LAANS_OPENSSL))
 		{
 			__lashe_defUUIDEngine = uuid::mkRandomEngine("MersenneTwisterEngine");
+			__lashe_defUUIDEngine->randomise();
 			__lashe_mtx_defUUIDEngine = new std::mutex();
 		}
 	}
