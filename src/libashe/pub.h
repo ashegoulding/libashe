@@ -64,25 +64,27 @@ enum /* uint32_t */ LibAsheAbilityNamespace
 	LAANS_NONE,
 	LAANS_DESCENDANT,
 	/* Network Socket
-	* Optional(explicit init):
+	* Optional:
 	*	- OpenSSL: Enables TLS layer.
 	*/
 	LAANS_NET_SOCKET,
-	/* Human Language
+	/* Human Language (planned)
 	*/
 	LAANS_HUMAN_LANG,
 	/* OpenSSL
 	* Classes:
 	*	- Base64Encoder
 	*	- Base64Decoder
-	*	- TODO: Hash
+	*	- MessageDigest
 	*/
 	LAANS_OPENSSL,
-	/* WebSocket
-	* Requires(implicit init):
-	*	- OpenSSL
+	LAANS_HTTP,
+	/* UUID
 	* Classes:
-	*	- WebSocket
+	*	- UUID
+	*	- uuid::RandomEngine
+	* Requires:
+	*	- OpenSSL
 	*/
 	LAANS_WEBSOCKET
 };

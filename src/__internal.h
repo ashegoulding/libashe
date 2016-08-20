@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 
 #include <regex>
 
@@ -35,6 +36,7 @@ typedef
 extern bool __lashe_initialised;
 // malloc()/free()
 extern uint32_t *__lashe_initialisedAbilities;
+extern std::set<LibAsheAbilityNamespace> *__lashe_initialisedAbilitiesSet;
 extern std::regex *__lashe_re_version;
 extern std::regex *__lashe_format_numberal;
 extern std::regex *__lashe_format_booleanTrue;
@@ -43,13 +45,15 @@ extern std::regex *__lashe_format_booleanFalse;
 extern std::regex
 	*__lashe_re_uuidHusk,
 	*__lashe_re_uuidStrict;
-extern uuid::MersenneTwisterEngine *__lashe_defUUIDEngine;
+extern uuid::RandomEngine *__lashe_defUUIDEngine;
 extern std::mutex *__lashe_mtx_defUUIDEngine;
 #define __LOCK_DEF_UUID_ENGINE() std::lock_guard<std::mutex> __lg_lashe_defUUIDEngine(*__lashe_mtx_defUUIDEngine)
 
 extern std::regex *__lashe_format_base64;
 extern std::regex *__lashe_format_base64url;
 
+
+[[noreturn]] void __die_critical() LASHE_NOEXCEPT;
 
 template<class E>
 void __dropif_uninitialised() LASHE_EXCEPT(E)
@@ -60,6 +64,23 @@ void __dropif_uninitialised() LASHE_EXCEPT(E)
 		if(typeid(E) == typeid(HelperException) ||
 				typeid(E) == typeid(uuid::Exception))
 			e.code(E::C_LASHE_UNINITIALISED);
+		else
+			__die_critical();
+		throw e;
+	}
+}
+
+template<class E>
+void __dropif_noAbility(const LibAsheAbilityNamespace x) LASHE_EXCEPT(E)
+{
+	__dropif_uninitialised<E>();
+	if(__lashe_initialisedAbilitiesSet->find(x) == __lashe_initialisedAbilitiesSet->end())
+	{
+		E e;
+		if(typeid(E) == typeid(uuid::Exception))
+			e.code(E::C_LASHE_NO_ABILITY);
+		else
+			__die_critical();
 		throw e;
 	}
 }
@@ -78,7 +99,7 @@ void __drop_unimplemented(const char *msg = "", const bool os = false) LASHE_EXC
 	throw e;
 }
 
-void __die_critical() LASHE_NOEXCEPT;
+bool __hasAbility(const LibAsheAbilityNamespace x) LASHE_NOEXCEPT;
 
 __ModuleType __loadModule__(const char *name) LASHE_EXCEPT(HelperException);
 void __unloadModule__(__ModuleType *mod) LASHE_NOEXCEPT;

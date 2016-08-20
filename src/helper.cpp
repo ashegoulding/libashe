@@ -1,6 +1,8 @@
 #include "libashe/helper.h"
-
 #include "__internal.h"
+#include "__ArrayArgument.h"
+#include "__openssl.h"
+#include "libashe/UUID.h"
 
 
 namespace ashe
@@ -10,15 +12,160 @@ LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags
 {
 	if(__lashe_initialised)
 		return;
-	// TODO
-	__drop_unimplemented<HelperException>();
+	try
+	{
+		size_t i, iCnt;
+		std::set<LibAsheAbilityNamespace> __abilities;
+		auto parsed = __aa::parseArrayArgument__<uint32_t>(flags, {{
+				{LAIF_OSCODE, 1},
+				{LAIF_ABILITY_PERMISSIVE, 0}
+		}});
+		// Parse flags.
+		auto pIt = parsed.find(LAIF_OSCODE);
+		if(pIt->second.appeared && (!pIt->second.list.empty()))
+		{
+			static auto __THROW_INCOMP__ = []()
+			{
+				HelperException e;
+				e.code(HelperException::C_INCOMPATIBLE_HOST_OS);
+				throw e;
+			};
+			const auto &code = pIt->second.list[0];
+#if ASHE_ISOS_POSIX()
+			if(ASHE_HOST_OSCODE == 0x01)
+			{
+				if(ASHE_HOST_OSCODE != code)
+				{
+					// TODO: Warn.
+				}
+			}
+			else if(ASHE_HOST_OSCODE != code)
+				__THROW_INCOMP__();
+#elif ASHE_ISOS_WIN()
+			if(ASHE_HOST_OSCODE > code)
+				__THROW_INCOMP__();
+			else if(ASHE_HOST_OSCODE < code)
+			{
+				// TODO: Warn.
+			}
+#endif
+		}
+		else
+		{
+			HelperException e;
+			e
+				.code(HelperException::C_ILLEGAL_ARGUMENT)
+				.msg("'Missing argument: LAIF_OSCODE'")
+				.arg1(LAIF_OSCODE);
+			throw e;
+		}
+
+		const auto &permissive = parsed[LAIF_ABILITY_PERMISSIVE].appeared;
+
+		// Parse requested abilities.
+		if(abilities)
+		{
+			while(*abilities)
+			{
+				switch(*abilities)
+				{
+				// FIXME
+				case LAANS_DESCENDANT:
+				case LAANS_NET_SOCKET:
+				case LAANS_HUMAN_LANG:
+				case LAANS_HTTP:
+				case LAANS_WEBSOCKET:
+					__drop_unimplemented<HelperException>();
+					break;
+				case LAANS_OPENSSL:
+					__abilities.insert(LAANS_OPENSSL);
+					break;
+				}
+			}
+		}
+		else
+		{
+			// Every single ability.
+			// __abilities.insert(LAANS_DESCENDANT); FIXME
+			// __abilities.insert(LAANS_NET_SOCKET); FIXME
+			// __abilities.insert(LAANS_HUMAN_LANG); FIXME
+			__abilities.insert(LAANS_OPENSSL);
+			// __abilities.insert(LAANS_HTTP); FIXME
+			// __abilities.insert(LAANS_WEBSOCKET); FIXME
+		}
+
+		// Initialise the modules discrete in order.
+		__initOpenSSL();
+
+		// Initialise globals.
+		{
+			auto it = __abilities.begin();
+
+			iCnt = __abilities.size();
+			__lashe_initialisedAbilities = (uint32_t*)::malloc(iCnt * sizeof(uint32_t));
+			for(i=0; i<iCnt; ++i)
+				__lashe_initialisedAbilities[i] = *(it++);
+			__lashe_initialisedAbilitiesSet = new std::set<LibAsheAbilityNamespace>();
+			__lashe_initialisedAbilitiesSet->swap(__abilities);
+		}
+		__lashe_re_version = new std::regex("^(\\s+)?[0-9]{1,5}\\.[0-9]{1,5}\\.[0-9]{1,5}(.*)?$");
+		__lashe_format_numberal = new std::regex("^(\\s+)?\\-?[0-9]+(\\s+)?$");
+		__lashe_format_booleanTrue = new std::regex("^(\\s+)?(false|(\\-?0+))(\\s+)?$", std::regex_constants::icase);
+		__lashe_format_booleanFalse = new std::regex("^(\\s+)?(true|\\-?[0-9]*[1-9][0-9]*)(\\s+)?$", std::regex_constants::icase);
+		__lashe_re_uuidHusk = new std::regex(LASHE_UUID_REGEX_HUSK, std::regex_constants::icase);
+		__lashe_re_uuidStrict = new std::regex(LASHE_UUID_REGEX_STRICT, std::regex_constants::icase);
+		if(__hasAbility(LAANS_OPENSSL))
+		{
+			__lashe_defUUIDEngine = uuid::mkRandomEngine("MersenneTwisterEngine");
+			__lashe_mtx_defUUIDEngine = new std::mutex();
+		}
+		__lashe_format_base64 = new std::regex("^[A-Za-z0-9\\+\\/\\s]+={0,2}(\\s+)?$", std::regex_constants::icase);
+		__lashe_format_base64url = new std::regex("^[A-Za-z0-9\\-_\\s]+={0,2}(\\s+)?$", std::regex_constants::icase);
+
+		__lashe_initialised = true;
+	}
+	catch(HelperException &e)
+	{
+		deinitLibAshe();
+		throw e;
+	}
 }
 
 LASHE_DECL_EXT_NOEXCEPT void deinitLibAshe() LASHE_NOEXCEPT
 {
 	if(!__lashe_initialised)
 		return;
-	// TODO
+
+	// Deinit modules.
+	__deinitOpenSSL();
+
+	// Deinit globals.
+	::free(__lashe_initialisedAbilities);
+	delete __lashe_initialisedAbilitiesSet;
+	delete __lashe_re_version;
+	delete __lashe_format_numberal;
+	delete __lashe_format_booleanTrue;
+	delete __lashe_format_booleanFalse;
+	delete __lashe_re_uuidHusk;
+	delete __lashe_re_uuidStrict;
+	delete __lashe_defUUIDEngine;
+	delete __lashe_mtx_defUUIDEngine;
+	delete __lashe_format_base64;
+	delete __lashe_format_base64url;
+	__lashe_initialisedAbilities = nullptr;
+	__lashe_initialisedAbilitiesSet = nullptr;
+	__lashe_re_version =
+		__lashe_format_numberal =
+		__lashe_format_booleanTrue =
+		__lashe_format_booleanFalse =
+		__lashe_re_uuidHusk =
+		__lashe_re_uuidStrict =
+		__lashe_format_base64 =
+		__lashe_format_base64url = nullptr;
+	__lashe_defUUIDEngine = nullptr;
+	__lashe_mtx_defUUIDEngine = nullptr;
+
+	__lashe_initialised = false;
 }
 
 LASHE_DECL_EXT const uint32_t *initialisedAbilities() LASHE_EXCEPT(HelperException)
@@ -101,7 +248,8 @@ const char *HelperException::code2str(const uint32_t x) const LASHE_NOEXCEPT
 			"invalid format",
 			"illegal argument",
 			"unimplemented",
-			"unsupported"
+			"unsupported",
+			"incompatible host os"
 	};
 
 	switch(x)
@@ -112,6 +260,7 @@ const char *HelperException::code2str(const uint32_t x) const LASHE_NOEXCEPT
 	case C_ILLEGAL_ARGUMENT:
 	case C_UNIMPLEMENTED:
 	case C_UNSUPPORTED:
+	case C_INCOMPATIBLE_HOST_OS:
 		return __str__[x];
 	}
 	return motherClass::code2str(x);

@@ -4,6 +4,7 @@ Makefile.in
 /configure
 /config.guess
 /config.sub
+/config.status
 /aclocal.m4
 /autom4te.cache
 /m4
@@ -12,12 +13,18 @@ Makefile.in
 /install-sh
 /ltmain.sh
 /missing
+/libtool
+/src/.deps
+/src/.libs
+
+/src/*.lo
+/src/*.pc
 
 /Debug
 /Release
 
-x64/*
-ipch/*
+/x64/*
+/ipch/*
 
 *.sdf
 *.aps

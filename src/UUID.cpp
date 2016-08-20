@@ -42,6 +42,7 @@ const char *Exception::code2str(const uint32_t x) const LASHE_NOEXCEPT
 	static const char *__str__[] = {
 			"none",
 			"LibAshe uninitialised",
+			"LibAshe not initialised with this ability",
 			"not found",
 			"short length given",
 			"invalid magic digit",
@@ -52,6 +53,7 @@ const char *Exception::code2str(const uint32_t x) const LASHE_NOEXCEPT
 	{
 	case C_NONE:
 	case C_LASHE_UNINITIALISED:
+	case C_LASHE_NO_ABILITY:
 	case C_NOT_FOUND:
 	case C_SHORT_LENGTH:
 	case C_INVALID_MAGIC_DIGIT:
@@ -136,9 +138,10 @@ MersenneTwisterEngine& MersenneTwisterEngine::randomise() LASHE_NOEXCEPT
 /******************
 * Namespace functions.
 */
-uint32_t implVersion__() LASHE_NOEXCEPT
+const uint32_t *implVersion__() LASHE_NOEXCEPT
 {
-	return 5;
+	static const uint32_t __ARR__[] = {5};
+	return __ARR__;
 }
 
 const char* versionToString__(const uint32_t v) LASHE_NOEXCEPT
@@ -168,7 +171,7 @@ const char* versionToString__(const uint32_t v) LASHE_NOEXCEPT
 
 RandomEngine* mkRandomEngine(const char* name) LASHE_EXCEPT(Exception)
 {
-	__dropif_uninitialised<Exception>();
+	__dropif_noAbility<Exception>(LAANS_OPENSSL);
 
 	if(0 == ::strcmp(name, "MersenneTwisterEngine"))
 	{
@@ -188,9 +191,9 @@ UUID generate() LASHE_EXCEPT(Exception)
 {
 	UUID ret;
 
-	__dropif_uninitialised<Exception>();
+	__dropif_noAbility<Exception>(LAANS_OPENSSL);
 	{
-		std::lock_guard<std::mutex> lg(*__lashe_mtx_defUUIDEngine);
+		__LOCK_DEF_UUID_ENGINE();
 		ret = __lashe_defUUIDEngine->generate();
 	}
 	return ret;
@@ -394,7 +397,7 @@ UUID UUID::merge(const thisClass& x) const LASHE_EXCEPT(uuid::Exception)
 	FilterResult hashed;
 	uint8_t buf[uuid::RAW_BYTE_SIZE*2];
 
-	__dropif_uninitialised<uuid::Exception>();
+	__dropif_noAbility<uuid::Exception>(LAANS_OPENSSL);
 
 	::memcpy(buf, this->data, uuid::RAW_BYTE_SIZE);
 	::memcpy(buf + uuid::RAW_BYTE_SIZE, x.data, uuid::RAW_BYTE_SIZE);

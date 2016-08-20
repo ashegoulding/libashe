@@ -8,6 +8,7 @@ namespace ashe
 
 bool __lashe_initialised = false;
 uint32_t *__lashe_initialisedAbilities = nullptr;
+std::set<LibAsheAbilityNamespace> *__lashe_initialisedAbilitiesSet = nullptr;
 std::regex *__lashe_re_version = nullptr;
 std::regex *__lashe_format_numberal = nullptr;
 std::regex *__lashe_format_booleanTrue = nullptr;
@@ -16,7 +17,7 @@ std::regex *__lashe_format_booleanFalse = nullptr;
 std::regex
 	*__lashe_re_uuidHusk = nullptr,
 	*__lashe_re_uuidStrict = nullptr;
-uuid::MersenneTwisterEngine *__lashe_defUUIDEngine = nullptr;
+uuid::RandomEngine *__lashe_defUUIDEngine = nullptr;
 std::mutex *__lashe_mtx_defUUIDEngine = nullptr;
 
 std::regex *__lashe_format_base64 = nullptr;
@@ -27,6 +28,13 @@ void __die_critical() LASHE_NOEXCEPT
 {
 	::abort();
 	::exit(128 + 6);
+}
+
+bool __hasAbility(const LibAsheAbilityNamespace x) LASHE_NOEXCEPT
+{
+	if(!__lashe_initialisedAbilitiesSet)
+		__die_critical();
+	return __lashe_initialisedAbilitiesSet->end() != __lashe_initialisedAbilitiesSet->find(x);
 }
 
 __ModuleType __loadModule__(const char *name) LASHE_EXCEPT(HelperException)

@@ -28,6 +28,15 @@ esac],
 [debug=false])
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
+os_code=""
+case "$host" in
+*linux*) os_code="0x02" ;;
+*mingw*) os_code="0x10" ;;
+*) AC_MSG_ERROR([Could not determine OS code.]) ;;
+esac
+AC_DEFINE_UNQUOTED([ASHE_HOST_OSCODE], [$os_code])
+AC_MSG_NOTICE([Ashe OS Code: $os_code])
+
 PKG_CHECK_MODULES([DEP_OPENSSL], [openssl])
 
 AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile doc/Makefile src/libashe.pc])

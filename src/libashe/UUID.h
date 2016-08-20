@@ -52,6 +52,7 @@ public:
 	{
 		C_NONE,
 		C_LASHE_UNINITIALISED,
+		C_LASHE_NO_ABILITY,
 		C_NOT_FOUND,
 		C_SHORT_LENGTH,
 		C_INVALID_MAGIC_DIGIT, // Magic digit(N) is neither  8, 9, A nor B
@@ -127,10 +128,10 @@ public:
 #pragma pack(pop)
 
 // Reserved UUID namespaces according to RFC4122.
-static const char *NS_DNS =			"6ba7b810-9dad-11d1-80b4-00c04fd430c8";
-static const char *NS_URL =			"6ba7b811-9dad-11d1-80b4-00c04fd430c8";
-static const char *NS_ISO_OID =		"6ba7b812-9dad-11d1-80b4-00c04fd430c8";
-static const char *NS_X500 =		"6ba7b814-9dad-11d1-80b4-00c04fd430c8";
+#define LASHE_UUID_NS_DNS			"6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+#define LASHE_UUID_NS_URL			"6ba7b811-9dad-11d1-80b4-00c04fd430c8"
+#define LASHE_UUID_NS_ISO_OID		"6ba7b812-9dad-11d1-80b4-00c04fd430c8"
+#define LASHE_UUID_NS_X500			"6ba7b814-9dad-11d1-80b4-00c04fd430c8"
 
 /* A regular expression of a valid UUID string.
 *
@@ -139,14 +140,18 @@ static const char *NS_X500 =		"6ba7b814-9dad-11d1-80b4-00c04fd430c8";
 *		Blocks any UUID string that seems legit but isn't because of the magic digits.
 */
 // Does not check version digit.
-static const char *REGEX_STRICT = "^(\\s+)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}(\\s+)?$";
+#define LASHE_UUID_REGEX_STRICT	"^(\\s+)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[8-9a-b][0-9a-f]{3}-[0-9a-f]{12}(\\s+)?$"
 // Does not check magic digit.
-static const char *REGEX_HUSK = "^(\\s+)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(\\s+)?$";
+#define LASHE_UUID_REGEX_HUSK	"^(\\s+)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(\\s+)?$"
 static const size_t RAW_BYTE_SIZE = 16;
 // Including null-terminator.
 static const size_t STRING_SIZE = 36;
 
-LASHE_DECL_EXT uint32_t implVersion__() LASHE_NOEXCEPT;
+/* implVersion__()
+* Implemented levels of UUID generation.
+* Will return: {5}
+*/
+LASHE_DECL_EXT const uint32_t *implVersion__() LASHE_NOEXCEPT;
 LASHE_DECL_EXT const char *versionToString__(const uint32_t v) LASHE_NOEXCEPT;
 
 /* ashe::uuid::mkRandomEngine(const char *name) LASHE_EXCEPT(Exception)
