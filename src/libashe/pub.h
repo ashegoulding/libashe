@@ -59,6 +59,9 @@
 #endif
 
 
+namespace ashe
+{
+
 enum /* uint32_t */ LibAsheAbilityNamespace
 {
 	LAANS_NONE,
@@ -105,5 +108,7 @@ enum /* uint32_t */ LibAsheComparisonOperation
 	// Less than or equals to
 	LACO_LE
 };
+
+}
 
 #endif
