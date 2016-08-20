@@ -28,14 +28,15 @@ esac],
 [debug=false])
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
-os_code=""
+lashe_os_code=""
 case "$host" in
-*linux*) os_code="0x02" ;;
-*mingw*) os_code="0x10" ;;
+*linux*) lashe_os_code="0x02" ;;
+*mingw*) lashe_os_code="0x10" ;;
 *) AC_MSG_ERROR([Could not determine OS code.]) ;;
 esac
-AC_DEFINE_UNQUOTED([ASHE_HOST_OSCODE], [$os_code])
-AC_MSG_NOTICE([Ashe OS Code: $os_code])
+AC_DEFINE_UNQUOTED([ASHE_HOST_OSCODE], [$lashe_os_code])
+AC_SUBST([lashe_os_code], [$lashe_os_code])
+AC_MSG_NOTICE([Determined Ashe OS Code: $lashe_os_code])
 
 PKG_CHECK_MODULES([DEP_OPENSSL], [openssl])
 

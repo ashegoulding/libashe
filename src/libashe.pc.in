@@ -2,10 +2,11 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
+lashe_host_os_code=@lashe_os_code@
 
 Name: @PACKAGE_NAME@
 Description: Ashe's C++11/98 utility stuff
 URL: https://github.com/ashegoulding/libashe
 Version: @PACKAGE_VERSION@
-Cflags: -I${includedir}
-Libs: -L${libdir} -lashe -lpthread
+Cflags: -I${includedir} -DASHE_HOST_OSCODE=${lashe_host_os_code}
+Libs: -L${libdir} -lashe -lpthread -ldl
