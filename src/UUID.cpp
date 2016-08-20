@@ -115,7 +115,7 @@ UUID MersenneTwisterEngine::generate() LASHE_NOEXCEPT
 		v = this->__privCtx->rndEng();
 	buf.resize(this->__privCtx->md->feed(content.data(), content.size()).finish().payloadSize());
 	this->__privCtx->md->payload(buf.data(), buf.size());
-	__putGlamour__(buf.data(), V_SHA1_AND_NAMESPACE);
+	__putGlamour__(buf.data(), V_RANDOM);
 	::memcpy(y.data, buf.data(), RAW_BYTE_SIZE);
 
 	return y;
