@@ -105,6 +105,12 @@ public:
 	typedef AsheClass motherClass;
 	typedef FilterResult thisClass;
 
+protected:
+	/* Sets 'ptr' and 'size' member to null
+	* so they don't get freed on the instance's destruction.
+	*/
+	virtual void __detach() LASHE_NOEXCEPT;
+
 public:
 	// Managed with ::malloc() and ::free().
 	char *ptr;
@@ -112,16 +118,12 @@ public:
 
 	FilterResult(const size_t size = 0) LASHE_NOEXCEPT;
 	// Move constructor.
-	FilterResult(thisClass &x) LASHE_NOEXCEPT;
+	FilterResult(thisClass &&x) LASHE_NOEXCEPT;
 	virtual ~FilterResult() LASHE_NOEXCEPT;
 
 	// Move operator.
-	thisClass &operator =(thisClass &x) LASHE_NOEXCEPT;
+	thisClass &operator =(thisClass &&x) LASHE_NOEXCEPT;
 
-	/* Sets 'ptr' and 'size' member to null
-	* so they don't get freed on the instance's destruction.
-	*/
-	virtual thisClass &detach() LASHE_NOEXCEPT;
 	// This will call ::free() first. 0 is an acceptable argument.
 	virtual thisClass &alloc(const size_t size) LASHE_NOEXCEPT;
 	// Frees 'ptr' and calls detach().

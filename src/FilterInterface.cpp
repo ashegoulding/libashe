@@ -171,11 +171,11 @@ FilterResult::FilterResult(const size_t size/* = 0*/) LASHE_NOEXCEPT
 		__die_critical();
 }
 
-FilterResult::FilterResult(thisClass& x) LASHE_NOEXCEPT
+FilterResult::FilterResult(thisClass&& x) LASHE_NOEXCEPT
 	: ptr(x.ptr)
 	, size(x.size)
 {
-	x.detach();
+	x.__detach();
 }
 
 FilterResult::~FilterResult() LASHE_NOEXCEPT
@@ -183,20 +183,19 @@ FilterResult::~FilterResult() LASHE_NOEXCEPT
 	::free(this->ptr);
 }
 
-FilterResult& FilterResult::operator =(thisClass& x) LASHE_NOEXCEPT
+FilterResult& FilterResult::operator =(thisClass&& x) LASHE_NOEXCEPT
 {
 	this->free();
 	this->ptr = x.ptr;
 	this->size = x.size;
-	x.detach();
+	x.__detach();
 	return *this;
 }
 
-FilterResult& FilterResult::detach() LASHE_NOEXCEPT
+void FilterResult::__detach() LASHE_NOEXCEPT
 {
 	this->ptr = nullptr;
 	this->size = 0;
-	return *this;
 }
 
 FilterResult& FilterResult::alloc(const size_t size) LASHE_NOEXCEPT
@@ -217,7 +216,7 @@ FilterResult& FilterResult::alloc(const size_t size) LASHE_NOEXCEPT
 FilterResult& FilterResult::free() LASHE_NOEXCEPT
 {
 	::free(this->ptr);
-	this->detach();
+	this->__detach();
 	return *this;
 }
 

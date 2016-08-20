@@ -1,10 +1,16 @@
 #include "libashe/UUID.h"
 #include "__internal.h"
+#include "libashe/MessageDigest.h"
+#include "libashe/Process.h"
+
+#include <vector>
 
 #include <cstring>
 #include <random>
 #include <sstream>
 #include <iomanip>
+
+#include <thread>
 
 
 namespace ashe
@@ -12,18 +18,26 @@ namespace ashe
 namespace uuid
 {
 
+static void __putGlamour__(void *x, const /* uuid::Version */ uint32_t ver) LASHE_NOEXCEPT
+{
+	uint8_t *p = (uint8_t*)x;
+	const uint8_t theDigit = (uint8_t)(0x10 * ver);
+	p[6] = (p[6] & 0x0F) | theDigit;
+	p[8] = (((((p[8] & 0xF0) >> 4) % 4) + 8) << 4) | (p[8] & 0x0F);
+}
+
 /******************
 * Exception
 */
 Exception::~Exception() LASHE_NOEXCEPT{}
 
-const char *Exception::className() const LASHE_NOEXCEPT //@Override
+const char *Exception::className() const LASHE_NOEXCEPT
 {
 	static const char *__name__ = "ashe::uuid::Exception";
 	return __name__;
 }
 
-const char *Exception::code2str(const uint32_t x) const LASHE_NOEXCEPT //@Override
+const char *Exception::code2str(const uint32_t x) const LASHE_NOEXCEPT
 {
 	static const char *__str__[] = {
 			"none",
@@ -60,17 +74,22 @@ UUID RandomEngine::operator()() LASHE_NOEXCEPT
 /******************
 * MersenneTwisterEngine
 */
-#define __INTP_CTX() auto &__ctx = *(std::mt19937_64*)this->__privCtx
+struct __MersenneTwisterEngineContext
+{
+	FilterInterface *md = nullptr;
+	std::mt19937_64 rndEng;
+};
 
 MersenneTwisterEngine::MersenneTwisterEngine() LASHE_NOEXCEPT
-	: __privCtx(new std::mt19937_64)
+	: __privCtx(new __MersenneTwisterEngineContext)
 	, __poolSize(32)
 {
+	this->__privCtx->md = mkMessageDigest(LAHA_SHA1);
 }
 
 MersenneTwisterEngine::~MersenneTwisterEngine() LASHE_NOEXCEPT
 {
-	delete (std::mt19937_64*)this->__privCtx;
+	delete this->__privCtx;
 }
 
 size_t MersenneTwisterEngine::poolSize() const LASHE_NOEXCEPT
@@ -84,27 +103,31 @@ MersenneTwisterEngine& MersenneTwisterEngine::poolSize(const size_t size) LASHE_
 	return *this;
 }
 
-UUID MersenneTwisterEngine::generate() LASHE_NOEXCEPT //@Implement
+UUID MersenneTwisterEngine::generate() LASHE_NOEXCEPT
 {
-	// TODO
-#if 0
 	UUID y;
 	std::vector<uint64_t> content(this->__poolSize);
-	std::array<uint8_t, SHA1_DIGEST_SIZE> hashed;
+	std::vector<uint8_t> buf;
 
 	for(auto &v : content)
-		v = this->random();
-	::sha1_buffer((char*)content.data(), content.size() * sizeof(uint64_t), hashed.data());
-	y.__build(hashed.data(), hashed.size(), UUID::VER_RANDOM);
+		v = this->__privCtx->rndEng();
+	buf.resize(this->__privCtx->md->feed(content.data(), content.size()).finish().payloadSize());
+	this->__privCtx->md->payload(buf.data(), buf.size());
+	__putGlamour__(buf.data(), V_SHA1_AND_NAMESPACE);
+	::memcpy(y.data, buf.data(), RAW_BYTE_SIZE);
 
 	return y;
-#endif
 }
 
 MersenneTwisterEngine& MersenneTwisterEngine::randomise() LASHE_NOEXCEPT
 {
-	// TODO: Use PID as seed as well.
-	__INTP_CTX();
+	std::hash<std::thread::id> hasher;
+	std::seed_seq seed({
+		(uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count(),
+		(uint64_t)hasher(std::this_thread::get_id()),
+		(uint64_t)pid__()});
+
+	this->__privCtx->rndEng.seed(seed);
 	return *this;
 }
 
@@ -161,17 +184,21 @@ RandomEngine* mkRandomEngine(const char* name) LASHE_EXCEPT(Exception)
 	return nullptr;
 }
 
-UUID generate(const uint32_t v) LASHE_EXCEPT(Exception)
+UUID generate() LASHE_EXCEPT(Exception)
 {
-	__dropif_uninitialised<Exception>();
 	UUID ret;
-	// TODO: Make default engine in ashe::initLibAshe() and use it.
+
+	__dropif_uninitialised<Exception>();
+	{
+		std::lock_guard<std::mutex> lg(*__lashe_mtx_defUUIDEngine);
+		ret = __lashe_defUUIDEngine->generate();
+	}
 	return ret;
 }
 
 UUID fromString(const char* str) LASHE_EXCEPT(Exception)
 {
-	return fromString(str, 	::strlen(str));
+	return fromString(str, ::strlen(str));
 }
 
 UUID fromString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
@@ -179,9 +206,9 @@ UUID fromString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
 	validateString(str, len);
 	std::string __str(str, len);
 	UUID ret;
-	__trim__(__str);
-	// __lower__(__str); XXX
 
+	__trim__(__str);
+	__lower__(__str);
 	{
 		std::string::size_type i = 0, j = 1;
 		size_t p = 0;
@@ -278,14 +305,6 @@ void validateString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
 	}
 }
 
-static void __putGlamour__(void *x, const /* uuid::Version */ uint32_t ver) LASHE_NOEXCEPT
-{
-	uint8_t *p = (uint8_t*)x;
-	const uint8_t theDigit = (uint8_t)(0x10 * ver);
-	p[6] = (p[6] & 0x0F) | theDigit;
-	p[8] = (((((p[8] & 0xF0) >> 4) % 4) + 8) << 4) | (p[8] & 0x0F);
-}
-
 }
 
 /******************
@@ -369,19 +388,19 @@ const UUID& UUID::string(char* p, const bool upper) const LASHE_NOEXCEPT
 	return *this;
 }
 
-UUID UUID::merge(const thisClass& x) const LASHE_NOEXCEPT
+UUID UUID::merge(const thisClass& x) const LASHE_EXCEPT(uuid::Exception)
 {
 	UUID y;
-	// TODO
-#if 0
-	std::array<uint8_t, SHA1_DIGEST_SIZE> hashed;
-	std::array<uint8_t, thisClass::UUID_BYTE_SIZE*2> concatenated;
+	FilterResult hashed;
+	uint8_t buf[uuid::RAW_BYTE_SIZE*2];
 
-	::memcpy(concatenated.data(), this->data, thisClass::UUID_BYTE_SIZE);
-	::memcpy(concatenated.data() + thisClass::UUID_BYTE_SIZE, x.data, thisClass::UUID_BYTE_SIZE);
-	::sha1_buffer((char*)concatenated.data(), concatenated.size(), hashed.data());
-	y.__build(hashed.data(), hashed.size(), VER_SHA1_AND_NAMESPACE);
-#endif
+	__dropif_uninitialised<uuid::Exception>();
+
+	::memcpy(buf, this->data, uuid::RAW_BYTE_SIZE);
+	::memcpy(buf + uuid::RAW_BYTE_SIZE, x.data, uuid::RAW_BYTE_SIZE);
+	hashed = digest(buf, uuid::RAW_BYTE_SIZE*2, LAHA_SHA1);
+	::memcpy(y.data, hashed.ptr, uuid::RAW_BYTE_SIZE);
+
 	return y;
 }
 

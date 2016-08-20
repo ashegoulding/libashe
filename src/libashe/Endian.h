@@ -36,20 +36,20 @@ namespace ashe
 {
 
 // Little <-> Big
-void LASHE_DECL_EXT_NOEXCEPT invertEndian_lb(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT invertEndian_lb__(void *buf, const size_t len) LASHE_NOEXCEPT;
 // PDP <-> Little
-void LASHE_DECL_EXT_NOEXCEPT invertEndian_ml(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT invertEndian_ml__(void *buf, const size_t len) LASHE_NOEXCEPT;
 // PDP <-> Big
-void LASHE_DECL_EXT_NOEXCEPT invertEndian_mb(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT invertEndian_mb__(void *buf, const size_t len) LASHE_NOEXCEPT;
 
 // Assures 'buf' to be in host endian.
-void LASHE_DECL_EXT_NOEXCEPT fromEndian_l(void *buf, const size_t len) LASHE_NOEXCEPT;
-void LASHE_DECL_EXT_NOEXCEPT fromEndian_b(void *buf, const size_t len) LASHE_NOEXCEPT;
-void LASHE_DECL_EXT_NOEXCEPT fromEndian_m(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT fromEndian_l__(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT fromEndian_b__(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT fromEndian_m__(void *buf, const size_t len) LASHE_NOEXCEPT;
 // Converts 'buf' to the endian specified.
-void LASHE_DECL_EXT_NOEXCEPT toEndian_l(void *buf, const size_t len) LASHE_NOEXCEPT;
-void LASHE_DECL_EXT_NOEXCEPT toEndian_b(void *buf, const size_t len) LASHE_NOEXCEPT;
-void LASHE_DECL_EXT_NOEXCEPT toEndian_m(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT toEndian_l__(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT toEndian_b__(void *buf, const size_t len) LASHE_NOEXCEPT;
+void LASHE_DECL_EXT_NOEXCEPT toEndian_m__(void *buf, const size_t len) LASHE_NOEXCEPT;
 
 #define LASHE_INVERTENDIAN_LB(x) ashe::invertEndian_lb(&x, sizeof(x))
 #define LASHE_INVERTENDIAN_ML(x) ashe::invertEndian_ml(&x, sizeof(x))

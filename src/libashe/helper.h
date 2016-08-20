@@ -51,6 +51,7 @@ enum /* uint32_t */ LibAsheInitFlag
 LASHE_DECL_EXT void initLibAshe(const /* LibAsheAbilityNamespace */ uint32_t *abilities, const /* LibAsheInitFlag */ uint32_t *flags) LASHE_EXCEPT(HelperException);
 LASHE_DECL_EXT_NOEXCEPT void deinitLibAshe() LASHE_NOEXCEPT;
 LASHE_DECL_EXT const /* LibAsheAbilityNamespace */ uint32_t *initialisedAbilities() LASHE_EXCEPT(HelperException);
+// Why would anyone need this?
 LASHE_DECL_EXT bool compareLibAsheVersion(const char *a, const /* LibAsheComparisonOperation */ uint32_t op, const char *b) LASHE_EXCEPT(HelperException);
 
 LASHE_DECL_EXT_NOEXCEPT const char *libAsheVersion__() LASHE_NOEXCEPT;

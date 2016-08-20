@@ -27,8 +27,10 @@ static void __dropif_odd__(const size_t x) LASHE_NOEXCEPT
 		* No idea on handling overflow or underflow happens here,
 		* which some machine would make.
 		*/
-		const double a = std::log((double)(x - 1)) / std::log(2.0F);
-		const double b = std::log((double)x) / std::log(2.0F);
+		static const double __LOG_TWO__ = std::log(2.0F);
+
+		const double a = std::log((double)(x - 1)) / __LOG_TWO__;
+		const double b = std::log((double)x) / __LOG_TWO__;
 
 		if(a == NAN || b == NAN || (long long)a == (long long)b)
 			__die_critical();
@@ -38,7 +40,7 @@ static void __dropif_odd__(const size_t x) LASHE_NOEXCEPT
 
 #define __INTP_BUF(x) ((uint8_t*)x)
 
-void invertEndian_lb(void* buf, const size_t len) LASHE_NOEXCEPT
+void invertEndian_lb__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	size_t a, b;
 
@@ -53,7 +55,7 @@ void invertEndian_lb(void* buf, const size_t len) LASHE_NOEXCEPT
 	}
 }
 
-void invertEndian_ml(void* buf, const size_t len) LASHE_NOEXCEPT
+void invertEndian_ml__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	size_t a, b;
 
@@ -68,7 +70,7 @@ void invertEndian_ml(void* buf, const size_t len) LASHE_NOEXCEPT
 	}
 }
 
-void invertEndian_mb(void* buf, const size_t len) LASHE_NOEXCEPT
+void invertEndian_mb__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	size_t a, b;
 
@@ -91,63 +93,63 @@ void invertEndian_mb(void* buf, const size_t len) LASHE_NOEXCEPT
 	}
 }
 
-void fromEndian_l(void* buf, const size_t len) LASHE_NOEXCEPT
+void fromEndian_l__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	__dropif_odd__(len);
 #if LASHE_IS_ENDIAN_BIG()
-	invertEndian_lb(buf, len);
+	invertEndian_lb__(buf, len);
 #elif LASHE_IS_ENDIAN_PDP()
-	invertEndian_ml(buf, len);
+	invertEndian_ml__(buf, len);
 #endif
 }
 
-void fromEndian_b(void* buf, const size_t len) LASHE_NOEXCEPT
+void fromEndian_b__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	__dropif_odd__(len);
 #if LASHE_IS_ENDIAN_LITTLE()
-	invertEndian_lb(buf, len);
+	invertEndian_lb__(buf, len);
 #elif LASHE_IS_ENDIAN_PDP()
-	invertEndian_mb(buf, len);
+	invertEndian_mb__(buf, len);
 #endif
 }
 
-void fromEndian_m(void* buf, const size_t len) LASHE_NOEXCEPT
+void fromEndian_m__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	__dropif_odd__(len);
 #if LASHE_IS_ENDIAN_LITTLE()
-	invertEndian_ml(buf, len);
+	invertEndian_ml__(buf, len);
 #elif LASHE_IS_ENDIAN_BIG()
-	invertEndian_mb(buf, len);
+	invertEndian_mb__(buf, len);
 #endif
 }
 
-void toEndian_l(void* buf, const size_t len) LASHE_NOEXCEPT
+void toEndian_l__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	__dropif_odd__(len);
 #if LASHE_IS_ENDIAN_BIG()
-	invertEndian_lb(buf, len);
+	invertEndian_lb__(buf, len);
 #elif LASHE_IS_ENDIAN_PDP()
-	invertEndian_ml(buf, len);
+	invertEndian_ml__(buf, len);
 #endif
 }
 
-void toEndian_b(void* buf, const size_t len) LASHE_NOEXCEPT
+void toEndian_b__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	__dropif_odd__(len);
 #if LASHE_IS_ENDIAN_LITTLE()
-	invertEndian_lb(buf, len);
+	invertEndian_lb__(buf, len);
 #elif LASHE_IS_ENDIAN_PDP()
-	invertEndian_mb(buf, len);
+	invertEndian_mb__(buf, len);
 #endif
 }
 
-void toEndian_m(void* buf, const size_t len) LASHE_NOEXCEPT
+void toEndian_m__(void* buf, const size_t len) LASHE_NOEXCEPT
 {
 	__dropif_odd__(len);
 #if LASHE_IS_ENDIAN_LITTLE()
-	invertEndian_ml(buf, len);
+	invertEndian_ml__(buf, len);
 #elif LASHE_IS_ENDIAN_BIG()
-	invertEndian_mb(buf, len);
+	invertEndian_mb__(buf, len);
 #endif
 }
 

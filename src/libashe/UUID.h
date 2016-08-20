@@ -88,6 +88,8 @@ public:
 	virtual thisClass &randomise() LASHE_NOEXCEPT = 0; //@Pure virtual
 };
 
+struct __MersenneTwisterEngineContext;
+
 // Random UUID engine implementation that uses std::mt19937_64
 class LASHE_DECL_EXT MersenneTwisterEngine : public RandomEngine
 {
@@ -98,7 +100,7 @@ public:
 protected:
 	friend RandomEngine* mkRandomEngine(const char*) LASHE_EXCEPT(Exception);
 
-	void *__privCtx;
+	__MersenneTwisterEngineContext *__privCtx;
 	/* PoolSize
 	* Generates 32 random 64bit integers to make a random UUID.
 	* Larger the value, the less chance of collision occurrence.
@@ -145,7 +147,7 @@ static const size_t RAW_BYTE_SIZE = 16;
 static const size_t STRING_SIZE = 36;
 
 LASHE_DECL_EXT uint32_t implVersion__() LASHE_NOEXCEPT;
-const char *versionToString__(const uint32_t v) LASHE_NOEXCEPT;
+LASHE_DECL_EXT const char *versionToString__(const uint32_t v) LASHE_NOEXCEPT;
 
 /* ashe::uuid::mkRandomEngine(const char *name) LASHE_EXCEPT(Exception)
 * Instantiates RandomEngine for UUID generation.
@@ -160,7 +162,7 @@ LASHE_DECL_EXT RandomEngine *mkRandomEngine(const char *name) LASHE_EXCEPT(Excep
 * This function is thread safe. There would be bottleneck throttle if this function
 * is used concurrently. Refer to `mkRandomEngine()` if this is the case.
 */
-LASHE_DECL_EXT UUID generate(const uint32_t v) LASHE_EXCEPT(Exception);
+LASHE_DECL_EXT UUID generate() LASHE_EXCEPT(Exception);
 LASHE_DECL_EXT UUID fromString(const char *str) LASHE_EXCEPT(Exception);
 LASHE_DECL_EXT UUID fromString(const char *str, const size_t len) LASHE_EXCEPT(Exception);
 LASHE_DECL_EXT UUID fromRaw(const void *p) LASHE_EXCEPT(Exception);
@@ -218,7 +220,7 @@ public:
 	virtual const thisClass &string(char *y, const bool upper = false) const LASHE_NOEXCEPT;
 
 	// Namespace(merge) operations for version 5 UUID generation.
-	virtual UUID merge(const thisClass &x) const LASHE_NOEXCEPT;
+	virtual UUID merge(const thisClass &x) const LASHE_EXCEPT(uuid::Exception);
 };
 
 #pragma pack(pop)
