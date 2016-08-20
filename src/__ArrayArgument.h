@@ -36,9 +36,9 @@ std::map<T, ParseResultValue<T>> parseArrayArgument__(T const *arr, const ParseP
 		return ret;
 	while(*arr)
 	{
+		v = *(arr++);
 		auto pIt = p.find(v);
 
-		v = *(arr++);
 		if(pIt != p.end())
 		{
 			auto &rv = ret[v];

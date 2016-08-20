@@ -67,7 +67,7 @@ LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags
 		{
 			while(*abilities)
 			{
-				switch(*abilities)
+				switch(*(abilities++))
 				{
 				// FIXME
 				case LAANS_DESCENDANT:
@@ -95,7 +95,15 @@ LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags
 		}
 
 		// Initialise the modules discrete in order.
-		__initOpenSSL();
+		try
+		{
+			__initOpenSSL();
+		}
+		catch(HelperException &e)
+		{
+			if(!permissive)
+				throw e;
+		}
 
 		// Initialise globals.
 		{
@@ -114,15 +122,17 @@ LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags
 		__lashe_format_booleanFalse = new std::regex("^(\\s+)?(true|\\-?[0-9]*[1-9][0-9]*)(\\s+)?$", std::regex_constants::icase);
 		__lashe_re_uuidHusk = new std::regex(LASHE_UUID_REGEX_HUSK, std::regex_constants::icase);
 		__lashe_re_uuidStrict = new std::regex(LASHE_UUID_REGEX_STRICT, std::regex_constants::icase);
+		__lashe_format_base64 = new std::regex("^[A-Za-z0-9\\+\\/\\s]+={0,2}(\\s+)?$", std::regex_constants::icase);
+		__lashe_format_base64url = new std::regex("^[A-Za-z0-9\\-_\\s]+={0,2}(\\s+)?$", std::regex_constants::icase);
+
+		__lashe_initialised = true;
+
+		// Post init.
 		if(__hasAbility(LAANS_OPENSSL))
 		{
 			__lashe_defUUIDEngine = uuid::mkRandomEngine("MersenneTwisterEngine");
 			__lashe_mtx_defUUIDEngine = new std::mutex();
 		}
-		__lashe_format_base64 = new std::regex("^[A-Za-z0-9\\+\\/\\s]+={0,2}(\\s+)?$", std::regex_constants::icase);
-		__lashe_format_base64url = new std::regex("^[A-Za-z0-9\\-_\\s]+={0,2}(\\s+)?$", std::regex_constants::icase);
-
-		__lashe_initialised = true;
 	}
 	catch(HelperException &e)
 	{
@@ -243,6 +253,7 @@ HelperException::~HelperException() LASHE_NOEXCEPT{}
 const char *HelperException::code2str(const uint32_t x) const LASHE_NOEXCEPT
 {
 	static const char *__str__[] ={
+			"none",
 			"LibAshe uninitialised",
 			"module error",
 			"invalid format",
@@ -254,6 +265,7 @@ const char *HelperException::code2str(const uint32_t x) const LASHE_NOEXCEPT
 
 	switch(x)
 	{
+	case C_NONE:
 	case C_LASHE_UNINITIALISED:
 	case C_MODULE_ERROR:
 	case C_INVALID_FORMAT:
