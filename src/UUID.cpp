@@ -209,37 +209,35 @@ UUID fromString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
 	validateString(str, len);
 	std::string __str(str, len);
 	UUID ret;
+	const char *p;
 
 	__trim__(__str);
 	__lower__(__str);
+	for(auto &v : __str)
 	{
-		std::string::size_type i = 0, j = 1;
-		size_t p = 0;
-		std::string digit = "00";
-
-		for(auto &v : __str)
-		{
-			++i;
-			switch(i)
-			{
-			case 9:
-			case 14:
-			case 19:
-			case 24:
-				// Dashes
-				continue;
-			}
-
-			if(! (j%2))
-			{
-				digit[1] = v;
-				ret.data[p++] = (uint8_t)std::stoul(digit, 0, 16);
-			}
-			else
-				digit[0] = v;
-			++j;
-		}
+		if('0' <= v && v <= '9')
+			v -= '0';
+		else if('a' <= v && v <= 'z')
+			v -= 'a' - 10;
 	}
+	p = __str.data();
+
+	ret.data[0] = (uint8_t)((p[0] << 4) | p[1]);
+	ret.data[1] = (uint8_t)((p[2] << 4) | p[3]);
+	ret.data[2] = (uint8_t)((p[4] << 4) | p[5]);
+	ret.data[3] = (uint8_t)((p[6] << 4) | p[7]);
+	ret.data[4] = (uint8_t)((p[9] << 4) | p[10]);
+	ret.data[5] = (uint8_t)((p[11] << 4) | p[12]);
+	ret.data[6] = (uint8_t)((p[14] << 4) | p[15]);
+	ret.data[7] = (uint8_t)((p[16] << 4) | p[17]);
+	ret.data[8] = (uint8_t)((p[19] << 4) | p[20]);
+	ret.data[9] = (uint8_t)((p[21] << 4) | p[22]);
+	ret.data[10] = (uint8_t)((p[24] << 4) | p[25]);
+	ret.data[11] = (uint8_t)((p[26] << 4) | p[27]);
+	ret.data[12] = (uint8_t)((p[28] << 4) | p[29]);
+	ret.data[13] = (uint8_t)((p[30] << 4) | p[31]);
+	ret.data[14] = (uint8_t)((p[32] << 4) | p[33]);
+	ret.data[15] = (uint8_t)((p[34] << 4) | p[35]);
 
 	return ret;
 }
