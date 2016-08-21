@@ -79,6 +79,7 @@ UUID RandomEngine::operator()() LASHE_NOEXCEPT
 struct __MersenneTwisterEngineContext
 {
 	FilterInterface *md = nullptr;
+	std::random_device *rndDev;
 	std::mt19937_64 rndEng;
 };
 
@@ -87,6 +88,19 @@ MersenneTwisterEngine::MersenneTwisterEngine() LASHE_NOEXCEPT
 	, __poolSize(32)
 {
 	this->__privCtx->md = mkMessageDigest(LAHA_SHA1);
+	try
+	{
+		this->__privCtx->rndDev = new std::random_device();
+		if(this->__privCtx->rndDev->entropy() == 0.0F)
+		{
+			delete this->__privCtx->rndDev;
+			this->__privCtx->rndDev = nullptr;
+		}
+	}
+	catch(std::exception&)
+	{
+		this->__privCtx->rndDev = nullptr;
+	}
 }
 
 MersenneTwisterEngine::~MersenneTwisterEngine() LASHE_NOEXCEPT
@@ -108,11 +122,17 @@ MersenneTwisterEngine& MersenneTwisterEngine::poolSize(const size_t size) LASHE_
 UUID MersenneTwisterEngine::generate() LASHE_NOEXCEPT
 {
 	UUID y;
-	std::vector<uint64_t> content(this->__poolSize);
+	std::vector<uint64_t> content(this->__poolSize + 2);
+	auto it = content.begin();
 	std::vector<uint8_t> buf;
+	size_t i;
 
-	for(auto &v : content)
-		v = this->__privCtx->rndEng();
+	for(i=0; i<this->__poolSize; ++i)
+		*(it++) = this->__privCtx->rndEng();
+	*(it++) = (uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	if(this->__privCtx->rndDev)
+		*(it++) = (uint64_t)(*this->__privCtx->rndDev)();
+
 	buf.resize(this->__privCtx->md->feed(content.data(), content.size()*sizeof(uint64_t)).finish().payloadSize());
 	this->__privCtx->md->payload(buf.data(), buf.size());
 	::memcpy(y.data, buf.data(), RAW_BYTE_SIZE);
@@ -127,7 +147,9 @@ MersenneTwisterEngine& MersenneTwisterEngine::randomise() LASHE_NOEXCEPT
 	std::seed_seq seed({
 		(uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count(),
 		(uint64_t)hasher(std::this_thread::get_id()),
-		(uint64_t)pid__()});
+		(uint64_t)pid__(),
+		(this->__privCtx->rndDev? (uint64_t)(*this->__privCtx->rndDev)() : 0)
+	});
 
 	this->__privCtx->rndEng.seed(seed);
 	return *this;

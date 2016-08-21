@@ -110,6 +110,10 @@ int main()
 			lashe_id.string(unparsed);
 			unparsed[36] = 0;
 			std::cerr << "libashe re-parsed: " << unparsed << std::endl;
+			lashe_id = ashe::uuid::fromRaw(luuid_id);
+			lashe_id.string(unparsed);
+			unparsed[36] = 0;
+			std::cerr << "libashe from raw:  " << unparsed << std::endl;
 		}
 		catch(ashe::uuid::Exception &e)
 		{
