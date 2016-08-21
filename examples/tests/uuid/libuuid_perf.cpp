@@ -36,6 +36,7 @@ static void __libuuidRun() noexcept
 	{
 		::uuid_generate_random(id);
 		::uuid_unparse(id, unparsed);
+		::uuid_parse(unparsed, id);
 		++::__luuid__;
 	}
 }
@@ -50,6 +51,7 @@ static void __asheUUIDRun() noexcept
 	{
 		id = ashe::uuid::generate();
 		id.string(unparsed);
+		id = ashe::uuid::fromString(unparsed, 36);
 		++::__lashe__;
 	}
 }
@@ -87,6 +89,7 @@ int main()
 		ashe::initLibAshe(initAbilities, initFlags);
 
 		// Print out samples.
+		try
 		{
 			uuid_t luuid_id;
 			ashe::UUID lashe_id;
@@ -100,6 +103,19 @@ int main()
 			lashe_id.string(unparsed);
 			unparsed[36] = 0;
 			std::cerr << "libashe generates: " << unparsed << std::endl;
+			::uuid_unparse(lashe_id.data, unparsed);
+			std::cerr << "libuuid re-parsed: " << unparsed << std::endl;
+			::uuid_unparse(luuid_id, unparsed);
+			lashe_id = ashe::uuid::fromString(unparsed);
+			lashe_id.string(unparsed);
+			unparsed[36] = 0;
+			std::cerr << "libashe re-parsed: " << unparsed << std::endl;
+		}
+		catch(ashe::uuid::Exception &e)
+		{
+			std::cerr << e.what() << std::endl;
+			ashe::deinitLibAshe();
+			return 1;
 		}
 
 		::__flag__ = true;

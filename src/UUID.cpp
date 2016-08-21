@@ -291,7 +291,7 @@ void validateString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
 	}
 	__trim__(__str);
 
-	switch(__str[18])
+	switch(__str[19])
 	{
 	case '8':
 	case '9':
