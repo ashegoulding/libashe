@@ -158,6 +158,8 @@ MessageDigest& MessageDigest::close() LASHE_NOEXCEPT
 {
 	__lashe_mod_opensslBundle.EVP_MD_CTX_free(this->__ctx->ctxMD);
 	this->__ctx->ctxMD = nullptr;
+	this->__ctx->md = nullptr;
+	this->__ctx->msgSize = -1;
 	return *this;
 }
 

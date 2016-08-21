@@ -147,9 +147,6 @@ LASHE_DECL_EXT_NOEXCEPT void deinitLibAshe() LASHE_NOEXCEPT
 	if(!__lashe_initialised)
 		return;
 
-	// Deinit modules.
-	__deinitOpenSSL();
-
 	// Deinit globals.
 	::free(__lashe_initialisedAbilities);
 	delete __lashe_initialisedAbilitiesSet;
@@ -175,6 +172,9 @@ LASHE_DECL_EXT_NOEXCEPT void deinitLibAshe() LASHE_NOEXCEPT
 		__lashe_format_base64url = nullptr;
 	__lashe_defUUIDEngine = nullptr;
 	__lashe_mtx_defUUIDEngine = nullptr;
+
+	// Deinit modules.
+	__deinitOpenSSL();
 
 	__lashe_initialised = false;
 }

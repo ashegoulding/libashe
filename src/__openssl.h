@@ -137,10 +137,10 @@ struct __Base64DecoderContext : __FilterInterfaceContext
 
 struct __MessageDigestContext : __FilterInterfaceContext
 {
-	EVP_MD_CTX *ctxMD;
-	const EVP_MD *md;
+	EVP_MD_CTX *ctxMD = nullptr;
+	const EVP_MD *md = nullptr;
 	std::vector<uint8_t> result;
-	int msgSize;
+	int msgSize = -1;
 	bool upper = false;
 };
 

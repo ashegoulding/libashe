@@ -78,7 +78,7 @@ UUID RandomEngine::operator()() LASHE_NOEXCEPT
 */
 struct __MersenneTwisterEngineContext
 {
-	FilterInterface *md = nullptr;
+	FilterInterface *md;
 	std::random_device *rndDev;
 	std::mt19937_64 rndEng;
 };
@@ -105,6 +105,8 @@ MersenneTwisterEngine::MersenneTwisterEngine() LASHE_NOEXCEPT
 
 MersenneTwisterEngine::~MersenneTwisterEngine() LASHE_NOEXCEPT
 {
+	delete this->__privCtx->md;
+	delete this->__privCtx->rndDev;
 	delete this->__privCtx;
 }
 
