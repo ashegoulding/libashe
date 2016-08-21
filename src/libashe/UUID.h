@@ -56,7 +56,8 @@ public:
 		C_NOT_FOUND,
 		C_SHORT_LENGTH,
 		C_INVALID_MAGIC_DIGIT, // Magic digit(N) is neither  8, 9, A nor B
-		C_INVALID_FORMAT // Invalid string format.
+		C_INVALID_FORMAT, // Invalid string format.
+		C_ILLEGAL_ARGUMENT
 	};
 
 public:
@@ -217,7 +218,7 @@ public:
 	virtual bool operator !=(const char *x) const LASHE_EXCEPT(uuid::Exception);
 
 	// Alias of merge()
-	virtual UUID operator +(const thisClass &x) const LASHE_NOEXCEPT;
+	virtual UUID operator +(const char *str) const LASHE_EXCEPT(uuid::Exception);
 
 	virtual uint32_t version() const LASHE_NOEXCEPT;
 
@@ -225,7 +226,8 @@ public:
 	virtual const thisClass &string(char *y, const bool upper = false) const LASHE_NOEXCEPT;
 
 	// Namespace(merge) operations for version 5 UUID generation.
-	virtual UUID merge(const thisClass &x) const LASHE_EXCEPT(uuid::Exception);
+	virtual UUID merge(const char *str) const LASHE_EXCEPT(uuid::Exception);
+	virtual UUID merge(const void *p, const size_t len) const LASHE_EXCEPT(uuid::Exception);
 };
 
 #pragma pack(pop)

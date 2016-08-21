@@ -10,7 +10,7 @@ bool __lashe_initialised = false;
 uint32_t *__lashe_initialisedAbilities = nullptr;
 std::set<LibAsheAbilityNamespace> *__lashe_initialisedAbilitiesSet = nullptr;
 std::regex *__lashe_re_version = nullptr;
-std::regex *__lashe_format_numberal = nullptr;
+std::regex *__lashe_format_numeral = nullptr;
 std::regex *__lashe_format_booleanTrue = nullptr;
 std::regex *__lashe_format_booleanFalse = nullptr;
 
@@ -77,31 +77,32 @@ void __unloadModule__(__ModuleType *mod) LASHE_NOEXCEPT
 
 void __trim__(std::string& str) LASHE_NOEXCEPT
 {
-	std::string::const_iterator start, end, it, beg, itEnd;
+	std::string::const_iterator it, itBeg, itEnd;
 
 	if(str.empty())
 		return;
-	beg = it = str.begin();
-	start = end = itEnd = str.end();
+	itBeg = it = str.begin();
+	itEnd = str.end();
 	for(; it!=itEnd; it++)
 	{
 		if(!std::isspace(*it))
 		{
-			start = it;
+			str.erase(itBeg, it);
 			break;
 		}
 	}
-	if(itEnd == start)
+	if(itEnd == it)
 	{
 		str.clear();
 		return;
 	}
+	itEnd = str.end();
+	itBeg = str.begin();
 	it = itEnd - 1;
-	for(; it!=beg; it--)
+	for(; it!=itBeg; it--)
 	{
 		if(!std::isspace(*it))
 		{
-			str.erase(beg, start);
 			str.erase(it + 1, itEnd);
 			return;
 		}

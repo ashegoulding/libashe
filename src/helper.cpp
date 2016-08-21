@@ -117,7 +117,7 @@ LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags
 			__lashe_initialisedAbilitiesSet->swap(__abilities);
 		}
 		__lashe_re_version = new std::regex("^(\\s+)?[0-9]{1,5}\\.[0-9]{1,5}\\.[0-9]{1,5}(.*)?$");
-		__lashe_format_numberal = new std::regex("^(\\s+)?\\-?[0-9]+(\\s+)?$");
+		__lashe_format_numeral = new std::regex("^(\\s+)?\\-?[0-9]+(\\s+)?$");
 		__lashe_format_booleanTrue = new std::regex("^(\\s+)?(false|(\\-?0+))(\\s+)?$", std::regex_constants::icase);
 		__lashe_format_booleanFalse = new std::regex("^(\\s+)?(true|\\-?[0-9]*[1-9][0-9]*)(\\s+)?$", std::regex_constants::icase);
 		__lashe_re_uuidHusk = new std::regex(LASHE_UUID_REGEX_HUSK, std::regex_constants::icase);
@@ -151,7 +151,7 @@ LASHE_DECL_EXT_NOEXCEPT void deinitLibAshe() LASHE_NOEXCEPT
 	::free(__lashe_initialisedAbilities);
 	delete __lashe_initialisedAbilitiesSet;
 	delete __lashe_re_version;
-	delete __lashe_format_numberal;
+	delete __lashe_format_numeral;
 	delete __lashe_format_booleanTrue;
 	delete __lashe_format_booleanFalse;
 	delete __lashe_re_uuidHusk;
@@ -163,7 +163,7 @@ LASHE_DECL_EXT_NOEXCEPT void deinitLibAshe() LASHE_NOEXCEPT
 	__lashe_initialisedAbilities = nullptr;
 	__lashe_initialisedAbilitiesSet = nullptr;
 	__lashe_re_version =
-		__lashe_format_numberal =
+		__lashe_format_numeral =
 		__lashe_format_booleanTrue =
 		__lashe_format_booleanFalse =
 		__lashe_re_uuidHusk =

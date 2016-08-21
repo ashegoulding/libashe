@@ -46,7 +46,8 @@ const char *Exception::code2str(const uint32_t x) const LASHE_NOEXCEPT
 			"not found",
 			"short length given",
 			"invalid magic digit",
-			"invalid format"
+			"invalid format",
+			"illegal argument"
 	};
 
 	switch(x)
@@ -58,6 +59,7 @@ const char *Exception::code2str(const uint32_t x) const LASHE_NOEXCEPT
 	case C_SHORT_LENGTH:
 	case C_INVALID_MAGIC_DIGIT:
 	case C_INVALID_FORMAT:
+	case C_ILLEGAL_ARGUMENT:
 		return __str__[x];
 	}
 	return motherClass::code2str(x);
@@ -380,10 +382,9 @@ bool UUID::operator !=(const char* x) const LASHE_EXCEPT(uuid::Exception)
 	return uuid::fromString(x) != *this;
 }
 
-UUID UUID::operator +(const thisClass& x) const LASHE_NOEXCEPT
+UUID UUID::operator +(const char *str) const LASHE_EXCEPT(uuid::Exception)
 {
-	this->merge(x);
-	return *this;
+	return this->merge(str);
 }
 
 uint32_t UUID::version() const LASHE_NOEXCEPT
@@ -438,18 +439,35 @@ const UUID& UUID::string(char* p, const bool upper) const LASHE_NOEXCEPT
 	return *this;
 }
 
-UUID UUID::merge(const thisClass& x) const LASHE_EXCEPT(uuid::Exception)
+UUID UUID::merge(const char *str) const LASHE_EXCEPT(uuid::Exception)
+{
+	return this->merge(str, ::strlen(str));
+}
+
+UUID UUID::merge(const void *p, const size_t len) const LASHE_EXCEPT(uuid::Exception)
 {
 	UUID y;
 	FilterResult hashed;
-	uint8_t buf[uuid::RAW_BYTE_SIZE*2];
+	std::vector<uint8_t> buf;
+	uint8_t *bufPtr;
+	size_t bufLen;
 
 	__dropif_noAbility<uuid::Exception>(LAANS_OPENSSL);
+	if(len == 0 || p == nullptr)
+	{
+		uuid::Exception e;
+		e.code(uuid::Exception::C_ILLEGAL_ARGUMENT);
+		throw e;
+	}
 
-	::memcpy(buf, this->data, uuid::RAW_BYTE_SIZE);
-	::memcpy(buf + uuid::RAW_BYTE_SIZE, x.data, uuid::RAW_BYTE_SIZE);
-	hashed = digest(buf, uuid::RAW_BYTE_SIZE*2, LAHA_SHA1);
+	bufLen = uuid::RAW_BYTE_SIZE + len;
+	buf.resize(bufLen);
+	bufPtr = buf.data();
+	::memcpy(bufPtr, this->data, uuid::RAW_BYTE_SIZE);
+	::memcpy(bufPtr + uuid::RAW_BYTE_SIZE, p, len);
+	hashed = digest(bufPtr, bufLen, LAHA_SHA1);
 	::memcpy(y.data, hashed.ptr, uuid::RAW_BYTE_SIZE);
+	uuid::__putGlamour__(y.data, uuid::V_SHA1_AND_NAMESPACE);
 
 	return y;
 }

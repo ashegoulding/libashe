@@ -38,7 +38,7 @@ extern bool __lashe_initialised;
 extern uint32_t *__lashe_initialisedAbilities;
 extern std::set<LibAsheAbilityNamespace> *__lashe_initialisedAbilitiesSet;
 extern std::regex *__lashe_re_version;
-extern std::regex *__lashe_format_numberal;
+extern std::regex *__lashe_format_numeral;
 extern std::regex *__lashe_format_booleanTrue;
 extern std::regex *__lashe_format_booleanFalse;
 
