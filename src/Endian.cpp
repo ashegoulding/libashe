@@ -27,12 +27,10 @@ static void __dropif_odd__(const size_t x) LASHE_NOEXCEPT
 		* No idea on handling overflow or underflow happens here,
 		* which some machine would make.
 		*/
-		static const double __LOG_TWO__ = std::log(2.0F);
+		const double a = std::log2(x - 1);
+		const double b = std::log2(x);
 
-		const double a = std::log((double)(x - 1)) / __LOG_TWO__;
-		const double b = std::log((double)x) / __LOG_TWO__;
-
-		if(a == NAN || b == NAN || (long long)a == (long long)b)
+		if((long long)a == (long long)b)
 			__die_critical();
 	}
 	}

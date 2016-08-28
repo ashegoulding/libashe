@@ -7,6 +7,10 @@ namespace ashe
 #define LASHE_REGEX_LIBASHE_VERSION			"^(\\s+)?[0-9]{1,5}\\.[0-9]{1,5}\\.[0-9]{1,5}(.*)?$"
 #define LASHE_REGEX_FORMAT_NUMERAL			"^(\\s+)?\\-?[0-9]+(\\s+)?$"
 // Case insensitive.
+#define LASHE_REGEX_FORMAT_NUMERAL_HEX		"^(\\s+)?0x[0-9a-f]+(\\s+)?$"
+#define LASHE_REGEX_FORMAT_NUMERAL_OCT		"^(\\s+)?0[0-7]+(\\s+)?$"
+#define LASHE_REGEX_FORMAT_NUMERAL_BIN		"^(\\s+)?0b[01]+(\\s+)?$"
+// Case insensitive.
 #define LASHE_REGEX_FORMAT_BOOLEAN_TRUE		"^(\\s+)?(false|(\\-?0+))(\\s+)?$"
 // Case insensitive.
 #define LASHE_REGEX_FORMAT_BOOLEAN_FALSE	"^(\\s+)?(true|\\-?[0-9]*[1-9][0-9]*)(\\s+)?$"
