@@ -9,7 +9,7 @@
 namespace ashe
 {
 
-LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags) LASHE_EXCEPT(HelperException)
+LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const int32_t *flags) LASHE_EXCEPT(HelperException)
 {
 	if(__lashe_initialised)
 		return;
@@ -17,7 +17,7 @@ LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags
 	{
 		size_t i, iCnt;
 		std::set<LibAsheAbilityNamespace> __abilities;
-		auto parsed = __aa::parseArrayArgument__<uint32_t>(flags, {{
+		auto parsed = __aa::parseArrayArgument__<int32_t>(flags, {{
 				{LAIF_OSCODE, 1},
 				{LAIF_ABILITY_PERMISSIVE, 0}
 		}});

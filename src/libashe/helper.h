@@ -40,7 +40,7 @@ public:
 	virtual const char *subCode2str(const uint32_t x) const LASHE_NOEXCEPT;
 };
 
-enum /* uint32_t */ LibAsheInitFlag
+enum /* int32_t */ LibAsheInitFlag
 {
 	LAIF_NONE,
 	// Following value being ASHE_HOST_OSCODE of the software.
@@ -49,7 +49,7 @@ enum /* uint32_t */ LibAsheInitFlag
 	LAIF_ABILITY_PERMISSIVE
 };
 
-LASHE_DECL_EXT void initLibAshe(const /* LibAsheAbilityNamespace */ uint32_t *abilities, const /* LibAsheInitFlag */ uint32_t *flags) LASHE_EXCEPT(HelperException);
+LASHE_DECL_EXT void initLibAshe(const /* LibAsheAbilityNamespace */ uint32_t *abilities, const /* LibAsheInitFlag */ int32_t *flags) LASHE_EXCEPT(HelperException);
 LASHE_DECL_EXT_NOEXCEPT void deinitLibAshe() LASHE_NOEXCEPT;
 LASHE_DECL_EXT const /* LibAsheAbilityNamespace */ uint32_t *initialisedAbilities() LASHE_EXCEPT(HelperException);
 // Why would anyone need this?
