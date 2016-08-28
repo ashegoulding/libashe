@@ -88,7 +88,7 @@ int main()
 	try
 	{
 		static const uint32_t __ABILITIES__[] = {ashe::LAANS_OPENSSL, 0};
-		static const uint32_t __FLAGS__[] = {ashe::LAIF_OSCODE, ASHE_HOST_OSCODE, 0};
+		static const int32_t __FLAGS__[] = {ashe::LAIF_OSCODE, ASHE_HOST_OSCODE, 0};
 
 		std::future<void> initFut;
 		size_t i, j, cnt;

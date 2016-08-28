@@ -9,8 +9,11 @@
 
 #include "libashe/helper.h"
 #include "libashe/UUID.h"
+#include "libashe/RegexHelper.h"
 
-
+#ifndef PACKAGE_BUGREPORT
+#define PACKAGE_BUGREPORT "ashe.goulding@gmail.com"
+#endif
 const char *DEF_PROG_NAME__ = "asheutil-uuid";
 const char *VERSION__ = "0";
 
@@ -29,11 +32,11 @@ int main(const int argc, const char **args)
 		__RE_OPT_GEN__("^(\\s+)?\\-\\-gen(\\s+)?$"),
 		__RE_OPT_MERGE__("^(\\s+)?\\-\\-merge(\\s+)?$"),
 		__RE_OPT_PARSE__("^(\\s+)?\\-\\-parse(\\s+)?$"),
-		__RE_NUMERAL__("^(\\s+)?\\-?[0-9]+(\\s+)?$"),
-		__RE_BOOLEAN_TRUE__("^(\\s+)?(false|(\\-?0+))(\\s+)?$", std::regex_constants::icase),
-		__RE_BOOLEAN_FALSE__("^(\\s+)?(true|\\-?[0-9]*[1-9][0-9]*)(\\s+)?$", std::regex_constants::icase);
+		__RE_NUMERAL__(LASHE_REGEX_FORMAT_NUMERAL),
+		__RE_BOOLEAN_TRUE__(LASHE_REGEX_FORMAT_BOOLEAN_TRUE, std::regex_constants::icase),
+		__RE_BOOLEAN_FALSE__(LASHE_REGEX_FORMAT_BOOLEAN_FALSE, std::regex_constants::icase);
 	static const uint32_t __LASHE_INIT_ABILITIES__[] = {ashe::LAANS_OPENSSL, 0};
-	static const uint32_t __LASHE_INIT_FLAGS__[] = {ashe::LAIF_OSCODE, ASHE_HOST_OSCODE, 0};
+	static const int32_t __LASHE_INIT_FLAGS__[] = {ashe::LAIF_OSCODE, ASHE_HOST_OSCODE, 0};
 
 	int exitCode = 0;
 	ashe::uuid::RandomEngine *engine = nullptr;
@@ -239,30 +242,32 @@ void __printHelp__(std::ostream &s, const char *progName) noexcept
 	const char *programName = progName? progName : ::DEF_PROG_NAME__;
 
 	s << "Ashe's UUID utility version " << VERSION__ << '.' << std::endl
-			<< "Usage: " << programName << " <option [values ...]>" << std::endl
-			<< "LibAshe: v" << ashe::libAsheVersion__() << std::endl
-			<< "Refer https://www.ietf.org/rfc/rfc4122.txt" << std::endl
-			<< "RFC4122 Namespaces:" << std::endl
-			<< "   DNS:     " LASHE_UUID_NS_DNS << std::endl
-			<< "   URL:     " LASHE_UUID_NS_URL << std::endl
-			<< "   ISO_OID: " LASHE_UUID_NS_ISO_OID << std::endl
-			<< "   X500:    " LASHE_UUID_NS_X500 << std::endl
-			<< "Options:" << std::endl
-			<< "  --help" << std::endl
-			<< "    Print this and exit normally." << std::endl
-			<< "  --gen [count = 1]" << std::endl
-			<< "    Generate and print out [count] of version 4 UUIDs to stdout." << std::endl
-			<< "  --merge <UUID 1> <String to merge> [UUID match]" << std::endl
-			<< "    Merge a namesapce UUID with a string and print the result UUID." << std::endl
-			<< "    If [UUID match] is given and not identical to the result, exit code will be 4." << std::endl
-			<< "    <UUID 1> is usually a namespace UUID," << std::endl
-			<< "    which can be the one from RFC4122 or the one that you composed on your own." << std::endl
-			<< "  --parse <UUID 1 [UUID n ...]>" << std::endl
-			<< "    Parse and validate the given UUIDs." << std::endl
-			<< "Exit Codes:" << std::endl
-			<< "  0: Normal exit." << std::endl
-			<< "  1: Wrong usage or parse error." << std::endl
-			<< "  2: LibAshe exception." << std::endl
-			<< "  3: Binary validation failure(internal error)." << std::endl
-			<< "  4: Operation successful but the result does not match." << std::endl;
+		<< "LibAshe: " << ashe::libAsheVersion__() << std::endl
+		<< "Usage: " << programName << " <option [values ...]>" << std::endl
+		<< "Refer https://www.ietf.org/rfc/rfc4122.txt" << std::endl
+		<< "RFC4122 Namespaces:" << std::endl
+		<< "   DNS:     " LASHE_UUID_NS_DNS << std::endl
+		<< "   URL:     " LASHE_UUID_NS_URL << std::endl
+		<< "   ISO_OID: " LASHE_UUID_NS_ISO_OID << std::endl
+		<< "   X500:    " LASHE_UUID_NS_X500 << std::endl
+		<< "Options:" << std::endl
+		<< "  --help" << std::endl
+		<< "    Print this and exit normally." << std::endl
+		<< "  --gen [count = 1]" << std::endl
+		<< "    Generate and print out [count] of version 4 UUIDs to stdout." << std::endl
+		<< "  --merge <UUID 1> <String to merge> [UUID match]" << std::endl
+		<< "    Merge a namesapce UUID with a string and print the result UUID." << std::endl
+		<< "    If [UUID match] is given and not identical to the result, exit code will be 4." << std::endl
+		<< "    <UUID 1> is usually a namespace UUID," << std::endl
+		<< "    which can be the one from RFC4122 or the one that you composed on your own." << std::endl
+		<< "  --parse <UUID 1 [UUID n ...]>" << std::endl
+		<< "    Parse and validate the given UUIDs." << std::endl
+		<< "Exit Codes:" << std::endl
+		<< "  0: Normal exit." << std::endl
+		<< "  1: Wrong usage or parse error." << std::endl
+		<< "  2: LibAshe exception." << std::endl
+		<< "  3: Binary validation failure(internal error)." << std::endl
+		<< "  4: Operation successful but the result does not match." << std::endl
+		<< std::endl
+		<< "Bug report: " PACKAGE_BUGREPORT << std::endl;
 }
