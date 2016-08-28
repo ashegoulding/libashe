@@ -10,7 +10,7 @@ endif
 
 lib_LTLIBRARIES = libashe.la
 libashe_la_LDFLAGS = -version-info 0:0:0
-libashe_la_CXXFLAGS = -Wall -Wextra $(DEBUG_FLAGS) $(OPTI_FLAGS) -std=c++11
+libashe_la_CXXFLAGS = -Wall -Wextra $(DEBUG_FLAGS) $(OPTI_FLAGS) -std=c++11 -Wno-unused-parameter -Wno-unused-value
 libashe_la_SOURCES =\
 	AsheClass.cpp\
 	AsheException.cpp\
@@ -37,7 +37,8 @@ nobase_include_HEADERS =\
 	libashe/Base64Encoder.h\
 	libashe/Base64Decoder.h\
 	libashe/MessageDigest.h\
-	libashe/Process.h
+	libashe/Process.h\
+	libashe/RegexHelper.h
 	
 pkgconfigdir = @libdir@/pkgconfig
 pkgconfig_DATA = libashe.pc

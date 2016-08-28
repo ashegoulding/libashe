@@ -3,6 +3,7 @@
 #include "__ArrayArgument.h"
 #include "__openssl.h"
 #include "libashe/UUID.h"
+#include "libashe/RegexHelper.h"
 
 
 namespace ashe
@@ -116,14 +117,14 @@ LASHE_DECL_EXT void initLibAshe(const uint32_t *abilities, const uint32_t *flags
 			__lashe_initialisedAbilitiesSet = new std::set<LibAsheAbilityNamespace>();
 			__lashe_initialisedAbilitiesSet->swap(__abilities);
 		}
-		__lashe_re_version = new std::regex("^(\\s+)?[0-9]{1,5}\\.[0-9]{1,5}\\.[0-9]{1,5}(.*)?$");
-		__lashe_format_numeral = new std::regex("^(\\s+)?\\-?[0-9]+(\\s+)?$");
-		__lashe_format_booleanTrue = new std::regex("^(\\s+)?(false|(\\-?0+))(\\s+)?$", std::regex_constants::icase);
-		__lashe_format_booleanFalse = new std::regex("^(\\s+)?(true|\\-?[0-9]*[1-9][0-9]*)(\\s+)?$", std::regex_constants::icase);
+		__lashe_re_version = new std::regex(LASHE_REGEX_LIBASHE_VERSION);
+		__lashe_format_numeral = new std::regex(LASHE_REGEX_FORMAT_NUMERAL);
+		__lashe_format_booleanTrue = new std::regex(LASHE_REGEX_FORMAT_BOOLEAN_TRUE, std::regex_constants::icase);
+		__lashe_format_booleanFalse = new std::regex(LASHE_REGEX_FORMAT_BOOLEAN_FALSE, std::regex_constants::icase);
 		__lashe_re_uuidHusk = new std::regex(LASHE_UUID_REGEX_HUSK, std::regex_constants::icase);
 		__lashe_re_uuidStrict = new std::regex(LASHE_UUID_REGEX_STRICT, std::regex_constants::icase);
-		__lashe_format_base64 = new std::regex("^[A-Za-z0-9\\+\\/\\s]+={0,2}(\\s+)?$", std::regex_constants::icase);
-		__lashe_format_base64url = new std::regex("^[A-Za-z0-9\\-_\\s]+={0,2}(\\s+)?$", std::regex_constants::icase);
+		__lashe_format_base64 = new std::regex(LASHE_REGEX_FORMAT_BASE64, std::regex_constants::icase);
+		__lashe_format_base64url = new std::regex(LASHE_REGEX_FORMAT_BASE64URL, std::regex_constants::icase);
 
 		__lashe_initialised = true;
 
