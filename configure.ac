@@ -1,4 +1,4 @@
-AC_INIT([libashe], [0.0.0], [ashe.goulding@gmail.com])
+AC_INIT([libashe], [1.0.0], [mieabby@gmail.com])
 
 # Remove default compiler options to use -O3.
 : ${CFLAGS=""}
@@ -35,10 +35,9 @@ case "$host" in
 *) AC_MSG_ERROR([Could not determine OS code.]) ;;
 esac
 AC_DEFINE_UNQUOTED([ASHE_HOST_OSCODE], [$lashe_os_code])
-AC_SUBST([lashe_os_code], [$lashe_os_code])
-AC_MSG_NOTICE([Determined Ashe OS Code: $lashe_os_code])
+AC_MSG_NOTICE([Determined OS Code: $lashe_os_code])
 
 PKG_CHECK_MODULES([DEP_OPENSSL], [openssl])
 
-AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile doc/Makefile src/libashe.pc])
+AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile src/libashe.pc])
 AC_OUTPUT

@@ -1,406 +1,190 @@
-#include "libashe/Base64Decoder.h"
-#include "__openssl.h"
+#include "__openssl.hpp"
+#include "__regex.hpp"
+#include "libashe/Base64Decoder.hpp"
 
 
-namespace ashe
-{
-
-FilterInterface* mkBase64Decoder(const /* Base64DecodeFlags */uint32_t *flags/* = nullptr*/) LASHE_EXCEPT(FilterException)
-{
-	FilterInterface *ret;
-
-	__dropif_opensslUninitialised();
-	ret = new Base64Decoder();
-	try
-	{
-		if(flags)
-		{
-			while(*flags)
-			{
-				switch(*flags)
-				{
-				case LAB64DF_URL:
-					ret->param("URL", "true");
-					break;
-				}
-				++flags;
-			}
-		}
-		ret->open(0);
-	}
-	catch(FilterException &e)
-	{
-		delete ret;
-		throw e;
-	}
-
-	return ret;
-}
-
-FilterResult base64Decode(const void *buf, const size_t len, const /* Base64EncodeFlags */ uint32_t *flags/* = nullptr*/) LASHE_EXCEPT(FilterException)
-{
-	FilterInterface *dec = mkBase64Decoder(flags);
-	FilterResult ret;
-
-	try
-	{
-		dec->feed(buf, len);
-		if(dec->hasPayload())
-		{
-			ret.alloc(dec->payloadSize());
-			dec->payload(ret.ptr, ret.size);
-		}
-	}
-	catch(FilterException &e)
-	{
-		delete dec;
-		throw e;
-	}
-	delete dec;
-	return ret;
-}
+namespace ashe {
 
 /********************
-* Base64Decoder
-*/
+ * Base64Decoder
+ */
 Base64Decoder::Base64Decoder() LASHE_NOEXCEPT
-	: __ctx(new __Base64DecoderContext)
+    : __pd(new __lashe::Base64DecoderPrivData)
 {
 }
 
 Base64Decoder::~Base64Decoder() LASHE_NOEXCEPT
 {
-	this->close();
-	delete this->__ctx;
+    this->close();
+    delete this->__pd;
 }
 
-const char* Base64Decoder::className() const LASHE_NOEXCEPT
+const char *Base64Decoder::className() const LASHE_NOEXCEPT
 {
-	static const char *__name__ = "ashe::Base64Decoder";
-	return __name__;
+    return "Base64Decoder";
 }
 
-Base64Decoder& Base64Decoder::open(const uint32_t x) LASHE_EXCEPT(FilterException)
+Base64Decoder &Base64Decoder::open(const Base64Type x)
 {
-	BIO *b64 = nullptr, *bio = nullptr;
+    BIO *b64 = nullptr, *bio = nullptr;
 
-	try
-	{
-		b64 = __lashe_mod_opensslBundle.BIO_new(__lashe_mod_opensslBundle.BIO_f_base64());
-		bio = __lashe_mod_opensslBundle.BIO_new(__lashe_mod_opensslBundle.BIO_s_mem());
-		if(nullptr == b64)
-		{
-			FilterException e;
-			e
-			.code(FilterException::C_ERROR_FROM_LIB)
-			.msg("BIO_f_base64() returned null.");
-			throw e;
-		}
-		if(nullptr == bio)
-		{
-			FilterException e;
-			e
-			.code(FilterException::C_ERROR_FROM_LIB)
-			.msg("BIO_s_mem() returned null.");
-			throw e;
-		}
-		__lashe_mod_opensslBundle.BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
-		__lashe_mod_opensslBundle.BIO_push(b64, bio);
+    __lashe::ensure_ability(LAsheAbility::OPENSSL);
 
-		this->close();
-		this->__ctx->b64 = b64;
-		this->__ctx->bio = bio;
-	}
-	catch(FilterException &e)
-	{
-		if(b64)
-			__lashe_mod_opensslBundle.BIO_pop(b64);
-		__lashe_mod_opensslBundle.BIO_free(b64);
-		__lashe_mod_opensslBundle.BIO_free(bio);
-		throw e;
-	}
-	return *this;
+    try {
+        b64 =
+            __lashe::openssl->fnp.BIO_new(__lashe::openssl->fnp.BIO_f_base64());
+        if (nullptr == b64) {
+            throw FilterException("BIO_f_base64() returned null.");
+        }
+        bio = __lashe::openssl->fnp.BIO_new(__lashe::openssl->fnp.BIO_s_mem());
+        if (nullptr == bio) {
+            throw FilterException("BIO_s_mem() returned null.");
+        }
+
+        __lashe::openssl->fnp.BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
+        __lashe::openssl->fnp.BIO_push(b64, bio);
+
+        this->close();
+        this->__pd->b64 = b64;
+        this->__pd->bio = bio;
+        this->__pd->type = x;
+    }
+    catch (Exception &e) {
+        if (b64) {
+            __lashe::openssl->fnp.BIO_pop(b64);
+        }
+        __lashe::openssl->fnp.BIO_free(b64);
+        __lashe::openssl->fnp.BIO_free(bio);
+
+        throw e;
+    }
+
+    return *this;
 }
 
-Base64Decoder& Base64Decoder::close() LASHE_NOEXCEPT
+Base64Decoder &Base64Decoder::close() LASHE_NOEXCEPT
 {
-	__lashe_mod_opensslBundle.BIO_free_all(this->__ctx->b64);
-	this->__ctx->b64 = this->__ctx->bio = nullptr;
-	this->__pushed = 0;
-	return *this;
+    __lashe::openssl->fnp.BIO_free_all(this->__pd->b64);
+
+    this->__pd->b64 = this->__pd->bio = nullptr;
+    this->__pd->pushed = 0;
+    this->__pd->result.free();
+
+    return *this;
 }
 
 bool Base64Decoder::ready() const LASHE_NOEXCEPT
 {
-	return this->__ctx->b64 && this->__ctx->bio;
+    return this->__pd->b64 != nullptr && this->__pd->bio != nullptr;
 }
 
-Base64Decoder& Base64Decoder::param(const char* key, const char* val, const /* ParamFlag */ uint32_t* flags) LASHE_EXCEPT(FilterException)
+Base64Decoder &Base64Decoder::feed(const char *str, const size_t len)
 {
-	motherClass::__dropif_nullParam__(key, val);
-	if(::strcmp(key, "URL") == 0)
-	{
-		if(std::regex_match(val, *__lashe_format_booleanTrue))
-			this->__ctx->isURL = true;
-		else if(std::regex_match(val, *__lashe_format_booleanFalse))
-			this->__ctx->isURL = false;
-		else
-		{
-			FilterException e;
-			e.code(FilterException::C_ILLEGAL_ARGUMENT);
-			throw e;
-		}
-		this->__ctx->paramChanged = true;
-	}
-	else
-	{
-		FilterException e;
-		e.code(FilterException::C_NO_SUBJECT);
-		throw e;
-	}
-	return *this;
+    int ret;
+    std::regex *re;
+    std::string url_str;
+    const char *input_c_str;
+    size_t input_len;
+
+    this->__dropif_ready(true);
+    if (0 == len) {
+        return *this;
+    }
+    else if (str == nullptr) {
+        motherClass::__dropif_nullBuf__(str);
+    }
+
+    // Format check.
+    if (this->__pd->type == Base64Type::URL) {
+        re = &__lashe::regex->fmt_base64_url;
+    }
+    else {
+        re = &__lashe::regex->fmt_base64;
+    }
+
+    if (!std::regex_match(str, *re)) {
+        throw FilterException("invalid format.");
+    }
+
+    if (this->__pd->type == Base64Type::URL) {
+        // Transform URL form of base64 to normal one.
+        url_str.reserve(len);
+        std::for_each(str, str + len, [&url_str](char c) {
+            switch (c) {
+            case '-':
+                c = '+';
+                break;
+            case '_':
+                c = '/';
+                break;
+            }
+            url_str.push_back(c);
+        });
+        input_c_str = url_str.c_str();
+        input_len = url_str.size();
+    }
+    else {
+        input_c_str = str;
+        input_len = len;
+    }
+
+    __LASHE_OPENSSL_BIO_reset(this->__pd->bio);
+    __lashe::openssl->fnp.BIO_write(this->__pd->bio, input_c_str, input_len);
+    this->__pd->pushed += len;
+
+    ret = __LASHE_OPENSSL_BIO_pending(this->__pd->bio);
+    if (ret < 0) {
+        throw FilterException("BIO_pending() returned an error.");
+    }
+    this->__pd->result.alloc((size_t)ret);
+    __lashe::openssl->fnp.BIO_read(this->__pd->b64, this->__pd->result.data(),
+                                   this->__pd->result.size());
+
+    return *this;
 }
 
-size_t Base64Decoder::param(const char* key, const ParamEntry** arr, const/* ParamFlag */ uint32_t* flags) const LASHE_NOEXCEPT
+Base64Decoder &Base64Decoder::feed(const uint8_t *buf, const size_t len)
 {
-	motherClass::__dropif_nullParam__(key);
-	this->__prepParamMap();
-	this->__prepParamPool(key);
-	if(arr)
-		*arr = this->__ctx->entryPool.data();
-	return this->__ctx->entryPool.size();
+    this->feed((const char *)buf, len);
+    return *this;
 }
 
-size_t Base64Decoder::param(const ParamEntry** arr, const/* ParamFlag */ uint32_t* flags) const LASHE_NOEXCEPT
+Base64Decoder &Base64Decoder::finish()
 {
-	this->__prepParamMap();
-	this->__prepParamPool();
-	if(arr)
-		*arr = this->__ctx->entryPool.data();
-	return this->__ctx->entryPool.size();
+    this->__dropif_ready(true);
+    return *this;
 }
 
-Base64Decoder& Base64Decoder::feed(const void* buf, const size_t len) LASHE_EXCEPT(FilterException)
+Base64Decoder &Base64Decoder::clear() LASHE_NOEXCEPT
 {
-	std::string val;
-	int ret;
+    this->__pd->result.free();
 
-	this->__dropif_ready(true);
-	if(0 == len)
-		return *this;
-	else if(buf == nullptr)
-		motherClass::__dropif_nullBuf__(buf);
-
-	// Check validity.
-	val.assign((char*)buf, len);
-	if(this->__ctx->isURL)
-	{
-		if(!std::regex_match(val, *__lashe_format_base64url))
-		{
-			FilterException e;
-			e.code(FilterException::C_INVALID_FORMAT);
-			throw e;
-		}
-	}
-	else
-	{
-		if(!std::regex_match(val, *__lashe_format_base64))
-		{
-			FilterException e;
-			e.code(FilterException::C_INVALID_FORMAT);
-			throw e;
-		}
-	}
-	{
-		// Filter out unnecessary characters and convert URL characters.
-		std::string::iterator it = val.begin();
-		std::string::iterator itEnd = val.end();
-		std::string::iterator tmp;
-
-		while(itEnd != it)
-		{
-			switch(*it)
-			{
-			case 'A':
-			case 'B':
-			case 'C':
-			case 'D':
-			case 'E':
-			case 'F':
-			case 'G':
-			case 'H':
-			case 'I':
-			case 'J':
-			case 'K':
-			case 'L':
-			case 'M':
-			case 'N':
-			case 'O':
-			case 'P':
-			case 'Q':
-			case 'R':
-			case 'S':
-			case 'T':
-			case 'U':
-			case 'V':
-			case 'W':
-			case 'X':
-			case 'Y':
-			case 'Z':
-			case 'a':
-			case 'b':
-			case 'c':
-			case 'd':
-			case 'e':
-			case 'f':
-			case 'g':
-			case 'h':
-			case 'i':
-			case 'j':
-			case 'k':
-			case 'l':
-			case 'm':
-			case 'n':
-			case 'o':
-			case 'p':
-			case 'q':
-			case 'r':
-			case 's':
-			case 't':
-			case 'u':
-			case 'v':
-			case 'w':
-			case 'x':
-			case 'y':
-			case 'z':
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9':
-			case '+':
-			case '/':
-			case '=':
-				it++;
-				break;
-			case '-':
-				*it = '+';
-				it++;
-				break;
-			case '_':
-				*it = '/';
-				it++;
-				break;
-			default:
-				tmp = it + 1;
-				val.erase(it);
-				it = tmp;
-				itEnd = val.end();
-			}
-		}
-	}
-
-	__LASHE_BIO_reset(this->__ctx->bio);
-	__lashe_mod_opensslBundle.BIO_write(this->__ctx->bio, val.data(), val.size());
-	this->__pushed += len;
-
-	this->__ctx->result.resize(val.size());
-	ret = __lashe_mod_opensslBundle.BIO_read(this->__ctx->b64, this->__ctx->result.data(), this->__ctx->result.size());
-	this->__ctx->resultSize = ret >= 0? (size_t)ret : 0;
-
-	return *this;
+    return *this;
 }
 
-Base64Decoder& Base64Decoder::finish() LASHE_EXCEPT(FilterException)
+const Buffer &Base64Decoder::payload() const LASHE_NOEXCEPT
 {
-	this->__dropif_ready(true);
-	return *this;
+    return this->__pd->result;
 }
 
-Base64Decoder& Base64Decoder::clear() LASHE_NOEXCEPT
+Buffer &&Base64Decoder::payload() LASHE_NOEXCEPT
 {
-	this->__ctx->result.clear();
-	this->__ctx->result.shrink_to_fit();
-	this->__ctx->resultSize = 0;
-	this->__pushed = 0;
-	return *this;
+    return std::move(this->__pd->result);
 }
 
-bool Base64Decoder::hasPayload() const LASHE_NOEXCEPT
+/********************
+ * Library Functions
+ */
+
+Buffer decode_base64(const uint8_t *buf, const size_t len,
+                     const Base64Type type /* = Base64Type::PLAIN*/)
 {
-	return this->__ctx->resultSize != 0;
+    __lashe::ensure_ability(LAsheAbility::OPENSSL);
+
+    {
+        Base64Decoder dec;
+        return std::move(dec.open(type).feed(buf, len).payload());
+    }
 }
 
-size_t Base64Decoder::payloadSize() const LASHE_EXCEPT(FilterException)
-{
-	const size_t ret = this->__ctx->resultSize;
-	if(0 == ret)
-	{
-		FilterException e;
-		e.code(FilterException::C_NO_DATA);
-		throw e;
-	}
-	return ret;
-}
-
-Base64Decoder& Base64Decoder::payload(void* buf, const size_t len) LASHE_EXCEPT(FilterException)
-{
-	if(this->payloadSize() > len)
-		motherClass::__drop_shortBuf__();
-	else
-		motherClass::__dropif_nullBuf__(buf);
-	::memcpy(buf, this->__ctx->result.data(), this->__ctx->resultSize);
-	return *this;
-}
-
-void Base64Decoder::__prepParamPool(const char* key) const LASHE_NOEXCEPT
-{
-	if(key)
-	{
-		auto r = this->__ctx->paramMap.equal_range(key);
-		this->__ctx->entryPool.resize(std::distance(r.first, r.second));
-		auto pIt = this->__ctx->entryPool.begin();
-
-		for(; r.first != r.second; r.first++)
-		{
-			pIt->key = r.first->first.c_str();
-			pIt->key = r.first->second.c_str();
-			pIt++;
-		}
-	}
-	else
-	{
-		this->__ctx->entryPool.resize(this->__ctx->paramMap.size());
-		auto pIt = this->__ctx->entryPool.begin();
-
-		for(const auto &v : this->__ctx->paramMap)
-		{
-			auto r = this->__ctx->paramMap.equal_range(v.first);
-
-			for(; r.first != r.second; r.first++)
-			{
-				pIt->key = r.first->first.c_str();
-				pIt->key = r.first->second.c_str();
-				pIt++;
-			}
-		}
-	}
-}
-
-void Base64Decoder::__prepParamMap() const LASHE_NOEXCEPT
-{
-	if(!this->__ctx->paramChanged)
-		return;
-	this->__ctx->paramMap.clear();
-
-	this->__ctx->paramMap.insert(std::make_pair("URL", this->__ctx->isURL? "true" : "false"));
-
-	this->__ctx->paramChanged = false;
-}
-
-}
+} // namespace ashe

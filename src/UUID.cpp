@@ -1,7 +1,8 @@
-#include "libashe/UUID.h"
-#include "__internal.h"
-#include "libashe/MessageDigest.h"
-#include "libashe/Process.h"
+#include "libashe/UUID.hpp"
+#include "libashe/StringUtils.hpp"
+#include "libashe/MessageDigest.hpp"
+#include "__internal.hpp"
+#include "__regex.hpp"
 
 #include <vector>
 
@@ -15,307 +16,308 @@
 
 namespace ashe
 {
-namespace uuid
+
+struct __UUIDPrivData {
+	uint8_t data[UUID::RAW_BYTE_SIZE];
+	std::string str;
+
+	__UUIDPrivData()
+	{
+		this->str.resize(36);
+	}
+};
+
+namespace __uuid
 {
 
-static void __putGlamour__(void *x, const /* uuid::Version */ uint32_t ver) LASHE_NOEXCEPT
-{
-	uint8_t *p = (uint8_t*)x;
-	const uint8_t theDigit = (uint8_t)(0x10 * ver);
+static void put_glamour(uint8_t *p, const UUID::Version ver) LASHE_NOEXCEPT {
+	const uint8_t theDigit = ((uint8_t)ver * 0x10);
+
 	p[6] = (p[6] & 0x0F) | theDigit;
 	p[8] = (((((p[8] & 0xF0) >> 4) % 4) + 8) << 4) | (p[8] & 0x0F);
 }
 
-/******************
-* Exception
-*/
-Exception::~Exception() LASHE_NOEXCEPT{}
-
-const char *Exception::className() const LASHE_NOEXCEPT
-{
-	static const char *__name__ = "ashe::uuid::Exception";
-	return __name__;
 }
 
-const char *Exception::code2str(const uint32_t x) const LASHE_NOEXCEPT
+/******************
+* UUID
+*/
+const char *UUID::tostr(const Version v) LASHE_NOEXCEPT
 {
-	static const char *__str__[] = {
-			"none",
-			"LibAshe uninitialised",
-			"LibAshe not initialised with this ability",
-			"not found",
-			"short length given",
-			"invalid magic digit",
-			"invalid format",
-			"illegal argument"
-	};
-
-	switch(x)
-	{
-	case C_NONE:
-	case C_LASHE_UNINITIALISED:
-	case C_LASHE_NO_ABILITY:
-	case C_NOT_FOUND:
-	case C_SHORT_LENGTH:
-	case C_INVALID_MAGIC_DIGIT:
-	case C_INVALID_FORMAT:
-	case C_ILLEGAL_ARGUMENT:
-		return __str__[x];
+	switch(v) {
+	case Version::NONE: return "NONE";
+	case Version::MAC_AND_DATETIME: return "MAC_AND_DATETIME";
+	case Version::DCE_SECURE: return "DCE_SECURE";
+	case Version::MD5_AND_NAMESPACE: return "MD5_AND_NAMESPACE";
+	case Version::RANDOM: return "RANDOM";
+	case Version::SHA1_AND_NAMESPACE: return "SHA1_AND_NAMESPACE";
 	}
-	return motherClass::code2str(x);
+	return nullptr;
+}
+
+void UUID::__mkStr() const LASHE_NOEXCEPT
+{
+	static const char t[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+	this->__pd->str[0] = t[this->__pd->data[0] >> 4];
+	this->__pd->str[1] = t[this->__pd->data[0] & 0x0F];
+	this->__pd->str[2] = t[this->__pd->data[1] >> 4];
+	this->__pd->str[3] = t[this->__pd->data[1] & 0x0F];
+	this->__pd->str[4] = t[this->__pd->data[2] >> 4];
+	this->__pd->str[5] = t[this->__pd->data[2] & 0x0F];
+	this->__pd->str[6] = t[this->__pd->data[3] >> 4];
+	this->__pd->str[7] = t[this->__pd->data[3] & 0x0F];
+	this->__pd->str[8] = '-';
+	this->__pd->str[9] = t[this->__pd->data[4] >> 4];
+	this->__pd->str[10] = t[this->__pd->data[4] & 0x0F];
+	this->__pd->str[11] = t[this->__pd->data[5] >> 4];
+	this->__pd->str[12] = t[this->__pd->data[5] & 0x0F];
+	this->__pd->str[13] = '-';
+	this->__pd->str[14] = t[this->__pd->data[6] >> 4];
+	this->__pd->str[15] = t[this->__pd->data[6] & 0x0F];
+	this->__pd->str[16] = t[this->__pd->data[7] >> 4];
+	this->__pd->str[17] = t[this->__pd->data[7] & 0x0F];
+	this->__pd->str[18] = '-';
+	this->__pd->str[19] = t[this->__pd->data[8] >> 4];
+	this->__pd->str[20] = t[this->__pd->data[8] & 0x0F];
+	this->__pd->str[21] = t[this->__pd->data[9] >> 4];
+	this->__pd->str[22] = t[this->__pd->data[9] & 0x0F];
+	this->__pd->str[23] = '-';
+	this->__pd->str[24] = t[this->__pd->data[10] >> 4];
+	this->__pd->str[25] = t[this->__pd->data[10] & 0x0F];
+	this->__pd->str[26] = t[this->__pd->data[11] >> 4];
+	this->__pd->str[27] = t[this->__pd->data[11] & 0x0F];
+	this->__pd->str[28] = t[this->__pd->data[12] >> 4];
+	this->__pd->str[29] = t[this->__pd->data[12] & 0x0F];
+	this->__pd->str[30] = t[this->__pd->data[13] >> 4];
+	this->__pd->str[31] = t[this->__pd->data[13] & 0x0F];
+	this->__pd->str[32] = t[this->__pd->data[14] >> 4];
+	this->__pd->str[33] = t[this->__pd->data[14] & 0x0F];
+	this->__pd->str[34] = t[this->__pd->data[15] >> 4];
+	this->__pd->str[35] = t[this->__pd->data[15] & 0x0F];
+}
+
+UUID::UUID(const char *str)
+	: __pd(nullptr)
+{
+	std::string __str(str);
+	UUIDException e;
+
+	if (!validate_uuid_string(str, &e)) {
+		throw e;
+	}
+
+	this->__pd = new __UUIDPrivData;
+	ashe::trim(__str);
+	ashe::lower(__str);
+
+	for(auto &v : __str) {
+		if('0' <= v && v <= '9') {
+			v -= '0';
+		}
+		else if('a' <= v && v <= 'z') {
+			v -= 'a' - 10;
+		}
+	}
+
+	this->__pd->data[0] = (uint8_t)((__str[0] << 4) | __str[1]);
+	this->__pd->data[1] = (uint8_t)((__str[2] << 4) | __str[3]);
+	this->__pd->data[2] = (uint8_t)((__str[4] << 4) | __str[5]);
+	this->__pd->data[3] = (uint8_t)((__str[6] << 4) | __str[7]);
+	this->__pd->data[4] = (uint8_t)((__str[9] << 4) | __str[10]);
+	this->__pd->data[5] = (uint8_t)((__str[11] << 4) | __str[12]);
+	this->__pd->data[6] = (uint8_t)((__str[14] << 4) | __str[15]);
+	this->__pd->data[7] = (uint8_t)((__str[16] << 4) | __str[17]);
+	this->__pd->data[8] = (uint8_t)((__str[19] << 4) | __str[20]);
+	this->__pd->data[9] = (uint8_t)((__str[21] << 4) | __str[22]);
+	this->__pd->data[10] = (uint8_t)((__str[24] << 4) | __str[25]);
+	this->__pd->data[11] = (uint8_t)((__str[26] << 4) | __str[27]);
+	this->__pd->data[12] = (uint8_t)((__str[28] << 4) | __str[29]);
+	this->__pd->data[13] = (uint8_t)((__str[30] << 4) | __str[31]);
+	this->__pd->data[14] = (uint8_t)((__str[32] << 4) | __str[33]);
+	this->__pd->data[15] = (uint8_t)((__str[34] << 4) | __str[35]);
+
+	this->__mkStr();
+}
+
+UUID::UUID(const uint8_t *buf)
+	: __pd(nullptr)
+{
+	UUIDException e;
+
+	if (!validate_uuid_binary(buf, &e)) {
+		throw e;
+	}
+
+	this->__pd = new __UUIDPrivData;
+	::memcpy(this->__pd->data, buf, RAW_BYTE_SIZE);
+
+	this->__mkStr();
+}
+
+UUID::UUID(const thisClass& src) LASHE_NOEXCEPT
+	: __pd(new __UUIDPrivData(*src.__pd))
+{
+}
+
+UUID::~UUID() LASHE_NOEXCEPT{}
+
+UUID& UUID::operator =(const thisClass& src) LASHE_NOEXCEPT
+{
+	*this->__pd = *src.__pd;
+	return *this;
+}
+
+const char* UUID::className() const LASHE_NOEXCEPT
+{
+	return "UUID";
+}
+
+bool UUID::operator ==(const thisClass& x) const LASHE_NOEXCEPT
+{
+	return ::memcmp(x.__pd->data, this->__pd->data, RAW_BYTE_SIZE) == 0;
+}
+
+bool UUID::operator !=(const thisClass& x) const LASHE_NOEXCEPT
+{
+	return ::memcmp(x.__pd->data, this->__pd->data, RAW_BYTE_SIZE) != 0;
+}
+
+UUID::Version UUID::version() const LASHE_NOEXCEPT
+{
+	const auto ret = (Version)(this->__pd->data[6] >> 4);
+	return tostr(ret) == nullptr ? Version::NONE : ret;
+}
+
+const char *UUID::str() const LASHE_NOEXCEPT
+{
+	return this->__pd->str.c_str();
+}
+
+const uint8_t *UUID::data() const LASHE_NOEXCEPT
+{
+	return this->__pd->data;
 }
 
 /******************
-* RandomEngine
+* RandomUUIDEngineInterface
 */
-RandomEngine::~RandomEngine() LASHE_NOEXCEPT{}
+RandomUUIDEngineInterface::~RandomUUIDEngineInterface() LASHE_NOEXCEPT{}
 
-UUID RandomEngine::operator()() LASHE_NOEXCEPT
-{
+UUID RandomUUIDEngineInterface::operator()() LASHE_NOEXCEPT {
 	return this->generate();
 }
 
 /******************
-* MersenneTwisterEngine
+* MersenneTwisterUUIDEngine
 */
-struct __MersenneTwisterEngineContext
-{
-	FilterInterface *md;
+struct __MersenneTwisterUUIDEnginePrivData {
+	size_t poolSize = 32;
 	std::random_device *rndDev;
+	MessageDigest md;
 	std::mt19937_64 rndEng;
 };
 
-MersenneTwisterEngine::MersenneTwisterEngine() LASHE_NOEXCEPT
-	: __privCtx(new __MersenneTwisterEngineContext)
-	, __poolSize(32)
+MersenneTwisterUUIDEngine::MersenneTwisterUUIDEngine()
+	: __pd(nullptr)
 {
-	this->__privCtx->md = mkMessageDigest(LAHA_SHA1);
-	try
-	{
-		this->__privCtx->rndDev = new std::random_device();
-		if(this->__privCtx->rndDev->entropy() == 0.0F)
-		{
-			delete this->__privCtx->rndDev;
-			this->__privCtx->rndDev = nullptr;
+	try {
+		this->__pd = new __MersenneTwisterUUIDEnginePrivData;
+		this->__pd->md.open(HashAlgorithm::SHA1);
+	}
+	catch (Exception &e) {
+		delete this->__pd;
+		this->__pd = nullptr;
+		throw e;
+	}
+
+	try {
+		this->__pd->rndDev = new std::random_device();
+		if(this->__pd->rndDev->entropy() == 0.0F) {
+			delete this->__pd->rndDev;
+			this->__pd->rndDev = nullptr;
 		}
 	}
-	catch(std::exception&)
-	{
-		this->__privCtx->rndDev = nullptr;
+	catch(std::exception&) {
+		this->__pd->rndDev = nullptr;
 	}
 }
 
-MersenneTwisterEngine::~MersenneTwisterEngine() LASHE_NOEXCEPT
+MersenneTwisterUUIDEngine::~MersenneTwisterUUIDEngine() LASHE_NOEXCEPT
 {
-	delete this->__privCtx->md;
-	delete this->__privCtx->rndDev;
-	delete this->__privCtx;
+	delete this->__pd->rndDev;
+	delete this->__pd;
 }
 
-size_t MersenneTwisterEngine::poolSize() const LASHE_NOEXCEPT
+size_t MersenneTwisterUUIDEngine::poolSize() const LASHE_NOEXCEPT
 {
-	return this->__poolSize;
+	return this->__pd->poolSize;
 }
 
-MersenneTwisterEngine& MersenneTwisterEngine::poolSize(const size_t size) LASHE_NOEXCEPT
+MersenneTwisterUUIDEngine& MersenneTwisterUUIDEngine::poolSize(const size_t size) LASHE_NOEXCEPT
 {
-	this->__poolSize = size;
+	this->__pd->poolSize = size;
 	return *this;
 }
 
-UUID MersenneTwisterEngine::generate() LASHE_NOEXCEPT
+UUID MersenneTwisterUUIDEngine::generate() LASHE_NOEXCEPT
 {
-	UUID y;
-	std::vector<uint64_t> content(this->__poolSize + 2);
+	uint8_t ret[UUID::RAW_BYTE_SIZE];
+	std::vector<uint64_t> content(this->__pd->poolSize + 2);
 	auto it = content.begin();
-	std::vector<uint8_t> buf;
 	size_t i;
 
-	for(i=0; i<this->__poolSize; ++i)
-		*(it++) = this->__privCtx->rndEng();
+	for(i=0; i<this->__pd->poolSize; ++i) {
+		*(it++) = this->__pd->rndEng();
+	}
 	*(it++) = (uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	if(this->__privCtx->rndDev)
-		*(it++) = (uint64_t)(*this->__privCtx->rndDev)();
+	if(this->__pd->rndDev) {
+		*(it++) = (uint64_t)(*this->__pd->rndDev)();
+	}
 
-	buf.resize(this->__privCtx->md->feed(content.data(), content.size()*sizeof(uint64_t)).finish().payloadSize());
-	this->__privCtx->md->payload(buf.data(), buf.size());
-	::memcpy(y.data, buf.data(), RAW_BYTE_SIZE);
-	__putGlamour__(y.data, V_RANDOM);
+	const auto buf = this->__pd->md.feed((uint8_t*)content.data(), content.size()*sizeof(uint64_t)).finish().payload();
+	::memcpy(ret, buf.data(), UUID::RAW_BYTE_SIZE);
+	__uuid::put_glamour(ret, UUID::Version::RANDOM);
 
-	return y;
+	return ret;
 }
 
-MersenneTwisterEngine& MersenneTwisterEngine::randomise() LASHE_NOEXCEPT
+MersenneTwisterUUIDEngine& MersenneTwisterUUIDEngine::randomise() LASHE_NOEXCEPT
 {
 	std::hash<std::thread::id> hasher;
 	std::seed_seq seed({
 		(uint64_t)std::chrono::high_resolution_clock::now().time_since_epoch().count(),
 		(uint64_t)hasher(std::this_thread::get_id()),
-		(uint64_t)pid__(),
-		(this->__privCtx->rndDev? (uint64_t)(*this->__privCtx->rndDev)() : 0)
+		// FIXME
+		// (uint64_t)pid__(),
+		(this->__pd->rndDev? (uint64_t)(*this->__pd->rndDev)() : 0)
 	});
 
-	this->__privCtx->rndEng.seed(seed);
+	this->__pd->rndEng.seed(seed);
 	return *this;
 }
 
-#undef __INTP_CTX
-
-/******************
-* Namespace functions.
+/********************
+* Library Functions
 */
-const uint32_t *implVersion__() LASHE_NOEXCEPT
-{
-	static const uint32_t __ARR__[] = {5};
-	return __ARR__;
-}
 
-const char* versionToString__(const uint32_t v) LASHE_NOEXCEPT
+bool validate_uuid_string(const char *str, UUIDException *e/* = nullptr*/)
 {
-	static const char *__str__[] = {
-			"none",
-			"mac&datetime",
-			"dce secure",
-			"md5&namespace",
-			"random",
-			"sha1&namespace"
+	const std::string uuid = trim(str);
+	auto set_exception = [&e](const char *msg) {
+		if (e != nullptr) {
+			*e = UUIDException(msg);
+		}
 	};
-	static const char *__unknown__ = "";
 
-	switch(v)
-	{
-	case V_NONE:
-	case V_MAC_AND_DATETIME:
-	case V_DCE_SECURE:
-	case V_MD5_AND_NAMESPACE:
-	case V_RANDOM:
-	case V_SHA1_AND_NAMESPACE:
-		return __str__[v];
-	}
-	return __unknown__;
-}
+	__lashe::ensure_init();
 
-RandomEngine* mkRandomEngine(const char* name) LASHE_EXCEPT(Exception)
-{
-	__dropif_noAbility<Exception>(LAANS_OPENSSL);
-
-	if(0 == ::strcmp(name, "MersenneTwisterEngine"))
-	{
-		return new MersenneTwisterEngine();
-	}
-	else
-	{
-		Exception e;
-		e.code(Exception::C_NOT_FOUND);
-		throw e;
+	if(!std::regex_match(uuid, __lashe::regex->uuid_husk)) {
+		set_exception("invalid UUID format.");
+		return false;
 	}
 
-	return nullptr;
-}
-
-UUID generate() LASHE_EXCEPT(Exception)
-{
-	UUID ret;
-
-	__dropif_noAbility<Exception>(LAANS_OPENSSL);
-	{
-		__LOCK_DEF_UUID_ENGINE();
-		ret = __lashe_defUUIDEngine->generate();
-	}
-	return ret;
-}
-
-UUID fromString(const char* str) LASHE_EXCEPT(Exception)
-{
-	return fromString(str, ::strlen(str));
-}
-
-UUID fromString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
-{
-	validateString(str, len);
-	std::string __str(str, len);
-	UUID ret;
-	const char *p;
-
-	__trim__(__str);
-	__lower__(__str);
-	for(auto &v : __str)
-	{
-		if('0' <= v && v <= '9')
-			v -= '0';
-		else if('a' <= v && v <= 'z')
-			v -= 'a' - 10;
-	}
-	p = __str.data();
-
-	ret.data[0] = (uint8_t)((p[0] << 4) | p[1]);
-	ret.data[1] = (uint8_t)((p[2] << 4) | p[3]);
-	ret.data[2] = (uint8_t)((p[4] << 4) | p[5]);
-	ret.data[3] = (uint8_t)((p[6] << 4) | p[7]);
-	ret.data[4] = (uint8_t)((p[9] << 4) | p[10]);
-	ret.data[5] = (uint8_t)((p[11] << 4) | p[12]);
-	ret.data[6] = (uint8_t)((p[14] << 4) | p[15]);
-	ret.data[7] = (uint8_t)((p[16] << 4) | p[17]);
-	ret.data[8] = (uint8_t)((p[19] << 4) | p[20]);
-	ret.data[9] = (uint8_t)((p[21] << 4) | p[22]);
-	ret.data[10] = (uint8_t)((p[24] << 4) | p[25]);
-	ret.data[11] = (uint8_t)((p[26] << 4) | p[27]);
-	ret.data[12] = (uint8_t)((p[28] << 4) | p[29]);
-	ret.data[13] = (uint8_t)((p[30] << 4) | p[31]);
-	ret.data[14] = (uint8_t)((p[32] << 4) | p[33]);
-	ret.data[15] = (uint8_t)((p[34] << 4) | p[35]);
-
-	return ret;
-}
-
-UUID fromRaw(const void* p) LASHE_EXCEPT(Exception)
-{
-	validateRaw(p);
-	UUID ret;
-	::memcpy(ret.data, p, uuid::RAW_BYTE_SIZE);
-	return ret;
-}
-
-void validateRaw(const void* x) LASHE_EXCEPT(Exception)
-{
-	const uint8_t *p = (const uint8_t*)x;
-	__dropif_uninitialised<Exception>();
-
-	switch(p[8] & 0xF0)
-	{
-	case 0x80:
-	case 0x90:
-	case 0xA0:
-	case 0xB0:
-		break;
-	default:
-	{
-		Exception e;
-		e.code(Exception::C_INVALID_MAGIC_DIGIT);
-		throw e;
-	}
-	}
-}
-
-void validateString(const char* str) LASHE_EXCEPT(Exception)
-{
-	validateString(str, ::strlen(str));
-}
-
-void validateString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
-{
-	__dropif_uninitialised<Exception>();
-	std::string __str(str, len);
-
-	if(!std::regex_match(__str, *__lashe_re_uuidHusk))
-	{
-		Exception e;
-		e.code(Exception::C_INVALID_FORMAT);
-		throw e;
-	}
-	__trim__(__str);
-
-	switch(__str[19])
+	switch(uuid[19])
 	{
 	case '8':
 	case '9':
@@ -325,151 +327,29 @@ void validateString(const char* str, const size_t len) LASHE_EXCEPT(Exception)
 	case 'B':
 		break;
 	default:
-	{
-		Exception e;
-		e.code(Exception::C_INVALID_MAGIC_DIGIT);
-		throw e;
-	}
-	}
-}
-
-}
-
-/******************
-* UUID
-*/
-UUID::UUID() LASHE_NOEXCEPT
-{
-	::memset(this->data, 0, uuid::RAW_BYTE_SIZE);
-}
-
-UUID::UUID(const thisClass& src) LASHE_NOEXCEPT
-{
-	::memcpy(this->data, src.data, uuid::RAW_BYTE_SIZE);
-}
-
-UUID::~UUID() LASHE_NOEXCEPT{}
-
-UUID& UUID::operator =(const thisClass& src) LASHE_NOEXCEPT
-{
-	::memcpy(this->data, src.data, uuid::RAW_BYTE_SIZE);
-	return *this;
-}
-
-const char* UUID::className() const LASHE_NOEXCEPT
-{
-	static const char *__name__ = "ashe::UUID";
-	return __name__;
-}
-
-bool UUID::operator ==(const thisClass& x) const LASHE_NOEXCEPT
-{
-	return ::memcmp(x.data, this->data, uuid::RAW_BYTE_SIZE) == 0;
-}
-
-bool UUID::operator ==(const char* x) const LASHE_EXCEPT(uuid::Exception)
-{
-	return uuid::fromString(x) == *this;
-}
-
-bool UUID::operator !=(const thisClass& x) const LASHE_NOEXCEPT
-{
-	return ::memcmp(x.data, this->data, uuid::RAW_BYTE_SIZE) != 0;
-}
-
-bool UUID::operator !=(const char* x) const LASHE_EXCEPT(uuid::Exception)
-{
-	return uuid::fromString(x) != *this;
-}
-
-UUID UUID::operator +(const char *str) const LASHE_EXCEPT(uuid::Exception)
-{
-	return this->merge(str);
-}
-
-uint32_t UUID::version() const LASHE_NOEXCEPT
-{
-	return (uint32_t)(this->data[6] >> 4);
-}
-
-const UUID& UUID::string(char* p, const bool upper) const LASHE_NOEXCEPT
-{
-	static const char __UPPER__[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-	static const char __LOWER__[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
-	const char *t = upper? __UPPER__ : __LOWER__;
-
-	p[0] = t[this->data[0] >> 4];
-	p[1] = t[this->data[0] & 0x0F];
-	p[2] = t[this->data[1] >> 4];
-	p[3] = t[this->data[1] & 0x0F];
-	p[4] = t[this->data[2] >> 4];
-	p[5] = t[this->data[2] & 0x0F];
-	p[6] = t[this->data[3] >> 4];
-	p[7] = t[this->data[3] & 0x0F];
-	p[8] = '-';
-	p[9] = t[this->data[4] >> 4];
-	p[10] = t[this->data[4] & 0x0F];
-	p[11] = t[this->data[5] >> 4];
-	p[12] = t[this->data[5] & 0x0F];
-	p[13] = '-';
-	p[14] = t[this->data[6] >> 4];
-	p[15] = t[this->data[6] & 0x0F];
-	p[16] = t[this->data[7] >> 4];
-	p[17] = t[this->data[7] & 0x0F];
-	p[18] = '-';
-	p[19] = t[this->data[8] >> 4];
-	p[20] = t[this->data[8] & 0x0F];
-	p[21] = t[this->data[9] >> 4];
-	p[22] = t[this->data[9] & 0x0F];
-	p[23] = '-';
-	p[24] = t[this->data[10] >> 4];
-	p[25] = t[this->data[10] & 0x0F];
-	p[26] = t[this->data[11] >> 4];
-	p[27] = t[this->data[11] & 0x0F];
-	p[28] = t[this->data[12] >> 4];
-	p[29] = t[this->data[12] & 0x0F];
-	p[30] = t[this->data[13] >> 4];
-	p[31] = t[this->data[13] & 0x0F];
-	p[32] = t[this->data[14] >> 4];
-	p[33] = t[this->data[14] & 0x0F];
-	p[34] = t[this->data[15] >> 4];
-	p[35] = t[this->data[15] & 0x0F];
-
-	return *this;
-}
-
-UUID UUID::merge(const char *str) const LASHE_EXCEPT(uuid::Exception)
-{
-	return this->merge(str, ::strlen(str));
-}
-
-UUID UUID::merge(const void *p, const size_t len) const LASHE_EXCEPT(uuid::Exception)
-{
-	UUID y;
-	FilterResult hashed;
-	std::vector<uint8_t> buf;
-	uint8_t *bufPtr;
-	size_t bufLen;
-
-	__dropif_noAbility<uuid::Exception>(LAANS_OPENSSL);
-	if(len == 0 || p == nullptr)
-	{
-		uuid::Exception e;
-		e.code(uuid::Exception::C_ILLEGAL_ARGUMENT);
-		throw e;
+		set_exception("invalid magic digit.");
+		return false;
 	}
 
-	bufLen = uuid::RAW_BYTE_SIZE + len;
-	buf.resize(bufLen);
-	bufPtr = buf.data();
-	::memcpy(bufPtr, this->data, uuid::RAW_BYTE_SIZE);
-	::memcpy(bufPtr + uuid::RAW_BYTE_SIZE, p, len);
-	hashed = digest(bufPtr, bufLen, LAHA_SHA1);
-	::memcpy(y.data, hashed.ptr, uuid::RAW_BYTE_SIZE);
-	uuid::__putGlamour__(y.data, uuid::V_SHA1_AND_NAMESPACE);
+	return true;
+}
 
-	return y;
+bool validate_uuid_binary(const uint8_t *p, UUIDException *e/* = nullptr*/)
+{
+	switch(p[8] & 0xF0) {
+	case 0x80:
+	case 0x90:
+	case 0xA0:
+	case 0xB0:
+		break;
+	default:
+		if (e != nullptr) {
+			*e = UUIDException("invalid magic digit.");
+		}
+		return false;
+	}
+
+	return true;
 }
 
 }

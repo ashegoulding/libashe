@@ -1,0 +1,4 @@
+IndentWidth: 4
+BreakBeforeBraces: Stroustrup
+MaxEmptyLinesToKeep: 5
+AccessModifierOffset: -4
