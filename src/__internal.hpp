@@ -17,6 +17,7 @@
 #include <Windows.h>
 #elif ASHE_ISOS_POSIX()
 #include <dlfcn.h>
+#include <unistd.h>
 #endif
 
 
@@ -24,8 +25,10 @@ namespace __lashe {
 
 #if ASHE_ISOS_POSIX()
 typedef void *ModuleType;
+typedef pid_t PIDType;
 #elif ASHE_ISOS_WIN()
 typedef HMODULE ModuleType;
+typedef DWORD PIDType;
 #endif
 
 struct Global {
@@ -94,6 +97,18 @@ template <class T> T load_func(const ModuleType mod, const size_t cnt, ...)
 
     return ret;
 }
+
+inline PIDType get_pid() LASHE_NOEXCEPT
+{
+#if ASHE_ISOS_WIN()
+    return ::GetCurrentProcessId();
+#elif ASHE_ISOS_POSIX()
+    return ::getpid();
+#else
+#error "FIXME"
+#endif
+}
+
 }
 
 #endif

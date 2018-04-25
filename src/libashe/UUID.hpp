@@ -133,24 +133,24 @@ public:
     MersenneTwisterUUIDEngine();
     MersenneTwisterUUIDEngine(const thisClass &) = delete;
     MersenneTwisterUUIDEngine(thisClass &&) = delete;
-    virtual ~MersenneTwisterUUIDEngine() LASHE_NOEXCEPT;
+    ~MersenneTwisterUUIDEngine() LASHE_NOEXCEPT;
 
     thisClass &operator=(const thisClass &) = delete;
     thisClass &operator=(thisClass &&) = delete;
 
-    virtual const char *className() const LASHE_NOEXCEPT override;
+    const char *className() const LASHE_NOEXCEPT override;
 
     /* PoolSize
      * Generates 32 random 64bit integers to make a random UUID.
      * Larger the value, the less chance of collision occurrence.
      * But 32 (possible combination = 2^(32*8*8)) is just fine
      */
-    virtual size_t poolSize() const LASHE_NOEXCEPT;
-    virtual thisClass &poolSize(const size_t size) LASHE_NOEXCEPT;
+    uint64_t poolSize() const LASHE_NOEXCEPT;
+    thisClass &poolSize(const uint64_t size) LASHE_NOEXCEPT;
 
-    virtual UUID generate() LASHE_NOEXCEPT override;
+    UUID generate() LASHE_NOEXCEPT override;
     // Using random_device, current timestamp, thread id, and PID.
-    virtual thisClass &randomise() LASHE_NOEXCEPT override;
+    thisClass &randomise() LASHE_NOEXCEPT override;
 };
 
 LASHE_DECL_EXT bool validate_uuid_string(const char *str,
