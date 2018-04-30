@@ -16,6 +16,8 @@
 
 namespace ashe {
 
+LASHE_IMPL_EXCEPTION(UUIDException, Exception);
+
 struct __UUIDPrivData {
     uint8_t data[UUID::RAW_BYTE_SIZE];
     std::string str;
@@ -227,6 +229,10 @@ MersenneTwisterUUIDEngine::MersenneTwisterUUIDEngine() : __pd(nullptr)
 MersenneTwisterUUIDEngine::~MersenneTwisterUUIDEngine() LASHE_NOEXCEPT
 {
     delete this->__pd;
+}
+
+const char *MersenneTwisterUUIDEngine::className() const LASHE_NOEXCEPT {
+    return "MersenneTwisterUUIDEngine";
 }
 
 size_t MersenneTwisterUUIDEngine::poolSize() const LASHE_NOEXCEPT

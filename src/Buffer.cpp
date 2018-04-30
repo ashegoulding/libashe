@@ -59,6 +59,18 @@ Buffer &Buffer::operator=(thisClass &&x) LASHE_NOEXCEPT
     return *this;
 }
 
+size_t Buffer::size() const LASHE_NOEXCEPT {
+    return this->__pd->size;
+}
+
+const uint8_t *Buffer::data() const LASHE_NOEXCEPT {
+    return this->__pd->ptr;
+}
+
+uint8_t *Buffer::data() LASHE_NOEXCEPT {
+    return this->__pd->ptr;
+}
+
 Buffer &Buffer::alloc(const size_t size) LASHE_NOEXCEPT
 {
     std::free(this->__pd->ptr);

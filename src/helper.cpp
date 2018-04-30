@@ -75,10 +75,10 @@ LASHE_DECL_EXT_NOEXCEPT const char *get_LAshe_version() LASHE_NOEXCEPT
 #endif
 }
 
-LASHE_DECL_EXT void init_LAshe(const size_t nb_flags,
-                               const /* LAsheInitFlag */ int32_t *flags,
-                               const size_t nb_abilities,
-                               const LAsheAbility *abilities)
+LASHE_DECL_EXT void init_LAshe(const /* LAsheInitFlag */ int32_t *flags,
+                               const size_t nb_flags,
+                               const LAsheAbility *abilities,
+                               const size_t nb_abilities)
 {
     if (__lashe::global != nullptr) {
         return;

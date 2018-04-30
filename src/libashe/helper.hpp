@@ -24,10 +24,10 @@ LASHE_DECL_EXT_NOEXCEPT const char *tostr(const LAsheCompOp v) LASHE_NOEXCEPT;
 LASHE_DECL_EXT_NOEXCEPT const char *get_LAshe_version() LASHE_NOEXCEPT;
 
 // TODO: test
-LASHE_DECL_EXT void init_LAshe(const size_t nb_flags,
-                               const /* LAsheInitFlag */ int32_t *flags,
-                               const size_t nb_abilities,
-                               const LAsheAbility *abilities);
+LASHE_DECL_EXT void init_LAshe(const /* LAsheInitFlag */ int32_t *flags,
+                               const size_t nb_flags,
+                               const LAsheAbility *abilities,
+                               const size_t nb_abilities);
 
 // TODO: test
 LASHE_DECL_EXT_NOEXCEPT void deinit_LAshe() LASHE_NOEXCEPT;
