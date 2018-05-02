@@ -1,4 +1,5 @@
 #include "__internal.hpp"
+#include "libashe/LAsheException.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -18,7 +19,7 @@ Global *global = nullptr;
 void ensure_init()
 {
     if (global == nullptr) {
-        throw ashe::Exception("LibAshe not initialised.");
+        throw ashe::LAsheException("LibAshe not initialised.");
     }
 }
 
@@ -26,11 +27,11 @@ void ensure_ability(const ashe::LAsheAbility x)
 {
     ensure_init();
 
-    if (global->initAbilitySet.find(x) == global->initAbilitySet.end()) {
+    if (!has_ability(x)) {
         std::stringstream ss;
 
         ss << "LibAshe not initialised with ability: " << ashe::tostr(x);
-        throw ashe::Exception(ss.str().c_str());
+        throw ashe::LAsheException(ss.str().c_str());
     }
 }
 

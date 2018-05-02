@@ -96,6 +96,16 @@ enum class IPVersion {
 	V6
 };
 
+enum class HashAlgorithm {
+	NONE,
+	MD5,
+	SHA1,
+	SHA224,
+	SHA256,
+	SHA384,
+	SHA512
+};
+
 } // namespace ashe
 
 #endif

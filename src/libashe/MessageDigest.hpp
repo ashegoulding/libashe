@@ -9,8 +9,6 @@ struct MessageDigestPrivData;
 
 namespace ashe {
 
-enum class HashAlgorithm { NONE, MD5, SHA1, SHA224, SHA256, SHA384, SHA512 };
-
 enum class MessageDigestFlags {
     NONE = 0x00,
     // Instruct digest() to return a hash string.

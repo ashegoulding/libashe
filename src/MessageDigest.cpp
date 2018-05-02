@@ -80,7 +80,9 @@ MessageDigest &MessageDigest::open(const HashAlgorithm x)
 
 MessageDigest &MessageDigest::close() LASHE_NOEXCEPT
 {
-    __lashe::openssl->fnp.EVP_MD_CTX_free(this->__pd->ctxMD);
+    if (__lashe::openssl != nullptr) {
+        __lashe::openssl->fnp.EVP_MD_CTX_free(this->__pd->ctxMD);
+    }
 
     this->__pd->pushed = 0;
     this->__pd->ctxMD = nullptr;

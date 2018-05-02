@@ -96,6 +96,10 @@ void init_openssl()
 
 void deinit_openssl() LASHE_NOEXCEPT
 {
+    if (openssl == nullptr) {
+        return;
+    }
+
     unload_module(openssl->mod_ssl);
     unload_module(openssl->mod_crypto);
     delete openssl;

@@ -27,6 +27,8 @@ Base64Encoder &Base64Encoder::open(const Base64Type x)
 {
     BIO *b64 = nullptr, *bio = nullptr;
 
+    __lashe::ensure_ability(LAsheAbility::OPENSSL);
+
     try {
         b64 =
             __lashe::openssl->fnp.BIO_new(__lashe::openssl->fnp.BIO_f_base64());
@@ -46,7 +48,7 @@ Base64Encoder &Base64Encoder::open(const Base64Type x)
         this->__pd->bio = bio;
         this->__pd->type = x;
     }
-    catch (Exception &e) {
+    catch (FilterException &e) {
         if (b64) {
             __lashe::openssl->fnp.BIO_pop(b64);
         }
@@ -61,7 +63,9 @@ Base64Encoder &Base64Encoder::open(const Base64Type x)
 
 Base64Encoder &Base64Encoder::close() LASHE_NOEXCEPT
 {
-    __lashe::openssl->fnp.BIO_free_all(this->__pd->b64);
+    if (__lashe::openssl != nullptr) {
+        __lashe::openssl->fnp.BIO_free_all(this->__pd->b64);
+    }
 
     this->__pd->b64 = this->__pd->bio = nullptr;
     this->__pd->pushed = 0;
@@ -156,12 +160,8 @@ void Base64Encoder::__popResult() const LASHE_NOEXCEPT
 Buffer encode_base64(const uint8_t *buf, const size_t len,
                      const Base64Type type /* = Base64Type::PLAIN*/)
 {
-    __lashe::ensure_ability(LAsheAbility::OPENSSL);
-
-    {
-        Base64Encoder enc;
-        return enc.open(type).feed(buf, len).finish().payload();
-    }
+    Base64Encoder enc;
+    return enc.open(type).feed(buf, len).finish().payload();
 }
 
 } // namespace ashe

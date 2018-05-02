@@ -3,6 +3,7 @@
 #include "libashe/MessageDigest.hpp"
 #include "libashe/StringUtils.hpp"
 #include "libashe/UUID.hpp"
+#include "libashe/LAsheException.hpp"
 
 #include <iomanip>
 #include <limits>
@@ -219,7 +220,7 @@ MersenneTwisterUUIDEngine::MersenneTwisterUUIDEngine() : __pd(nullptr)
         this->__pd = new __MersenneTwisterUUIDEnginePrivData;
         this->__pd->md.open(HashAlgorithm::SHA1);
     }
-    catch (Exception &e) {
+    catch (LAsheException &e) {
         delete this->__pd;
         this->__pd = nullptr;
         throw e;

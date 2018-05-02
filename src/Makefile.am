@@ -29,7 +29,8 @@ libashe_la_SOURCES =\
     ModuleException.cpp\
     Regex.cpp\
     Semaphore.cpp\
-    UUID.cpp
+    UUID.cpp\
+    LAsheException.cpp
 
 nobase_include_HEADERS =\
     libashe/Base64Encoder.hpp\
@@ -48,7 +49,8 @@ nobase_include_HEADERS =\
     libashe/MessageDigest.hpp\
     libashe/pub.hpp\
     libashe/Semaphore.hpp\
-    libashe/OSCode.hpp
+    libashe/OSCode.hpp\
+    libashe/LAsheException.hpp
 
 pkgconfigdir = @libdir@/pkgconfig
 pkgconfig_DATA = libashe.pc
@@ -60,7 +62,11 @@ if TESTS
     GTEST_CXXFLAGS = -Wall -g $(OPTI_FLAGS) -std=c++11
     GTEST_LDADD = libashe.la
 
-    bin_PROGRAMS = lashetest_lib-init lashetest_all
+    bin_PROGRAMS =\
+        lashetest_lib-init\
+        lashetest_all\
+        lashetest_noability\
+        lashetest_openssl
 
     lashetest_lib_init_SOURCES = tests/lib-init.cpp
     lashetest_lib_init_LDFLAGS = $(GTEST_MAIN_LIBS)
@@ -71,4 +77,14 @@ if TESTS
     lashetest_all_LDFLAGS = $(GTEST_LIBS)
     lashetest_all_CXXFLAGS = $(GTEST_CXXFLAGS)
     lashetest_all_LDADD = $(GTEST_LDADD)
+
+    lashetest_noability_SOURCES = tests/noability.cpp
+    lashetest_noability_LDFLAGS = $(GTEST_LIBS)
+    lashetest_noability_CXXFLAGS = $(GTEST_CXXFLAGS)
+    lashetest_noability_LDADD = $(GTEST_LDADD)
+
+    lashetest_openssl_SOURCES = tests/openssl.cpp
+    lashetest_openssl_LDFLAGS = $(GTEST_LIBS)
+    lashetest_openssl_CXXFLAGS = $(GTEST_CXXFLAGS)
+    lashetest_openssl_LDADD = $(GTEST_LDADD)
 endif
