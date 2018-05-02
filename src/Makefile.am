@@ -9,7 +9,7 @@ OPTI_FLAGS += -O3
 endif
 
 lib_LTLIBRARIES = libashe.la
-libashe_la_LDFLAGS = -version-info 0:0:0
+libashe_la_LDFLAGS = -version-info 1:0:0
 libashe_la_CXXFLAGS = -Wall $(DEBUG_FLAGS) $(OPTI_FLAGS) -std=c++11
 
 libashe_la_SOURCES =\
@@ -52,3 +52,23 @@ nobase_include_HEADERS =\
 
 pkgconfigdir = @libdir@/pkgconfig
 pkgconfig_DATA = libashe.pc
+
+
+if TESTS
+    GTEST_LIBS = -lgtest -lpthread -ldl
+    GTEST_MAIN_LIBS = -lgtest -lgtest_main -lpthread -ldl
+    GTEST_CXXFLAGS = -Wall -g $(OPTI_FLAGS) -std=c++11
+    GTEST_LDADD = libashe.la
+
+    bin_PROGRAMS = lashetest_lib-init lashetest_all
+
+    lashetest_lib_init_SOURCES = tests/lib-init.cpp
+    lashetest_lib_init_LDFLAGS = $(GTEST_MAIN_LIBS)
+    lashetest_lib_init_CXXFLAGS = $(GTEST_CXXFLAGS)
+    lashetest_lib_init_LDADD = $(GTEST_LDADD)
+
+    lashetest_all_SOURCES = tests/all.cpp
+    lashetest_all_LDFLAGS = $(GTEST_LIBS)
+    lashetest_all_CXXFLAGS = $(GTEST_CXXFLAGS)
+    lashetest_all_LDADD = $(GTEST_LDADD)
+endif

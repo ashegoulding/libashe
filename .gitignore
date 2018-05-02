@@ -1,6 +1,9 @@
-.directory
 Makefile
 Makefile.in
+.deps
+.libs
+.dirstamp
+
 /configure
 /config.guess
 /config.sub
@@ -14,8 +17,6 @@ Makefile.in
 /ltmain.sh
 /missing
 /libtool
-/src/.deps
-/src/.libs
 
 /src/*.lo
 /src/*.pc
@@ -33,4 +34,4 @@ Makefile.in
 *.[oa]
 *.so
 *.la
-
+lashetest_*

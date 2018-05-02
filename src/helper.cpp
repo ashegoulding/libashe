@@ -34,7 +34,10 @@ LASHE_DECL_EXT_NOEXCEPT const char *tostr(const LAsheInitFlag v) LASHE_NOEXCEPT
     switch (v) {
     case LAsheInitFlag::OSCODE:
         return "LAsheInitFlag::OSCODE";
+    case LAsheInitFlag::ALL_ABILITIES:
+        return "LAsheInitFlag::ALL_ABILITIES";
     }
+
     return nullptr;
 }
 
@@ -89,6 +92,7 @@ LASHE_DECL_EXT void init_LAshe(const /* LAsheInitFlag */ int32_t *flags,
 
         size_t i;
         int32_t os_code = -1;
+        bool init_all_abilities = false;
         std::set<LAsheAbility> abilitySet;
         auto ensure_next_flag = [&i, &nb_flags](const size_t more,
                                                 const LAsheInitFlag flag) {
@@ -100,7 +104,7 @@ LASHE_DECL_EXT void init_LAshe(const /* LAsheInitFlag */ int32_t *flags,
                 throw HelperException(ss.str().c_str());
             }
         };
-        auto __has_ability = [&abilitySet](const LAsheAbility ability) -> bool {
+        auto has_ability = [&abilitySet](const LAsheAbility ability) -> bool {
             return abilitySet.end() != abilitySet.find(ability);
         };
 
@@ -109,6 +113,10 @@ LASHE_DECL_EXT void init_LAshe(const /* LAsheInitFlag */ int32_t *flags,
             case (int32_t)LAsheInitFlag::OSCODE:
                 ensure_next_flag(1, (LAsheInitFlag)flags[i]);
                 os_code = flags[i + 1];
+                break;
+            case (int32_t)LAsheInitFlag::ALL_ABILITIES:
+                ensure_next_flag(1, (LAsheInitFlag)flags[i]);
+                init_all_abilities = flags[i + 1] != 0;
                 break;
             }
         }
@@ -142,7 +150,11 @@ LASHE_DECL_EXT void init_LAshe(const /* LAsheInitFlag */ int32_t *flags,
             }
         }
         // Parse requested abilities.
-        if (nb_abilities > 0) {
+        if (init_all_abilities) {
+            // Every single ability.
+            abilitySet = allAbilities;
+        }
+        else {
             for (i = 0; i < nb_abilities; i += 1) {
                 if (allAbilities.find(abilities[i]) == allAbilities.end()) {
                     throw HelperException("unrecognised 'LAsheAbility'.");
@@ -150,25 +162,20 @@ LASHE_DECL_EXT void init_LAshe(const /* LAsheInitFlag */ int32_t *flags,
                 abilitySet.insert(abilities[i]);
             }
         }
-        else {
-            // Every single ability.
-            abilitySet = allAbilities;
-        }
-
-        // Initialise the modules discrete in order.
-        if (__has_ability(LAsheAbility::OPENSSL)) {
-            __lashe::init_openssl();
-        }
 
         // Initialise globals.
+        __lashe::global = new __lashe::Global;
         __lashe::global->initAbilitySet = abilitySet;
         for (const auto &v : abilitySet) {
             __lashe::global->initAbilityVec.push_back(v);
         }
 
-        // Post init.
-
         __lashe::regex = new __lashe::RegexGlobal;
+
+        // Initialise the modules discrete in order.
+        if (has_ability(LAsheAbility::OPENSSL)) {
+            __lashe::init_openssl();
+        }
     }
     catch (Exception &e) {
         deinit_LAshe();

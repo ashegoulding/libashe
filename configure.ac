@@ -4,8 +4,7 @@ AC_INIT([libashe], [1.0.0], [mieabby@gmail.com])
 : ${CFLAGS=""}
 : ${CXXFLAGS=""}
 
-# AM_INIT_AUTOMAKE([1.0 subdir-objects])
-AM_INIT_AUTOMAKE([1.0])
+AM_INIT_AUTOMAKE([1.0 subdir-objects])
 LT_INIT
 
 AC_CANONICAL_HOST
@@ -19,7 +18,7 @@ AC_PROG_CXX
 
 AC_ARG_ENABLE(debug,
 AS_HELP_STRING([--enable-debug],
-               [enable debugging, default: no]),
+               [build with debug flags, default: no]),
 [case "${enableval}" in
              yes) debug=true ;;
              no)  debug=false ;;
@@ -27,6 +26,20 @@ AS_HELP_STRING([--enable-debug],
 esac],
 [debug=false])
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
+
+AC_ARG_ENABLE(tests,
+AS_HELP_STRING([--enable-tests],
+               [build tests, default: no]),
+[case "${enableval}" in
+             yes) tests=true ;;
+             no)  tests=false ;;
+             *)   AC_MSG_ERROR([bad value ${enableval} for --enable-tests]) ;;
+esac],
+[tests=false])
+AM_CONDITIONAL(TESTS, test x"$tests" = x"true")
+AM_COND_IF([TESTS], [
+    AC_CHECK_HEADERS([gtest/gtest.h])
+])
 
 lashe_os_code=""
 case "$host" in

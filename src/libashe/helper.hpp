@@ -8,7 +8,8 @@ namespace ashe {
 
 enum class LAsheInitFlag : int32_t {
     // Following value being ASHE_HOST_OSCODE of the software.
-    OSCODE
+    OSCODE,
+    ALL_ABILITIES
 };
 
 // TODO: test
