@@ -9,7 +9,6 @@
 
 namespace ashe {
 
-// TODO: test
 template <class CharT>
 std::basic_string<CharT> trim(const CharT *str,
                               const std::locale &lc) LASHE_NOEXCEPT
@@ -24,9 +23,9 @@ std::basic_string<CharT> trim(const CharT *str,
     start = str + i;
 
     // Find end.
-    for (i = 1; i <= len && std::isspace(str[len - i], lc); i += 1)
+    for (i = 0; i < len && std::isspace(str[len - i - 1], lc); i += 1)
         ;
-    end = str + (i - 1);
+    end = std::max(start, str + (len - i));
 
     return std::basic_string<CharT>(start, end);
 }
@@ -50,7 +49,6 @@ trim(const std::basic_string<CharT> &str) LASHE_NOEXCEPT
     return trim(str.c_str(), lc);
 }
 
-// TODO: test
 template <class CharT>
 std::basic_string<CharT> lower(const CharT *str,
                                const std::locale &lc) LASHE_NOEXCEPT
@@ -85,7 +83,6 @@ lower(const std::basic_string<CharT> &str) LASHE_NOEXCEPT
     return lower(str.c_str(), lc);
 }
 
-// TODO: test
 template <class CharT>
 std::basic_string<CharT> upper(const CharT *str,
                                const std::locale &lc) LASHE_NOEXCEPT
@@ -120,7 +117,6 @@ upper(const std::basic_string<CharT> &str) LASHE_NOEXCEPT
     return upper(str.c_str(), lc);
 }
 
-// TODO: test
 template <class CharT, class IteratorType>
 std::basic_string<CharT> join_str(IteratorType first, IteratorType last,
                                   const CharT *str)

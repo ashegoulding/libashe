@@ -38,7 +38,9 @@ esac],
 [tests=false])
 AM_CONDITIONAL(TESTS, test x"$tests" = x"true")
 AM_COND_IF([TESTS], [
-    AC_CHECK_HEADERS([gtest/gtest.h])
+    AC_CHECK_HEADERS([gtest/gtest.h],
+    [],
+    [AC_MSG_ERROR([gtest/gtest.h not found.])])
 ])
 
 lashe_os_code=""

@@ -113,10 +113,12 @@ LASHE_DECL_EXT void init_LAshe(const /* LAsheInitFlag */ int32_t *flags,
             case (int32_t)LAsheInitFlag::OSCODE:
                 ensure_next_flag(1, (LAsheInitFlag)flags[i]);
                 os_code = flags[i + 1];
+                i += 1;
                 break;
             case (int32_t)LAsheInitFlag::ALL_ABILITIES:
                 ensure_next_flag(1, (LAsheInitFlag)flags[i]);
                 init_all_abilities = flags[i + 1] != 0;
+                i += 1;
                 break;
             }
         }
